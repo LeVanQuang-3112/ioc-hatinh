@@ -769,15 +769,85 @@ button {
   position: relative;
   height: 374px;
   overflow: hidden;
+  isolation: isolate;
   background:
-    radial-gradient(circle at 72% 28%, rgba(82, 171, 208, 0.24) 0 9%, transparent 28%),
-    linear-gradient(145deg, rgba(16, 60, 54, 0.95), rgba(24, 84, 72, 0.82) 36%, rgba(22, 69, 89, 0.88) 72%, rgba(17, 50, 76, 0.96)),
-    repeating-linear-gradient(35deg, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px 18px);
+    linear-gradient(90deg, rgba(40, 143, 255, 0.72) 0 1px, transparent 1px calc(100% - 1px), rgba(40, 143, 255, 0.72) calc(100% - 1px)),
+    linear-gradient(180deg, rgba(40, 143, 255, 0.72) 0 1px, transparent 1px calc(100% - 1px), rgba(40, 143, 255, 0.72) calc(100% - 1px)),
+    #07131c;
+}
+
+.map-canvas::before {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background:
+    linear-gradient(90deg, rgba(47, 144, 255, 0.23) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(47, 144, 255, 0.18) 1px, transparent 1px);
+  background-size: 68px 68px;
+  content: "";
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.map-canvas::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(circle at 34% 48%, transparent 0 36%, rgba(7, 12, 18, 0.1) 62%, rgba(3, 7, 12, 0.28) 100%),
+    linear-gradient(90deg, rgba(5, 11, 16, 0.04), transparent 34%, transparent 70%, rgba(20, 78, 96, 0.1));
+  content: "";
+  pointer-events: none;
 }
 
 .ha-tinh-map-chart {
   position: absolute;
   inset: 0;
+  z-index: 2;
+}
+
+.ha-tinh-leaflet-map {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: #07131c;
+}
+
+.ha-tinh-leaflet-map .leaflet-tile {
+  filter: saturate(1.14) contrast(1.07) brightness(0.92);
+}
+
+.ha-tinh-leaflet-map .leaflet-tooltip-pane {
+  z-index: 680;
+}
+
+.ha-tinh-leaflet-map .leaflet-interactive {
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.54));
+}
+
+.ha-tinh-place-label {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: rgba(241, 246, 247, 0.96);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow:
+    0 1px 3px #000000,
+    0 0 7px rgba(0, 0, 0, 0.82);
+}
+
+.ha-tinh-place-label::before {
+  display: none;
+}
+
+.ha-tinh-place-label.capital {
+  color: #ffd453;
+  font-size: 13px;
+  font-weight: 900;
 }
 
 .province-outline {
@@ -816,12 +886,14 @@ button {
   position: absolute;
   left: 18px;
   bottom: 14px;
+  z-index: 4;
   display: grid;
   gap: 3px;
   border-radius: 4px;
-  background: rgba(9, 13, 22, 0.75);
+  background: rgba(9, 13, 22, 0.78);
   padding: 8px 10px;
   font-size: 10px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
 }
 
 .legend::before {
@@ -843,23 +915,39 @@ button {
   position: absolute;
   right: 30px;
   top: 54px;
+  z-index: 4;
   display: grid;
   overflow: hidden;
   border-radius: 8px;
   background: #ffffff;
   color: #111827;
-  font-size: 28px;
-  font-weight: 500;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.34);
 }
 
-.zoom-control span {
+.zoom-control button {
   display: grid;
   width: 42px;
   height: 42px;
   place-items: center;
+  border: 0;
+  background: #ffffff;
+  color: #111827;
+  padding: 0;
 }
 
-.zoom-control span + span {
+.zoom-control button svg {
+  width: 23px;
+  height: 23px;
+  stroke-width: 2.5;
+}
+
+.zoom-control button:hover,
+.zoom-control button:focus-visible {
+  background: #eef6ff;
+  color: #0a66cc;
+}
+
+.zoom-control button + button {
   border-top: 1px solid #d1d5db;
 }
 
@@ -2823,6 +2911,8 @@ button {
   height: 100%;
   min-height: 0;
   background:
+    linear-gradient(90deg, rgba(40, 143, 255, 0.72) 0 1px, transparent 1px calc(100% - 1px), rgba(40, 143, 255, 0.72) calc(100% - 1px)),
+    linear-gradient(180deg, rgba(40, 143, 255, 0.72) 0 1px, transparent 1px calc(100% - 1px), rgba(40, 143, 255, 0.72) calc(100% - 1px)),
     radial-gradient(circle at 75% 28%, rgba(91, 186, 230, 0.85) 0 2px, transparent 3px),
     radial-gradient(circle at 65% 70%, rgba(255, 216, 77, 0.95) 0 2px, transparent 3px),
     linear-gradient(35deg, transparent 0 45%, rgba(255, 197, 32, 0.75) 46% 47%, transparent 48%),
@@ -2845,12 +2935,16 @@ button {
 .overview-ioc .zoom-control {
   right: 12px;
   top: 16px;
-  font-size: 18px;
 }
 
-.overview-ioc .zoom-control span {
+.overview-ioc .zoom-control button {
   width: 28px;
   height: 28px;
+}
+
+.overview-ioc .zoom-control button svg {
+  width: 18px;
+  height: 18px;
 }
 
 .overview-ioc-grdp { grid-column: 1 / 8; grid-row: 1 / 2; }

@@ -1,6 +1,9 @@
-import { type CSSProperties, type ReactNode, useMemo, useState } from "react";
+import { type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import * as echarts from "echarts/core";
 import type { EChartsCoreOption } from "echarts/core";
+import type { GeoJsonObject } from "geojson";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import {
   BadgeDollarSign,
   BookOpen,
@@ -13,6 +16,8 @@ import {
   Landmark,
   ListChecks,
   MapPinned,
+  Minus,
+  Plus,
   Sprout,
   Store,
   TrendingUp,
@@ -1546,81 +1551,84 @@ function ExpenseBudgetCard({
 }
 
 function MapCanvas({ className = "", title }: { className?: string; title: string }) {
-  const option = useMemo<EChartsCoreOption>(() => ({
-    backgroundColor: "transparent",
-    tooltip: {
-      trigger: "item",
-      borderWidth: 0,
-      backgroundColor: "rgba(5, 16, 32, 0.92)",
-      textStyle: { color: "#f8fbff", fontSize: 12 },
-      formatter: (params: { name?: string; value?: unknown }) => {
-        const value = Array.isArray(params.value) ? params.value[2] : undefined;
-        return value ? `${params.name}<br/>Giá trị: ${Number(value).toLocaleString("vi-VN")}` : params.name;
+  const mapNodeRef = useRef<HTMLDivElement | null>(null);
+  const leafletMapRef = useRef<L.Map | null>(null);
+
+  useEffect(() => {
+    if (!mapNodeRef.current || leafletMapRef.current) {
+      return undefined;
+    }
+
+    const map = L.map(mapNodeRef.current, {
+      attributionControl: false,
+      doubleClickZoom: true,
+      maxZoom: 14,
+      minZoom: 8,
+      preferCanvas: true,
+      scrollWheelZoom: false,
+      zoomSnap: 0.1,
+      zoomControl: false,
+    });
+
+    leafletMapRef.current = map;
+
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+      maxZoom: 18,
+    }).addTo(map);
+
+    L.geoJSON(haTinhGeoJson as unknown as GeoJsonObject, {
+      style: {
+        color: "#ffd34f",
+        dashArray: "8 6",
+        fillColor: "#1f7a58",
+        fillOpacity: 0.12,
+        opacity: 0.96,
+        weight: 2.4,
       },
-    },
-    visualMap: {
-      show: false,
-      min: 0,
-      max: 3600,
-      dimension: 2,
-      inRange: {
-        color: ["#5ba9ff", "#51e572", "#f1ec72", "#ffbc4e"],
-      },
-    },
-    geo: {
-      map: HA_TINH_MAP_NAME,
-      roam: false,
-      left: "7%",
-      right: "7%",
-      top: "4%",
-      bottom: "4%",
-      silent: true,
-      itemStyle: {
-        areaColor: "rgba(26, 99, 83, 0.82)",
-        borderColor: "rgba(255, 218, 80, 0.95)",
-        borderWidth: 2,
-        shadowBlur: 18,
-        shadowColor: "rgba(0, 0, 0, 0.3)",
-      },
-      emphasis: {
-        disabled: true,
-      },
-    },
-    series: [
-      {
-        name: "Chỉ số theo địa bàn",
-        type: "scatter",
-        coordinateSystem: "geo",
-        data: haTinhMapPoints,
-        symbolSize: (value: unknown) => {
-          const metric = Array.isArray(value) ? Number(value[2]) : 0;
-          return Math.max(8, Math.min(18, metric / 210));
-        },
-        label: {
-          show: true,
-          formatter: "{b}",
-          position: "top",
-          color: "#f1f6f7",
-          fontSize: 11,
-          fontWeight: 700,
-          textShadowColor: "#000000",
-          textShadowBlur: 5,
-        },
-        itemStyle: {
-          borderColor: "rgba(255, 255, 255, 0.9)",
-          borderWidth: 1,
-          shadowBlur: 10,
-          shadowColor: "rgba(0, 0, 0, 0.35)",
-        },
-        emphasis: {
-          scale: 1.25,
-          label: {
-            color: "#ffd453",
-          },
-        },
-      },
-    ],
-  }), []);
+    }).addTo(map);
+
+    const pointLayer = L.layerGroup().addTo(map);
+
+    haTinhMapPoints.forEach((point) => {
+      const [lng, lat, metric] = point.value;
+      const isCapital = point.name.includes("TP.");
+      const tone = metric >= 3000 ? "#ffbc4e" : metric >= 2000 ? "#f1ec72" : metric >= 1000 ? "#51e572" : "#5ba9ff";
+
+      L.circleMarker([lat, lng], {
+        className: "ha-tinh-map-point",
+        color: "rgba(255, 255, 255, 0.95)",
+        fillColor: tone,
+        fillOpacity: 0.86,
+        opacity: 1,
+        radius: isCapital ? 6.5 : 4.4,
+        weight: 1.8,
+      })
+        .bindTooltip(point.name, {
+          className: isCapital ? "ha-tinh-place-label capital" : "ha-tinh-place-label",
+          direction: "top",
+          offset: [0, -4],
+          opacity: 1,
+          permanent: true,
+        })
+        .addTo(pointLayer);
+    });
+
+    const bounds = L.geoJSON(haTinhGeoJson as unknown as GeoJsonObject).getBounds();
+    map.fitBounds(bounds, { padding: [22, 22] });
+    map.setZoom(Math.min(11.2, map.getZoom() + 0.25));
+    map.setMaxBounds(bounds.pad(0.72));
+
+    const resizeFrame = requestAnimationFrame(() => map.invalidateSize());
+
+    return () => {
+      cancelAnimationFrame(resizeFrame);
+      map.remove();
+      leafletMapRef.current = null;
+    };
+  }, []);
+
+  const zoomIn = () => leafletMapRef.current?.zoomIn();
+  const zoomOut = () => leafletMapRef.current?.zoomOut();
 
   return (
     <article className={`map-panel ${className}`}>
@@ -1629,16 +1637,20 @@ function MapCanvas({ className = "", title }: { className?: string; title: strin
         {title}
       </div>
       <div className="map-canvas" role="img" aria-label="Bản đồ tỉnh Hà Tĩnh">
-        <EChart className="ha-tinh-map-chart" option={option} ariaLabel="Bản đồ ECharts tỉnh Hà Tĩnh" />
+        <div ref={mapNodeRef} className="ha-tinh-leaflet-map" />
         <div className="map-legend">
           <span className="legend high">Trên 3.000</span>
           <span className="legend mid">2.000 - 3.000</span>
           <span className="legend low">1.000 - 2.000</span>
           <span className="legend base">Dưới 1.000</span>
         </div>
-        <div className="zoom-control" aria-hidden="true">
-          <span>+</span>
-          <span>-</span>
+        <div className="zoom-control">
+          <button type="button" onClick={zoomIn} aria-label="Phóng to bản đồ">
+            <Plus aria-hidden="true" />
+          </button>
+          <button type="button" onClick={zoomOut} aria-label="Thu nhỏ bản đồ">
+            <Minus aria-hidden="true" />
+          </button>
         </div>
       </div>
     </article>
@@ -1799,7 +1811,7 @@ function OverviewDashboard() {
           </div>
         </OverviewCard>
 
-        <MapCanvas className="overview-ioc-map" title="Bản đồ tổng quan Hà Tĩnh" />
+        <MapCanvas className="overview-ioc-map" title="Bản đồ GIS tổng hợp Hà Tĩnh" />
 
         <OverviewCard className="overview-ioc-industry" icon="industry" title="Công nghiệp">
           <div className="overview-split">
