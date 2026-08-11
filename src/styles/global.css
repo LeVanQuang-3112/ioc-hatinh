@@ -132,11 +132,11 @@ button {
 
 .dashboard-tabs {
   display: grid;
-  grid-auto-columns: minmax(238px, max-content);
+  grid-auto-columns: minmax(238px, 16vw);
   grid-auto-flow: column;
   gap: 8px;
   overflow-x: auto;
-  padding: 6px 2px 8px;
+  padding: 8px 2px 10px;
   background: #162235;
   border-top: 1px solid rgba(77, 96, 122, 0.42);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
@@ -149,7 +149,8 @@ button {
   justify-content: flex-start;
   gap: 12px;
   width: 100%;
-  min-height: 46px;
+  min-width: 0;
+  min-height: 54px;
   border: 1px solid #2b3950;
   border-radius: 4px;
   background: #1c283b;
@@ -160,7 +161,8 @@ button {
   text-transform: uppercase;
   line-height: 1.12;
   white-space: normal;
-  padding: 0 26px;
+  overflow-wrap: anywhere;
+  padding: 6px 20px;
   text-align: left;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.015);
 }
@@ -3110,9 +3112,11 @@ button {
 .overview-value strong {
   color: #24e384;
   font-family: var(--font-display);
-  font-size: clamp(28px, 2.7vw, 42px);
+  max-width: 100%;
+  font-size: clamp(24px, 2.45vw, 42px);
   font-weight: 900;
   line-height: 0.95;
+  overflow-wrap: anywhere;
 }
 
 .overview-value small {
@@ -3147,7 +3151,7 @@ button {
 }
 
 .overview-value.hero strong {
-  font-size: clamp(58px, 5vw, 76px);
+  font-size: clamp(44px, 4.2vw, 70px);
 }
 
 .overview-small-bars,
@@ -3413,7 +3417,7 @@ button {
 .overview-simple-head,
 .overview-simple-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 92px minmax(112px, max-content);
+  grid-template-columns: minmax(0, 1fr) 92px minmax(124px, 0.72fr);
   align-items: center;
   gap: 10px;
   border-bottom: 1px solid rgba(82, 143, 186, 0.27);
@@ -3443,8 +3447,9 @@ button {
   font-size: 11px;
   font-weight: 800;
   padding: 6px 9px;
+  line-height: 1.15;
   text-align: center;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .overview-link {
@@ -4796,7 +4801,7 @@ button {
 
 .key-projects-grid {
   display: grid;
-  grid-template-columns: minmax(540px, 40fr) minmax(260px, 20fr) minmax(540px, 40fr);
+  grid-template-columns: minmax(560px, 38fr) minmax(360px, 24fr) minmax(560px, 38fr);
   align-items: stretch;
   min-height: 438px;
   border-left: 1px solid rgba(34, 49, 66, 0.92);
@@ -4825,7 +4830,7 @@ button {
 
 .key-projects-period {
   position: absolute;
-  top: 68px;
+  top: 64px;
   right: 36px;
   z-index: 2;
   display: flex;
@@ -4854,7 +4859,7 @@ button {
   display: flex;
   align-items: baseline;
   gap: 14px;
-  margin: 58px 24px 24px;
+  margin: 58px 24px 22px;
 }
 
 .key-projects-total strong,
@@ -4875,6 +4880,9 @@ button {
 
 .key-projects-table {
   margin: 0 24px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
 }
 
 .key-projects-table-head,
@@ -4884,6 +4892,7 @@ button {
   align-items: center;
   gap: 12px;
   min-height: 33px;
+  min-width: 760px;
   border-bottom: 1px solid rgba(95, 109, 132, 0.28);
 }
 
@@ -4970,13 +4979,13 @@ button {
 }
 
 .key-projects-progress-panel small {
-  margin: 36px 24px 0;
+  margin: 20px 24px 0;
 }
 
 .key-projects-progress-chart {
   width: calc(100% - 36px);
-  height: 154px;
-  margin: 0 18px 0;
+  height: 210px;
+  margin: 8px 18px 0;
 }
 
 .key-projects-delayed-value {
@@ -6124,7 +6133,7 @@ button {
 
 .treasury-grid {
   display: grid;
-  grid-template-columns: 1.08fr 1.82fr 1.94fr;
+  grid-template-columns: minmax(360px, 1.08fr) minmax(560px, 1.82fr) minmax(560px, 1.94fr);
   grid-template-rows: 408px 376px;
   border-top: 1px solid rgba(198, 218, 244, 0.28);
   border-left: 1px solid rgba(198, 218, 244, 0.28);
@@ -6205,7 +6214,7 @@ button {
   position: relative;
   height: calc(100% - 46px);
   min-height: 330px;
-  padding-top: 30px;
+  padding: 30px 20px 0 26px;
 }
 
 .treasury-donut-chart {
@@ -6215,7 +6224,7 @@ button {
 
 .treasury-donut-center {
   position: absolute;
-  left: 50%;
+  left: 54%;
   top: 152px;
   display: grid;
   width: 124px;
@@ -6287,12 +6296,13 @@ button {
 
 .treasury-big-metric {
   display: grid;
-  grid-template-columns: auto auto minmax(220px, 1fr);
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   align-self: stretch;
-  gap: 24px;
+  align-content: center;
+  gap: 8px 22px;
   min-height: 118px;
-  padding: 18px 34px 18px;
+  padding: 14px 34px 16px;
   border-top: 1px solid rgba(198, 218, 244, 0.1);
 }
 
@@ -6318,17 +6328,19 @@ button {
 
 .treasury-big-metric div {
   display: grid;
-  gap: 4px;
-  justify-self: end;
+  grid-column: 1 / -1;
+  gap: 5px;
+  justify-self: start;
   min-width: 0;
+  width: 100%;
 }
 
 .treasury-trend {
   margin: 0;
   color: var(--good);
-  font-size: 19px;
-  line-height: 1.25;
-  white-space: nowrap;
+  font-size: 18px;
+  line-height: 1.18;
+  white-space: normal;
 }
 
 .treasury-trend::before {
@@ -6449,7 +6461,7 @@ button {
   position: relative;
   min-height: calc(100vh - 198px);
   padding: 24px 24px 22px;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .enterprise-dashboard::before {
@@ -6525,15 +6537,26 @@ button {
 
 .enterprise-total-panel {
   display: grid;
-  grid-template-rows: 44px 1fr;
+  grid-template-rows: auto auto 1fr auto;
+}
+
+.enterprise-total-panel .enterprise-period {
+  position: static;
+  justify-self: stretch;
+  justify-content: space-between;
+  margin: 16px 28px 0;
+}
+
+.enterprise-total-panel .enterprise-period select {
+  width: min(234px, 62%);
 }
 
 .enterprise-total-value {
   display: grid;
   justify-items: center;
   align-self: center;
-  gap: 18px;
-  padding: 42px 22px 0;
+  gap: 16px;
+  padding: 16px 22px 0;
 }
 
 .enterprise-total-value strong {
@@ -6552,22 +6575,23 @@ button {
 }
 
 .enterprise-trend {
-  align-self: start;
+  align-self: end;
   justify-self: center;
-  display: grid;
-  grid-template-columns: auto auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
-  max-width: 290px;
-  margin: 8px 0 0;
+  max-width: calc(100% - 42px);
+  margin: 12px 0 18px;
   color: rgba(224, 231, 242, 0.92);
-  font-size: 19px;
-  line-height: 1.35;
+  font-size: 18px;
+  line-height: 1.3;
 }
 
 .enterprise-trend i {
+  flex: 0 0 auto;
   width: 0;
   height: 0;
-  margin-top: 8px;
   border-right: 7px solid transparent;
   border-bottom: 9px solid #20d5ad;
   border-left: 7px solid transparent;
@@ -6578,14 +6602,10 @@ button {
   font-weight: 700;
 }
 
-.enterprise-trend span {
-  grid-column: 2;
-}
-
 .enterprise-activity-chart,
 .enterprise-coop-chart {
   width: calc(100% - 20px);
-  height: 356px;
+  height: 372px;
   margin: 16px 10px 0;
   background:
     linear-gradient(rgba(236, 242, 250, 0.08) 1px, transparent 1px),
@@ -8211,9 +8231,10 @@ button {
 }
 
 .resolution-card-top {
-  position: relative;
-  min-height: 78px;
-  padding: 16px 20px 0;
+  display: grid;
+  gap: 6px;
+  min-height: 114px;
+  padding: 16px 20px 10px;
 }
 
 .resolution-card h3,
@@ -8222,11 +8243,11 @@ button {
 }
 
 .resolution-card h3 {
-  max-width: calc(100% - 190px);
   color: #27c7ff;
   font-size: 13px;
   font-weight: 900;
   line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .resolution-card h3 span,
@@ -8235,18 +8256,16 @@ button {
 }
 
 .resolution-card p {
-  max-width: calc(100% - 190px);
   margin-top: 4px;
   color: #27c7ff;
   font-size: 12px;
   font-weight: 800;
   line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .resolution-period-select {
-  position: absolute;
-  right: 16px;
-  bottom: 4px;
+  justify-self: end;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -8275,7 +8294,7 @@ button {
 .resolution-task-head,
 .resolution-task-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 70px 76px 66px;
+  grid-template-columns: minmax(0, 1fr) 76px 82px 78px;
   align-items: center;
   gap: 10px;
 }
@@ -8290,7 +8309,9 @@ button {
 }
 
 .resolution-task-row {
-  min-height: 51px;
+  align-items: start;
+  min-height: 56px;
+  padding-top: 8px;
 }
 
 .resolution-task-row div {
@@ -8305,29 +8326,39 @@ button {
   white-space: nowrap;
 }
 
+.resolution-task-row div small,
+.resolution-task-row div span {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
 .resolution-task-row small {
   margin-bottom: 6px;
   color: #f0a11b;
   font-size: 10px;
   font-weight: 900;
+  line-height: 1.22;
 }
 
 .resolution-task-row span {
   color: rgba(236, 243, 252, 0.82);
   font-size: 11px;
   font-weight: 700;
+  line-height: 1.25;
 }
 
 .resolution-status {
   justify-self: end;
-  min-width: 56px;
+  min-width: 66px;
   border-radius: 4px;
   color: #ffffff;
   font-size: 9px;
   font-weight: 900;
-  line-height: 1;
+  line-height: 1.12;
   text-align: center;
   padding: 6px 8px;
+  white-space: normal;
 }
 
 .resolution-status.green {

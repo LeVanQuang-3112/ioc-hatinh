@@ -7,7 +7,6 @@ function ChartWidget({ data }: { data: WidgetData }) {
     const labels = data.series.map((_, index) => `T${index + 1}`);
 
     return {
-      animationDuration: 700,
       color: ["#16d196"],
       grid: {
         left: 8,

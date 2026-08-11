@@ -883,7 +883,6 @@ function AgriculturePeriodSelect() {
 
 function AgricultureBarChart({ chart }: { chart: AgricultureChartConfig }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 850,
     color: chart.series.map((item) => item.color),
     grid: {
       left: 66,
@@ -942,7 +941,6 @@ function AgricultureBarChart({ chart }: { chart: AgricultureChartConfig }) {
 
 function ForestCoverageGauge() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     series: [
       {
         type: "gauge",
@@ -1028,7 +1026,6 @@ function AgricultureDashboard() {
 
 function MiniLineChart({ series = [42, 68, 55, 73, 82, 96] }: { series?: number[] }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#ffbd63", "#56d7ff"],
     grid: {
       left: 14,
@@ -1082,7 +1079,6 @@ function MiniLineChart({ series = [42, 68, 55, 73, 82, 96] }: { series?: number[
 
 function PieChartBlock({ items }: { items: DetailData["pie"] }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 800,
     color: items.map((item) => item.tone),
     legend: { show: false },
     tooltip: {
@@ -1154,7 +1150,6 @@ function PlanningGauge({
   value: number;
 }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 850,
     series: [
       {
         type: "gauge",
@@ -1206,7 +1201,6 @@ function PlanningGauge({
 
 function PlanningAssetLineChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 850,
     color: ["#4188ff", "#f9a037"],
     grid: { left: 52, right: 28, top: 72, bottom: 38 },
     legend: { show: false },
@@ -1257,7 +1251,6 @@ function PlanningAssetLineChart() {
 
 function PlanningBacklogChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 850,
     color: ["#ff4f55"],
     grid: { left: 54, right: 28, top: 76, bottom: 46 },
     tooltip: {
@@ -1443,7 +1436,6 @@ function ResolutionTasksDashboard() {
 
 function ExpenseMonthlyBarChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 800,
     color: ["#7767d6", "#d47a74"],
     grid: { left: 48, right: 24, top: 36, bottom: 58 },
     legend: {
@@ -2092,7 +2084,6 @@ const socioEconomic57MonthlyProgress = [58, 63, 67, 72, 78, 82.6];
 
 function SocioEconomic57BarChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#16d196", "#63c7ff", "#f4b45e"],
     grid: { left: 46, right: 20, top: 44, bottom: 34 },
     legend: {
@@ -2274,7 +2265,6 @@ function AdminPeriodSelect({
 
 function AdminStaffChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 800,
     color: ["#16b77d", "#4b8ee8", "#f4a53b", "#bfc8d5"],
     grid: { left: 48, right: 30, top: 24, bottom: 34 },
     tooltip: {
@@ -2339,7 +2329,6 @@ function AdminProgressRow({
 
 function AdminLaborDonutChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 800,
     color: ["#6ed698", "#ff817a"],
     tooltip: {
       trigger: "item",
@@ -2517,7 +2506,6 @@ function EducationPeriodSelect({
 
 function EducationEnrollmentChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#347df7", "#57d79d"],
     grid: { left: 46, right: 20, top: 40, bottom: 34 },
     tooltip: {
@@ -2576,7 +2564,6 @@ function EducationEnrollmentChart() {
 
 function EducationStandardChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#57d79d", "#ffc957"],
     grid: { left: 42, right: 18, top: 30, bottom: 30 },
     tooltip: {
@@ -2743,7 +2730,6 @@ function formatIndustrialAxis(value: number) {
 
 function IndustrialProductChart({ item }: { item: IndustrialChartConfig }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 800,
     color: item.series.map((serie) => serie.color),
     grid: {
       left: 64,
@@ -2845,9 +2831,8 @@ function KeyProjectsPeriodSelect() {
 
 function KeyProjectsProgressChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#2f7df6"],
-    grid: { left: 48, right: 22, top: 88, bottom: 42 },
+    grid: { left: 48, right: 22, top: 36, bottom: 38 },
     tooltip: {
       trigger: "axis",
       backgroundColor: "rgba(8, 13, 24, 0.96)",
@@ -2892,7 +2877,6 @@ function KeyProjectsProgressChart() {
 
 function KeyProjectsDelayedChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#ff6259"],
     grid: { left: 82, right: 42, top: 72, bottom: 64 },
     tooltip: {
@@ -3008,7 +2992,6 @@ function ReportPeriodSelect() {
 
 function GrdpTrendChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#eb747b", "#7659ff"],
     grid: { left: 42, right: 28, top: 22, bottom: 42 },
     legend: {
@@ -3068,7 +3051,6 @@ function GrdpTrendChart() {
 
 function GrdpInvestmentChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#d99844"],
     grid: { left: 38, right: 22, top: 18, bottom: 24 },
     tooltip: {
@@ -3110,7 +3092,6 @@ function GrdpInvestmentChart() {
 
 function GrdpPieChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 800,
     color: grdpDesignPieItems.map((item) => item.tone),
     tooltip: {
       trigger: "item",
@@ -3276,7 +3257,6 @@ function DesignReportPeriodSelect() {
 
 function GrdpDesignTrendChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#7659ff", "#eb747b"],
     grid: { left: 42, right: 28, top: 22, bottom: 42 },
     legend: {
@@ -3336,7 +3316,6 @@ function GrdpDesignTrendChart() {
 
 function GrdpDesignInvestmentChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#d99844"],
     grid: { left: 38, right: 22, top: 18, bottom: 24 },
     tooltip: {
@@ -3378,7 +3357,6 @@ function GrdpDesignInvestmentChart() {
 
 function GrdpDesignPieChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 800,
     color: grdpDesignPieItems.map((item) => item.tone),
     tooltip: {
       trigger: "item",
@@ -3643,7 +3621,6 @@ function GrdpDashboardV2() {
 
 function RevenueDonutChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 800,
     color: ["#7b61ff", "#ff817d", "#39c6de"],
     legend: { show: false },
     tooltip: {
@@ -3655,17 +3632,20 @@ function RevenueDonutChart() {
     series: [
       {
         type: "pie",
-        radius: ["56%", "78%"],
-        center: ["50%", "47%"],
+        radius: ["54%", "74%"],
+        center: ["54%", "47%"],
         avoidLabelOverlap: true,
         label: {
           color: "rgba(245, 248, 252, 0.86)",
-          formatter: "{b}\n{d}%",
+          formatter: ({ name, percent }: { name?: string; percent?: number }) => {
+            const label = name && name.length > 12 ? `${name.slice(0, 11)}...` : name;
+            return `${label ?? ""}\n${percent ?? 0}%`;
+          },
           fontSize: 11,
         },
         labelLine: {
-          length: 12,
-          length2: 8,
+          length: 10,
+          length2: 6,
           lineStyle: { color: "rgba(245, 248, 252, 0.42)" },
         },
         itemStyle: {
@@ -3699,7 +3679,6 @@ function RevenueDonutChart() {
 
 function RevenueColumnChart({ compact = false }: { compact?: boolean }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#7565d8"],
     grid: {
       left: 50,
@@ -3864,7 +3843,6 @@ function RevenueDashboard() {
 
 function PublicInvestmentMonthlyChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#d7b85f", "#15b77d"],
     grid: { left: 66, right: 32, top: 56, bottom: 58 },
     legend: {
@@ -3923,7 +3901,6 @@ function PublicInvestmentMonthlyChart() {
 
 function PublicInvestmentSourcesChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#806cff"],
     grid: { left: 300, right: 38, top: 54, bottom: 34 },
     tooltip: {
@@ -3975,7 +3952,6 @@ function PublicInvestmentSourcesChart() {
 
 function PublicInvestmentDonutChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 800,
     color: ["#67d893", "#ff7f7a"],
     legend: { show: false },
     series: [
@@ -4087,7 +4063,6 @@ function InvestmentAttractionPeriodSelect() {
 
 function InvestmentAttractionChart({ capitalUnit }: { capitalUnit: "Tỷ đồng" | "Triệu USD" }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#66c98d", "#d89232"],
     grid: { left: 62, right: 62, top: 100, bottom: 82 },
     legend: {
@@ -4211,7 +4186,6 @@ function TradeServicePeriodSelect({ value = "Quý II/2026" }: { value?: string }
 
 function TradeServiceExportChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#2e7cff", "#f5a623"],
     grid: { left: 92, right: 70, top: 82, bottom: 72 },
     legend: {
@@ -4289,7 +4263,6 @@ function TradeServiceExportChart() {
 
 function TradeServiceTourismChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#7463d4", "#d97973", "#38b5cc"],
     grid: { left: 80, right: 58, top: 92, bottom: 102 },
     legend: {
@@ -4405,11 +4378,10 @@ function EnterprisePeriodSelect({ value = "Quý I/2026" }: { value?: string }) {
 
 function EnterpriseActivityChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#7462d9", "#df7a78", "#37bdd2", "#f6aa45", "#416fd8"],
-    grid: { left: 78, right: 42, top: 78, bottom: 82 },
+    grid: { left: 78, right: 42, top: 72, bottom: 118 },
     legend: {
-      bottom: 22,
+      bottom: 14,
       icon: "rect",
       itemGap: 14,
       itemHeight: 10,
@@ -4459,7 +4431,6 @@ function EnterpriseActivityChart() {
 
 function EnterpriseCoopChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     color: ["#7462d9", "#df7a78", "#37bdd2"],
     grid: { left: 80, right: 34, top: 78, bottom: 74 },
     legend: {
@@ -4562,7 +4533,6 @@ function ExpenseDashboard() {
               ariaLabel="Cơ cấu tỷ trọng các khoản chi"
               className="expense-donut-chart"
               option={{
-                animationDuration: 800,
                 color: ["#67d893", "#ff7f7a"],
                 legend: { show: false },
                 series: [
@@ -4663,7 +4633,6 @@ function HealthPeriodSelect({ value = "Tháng 1/2026" }: { value?: string }) {
 
 function HealthMiniLineChart({ data, max = 10000 }: { data: HealthLineConfig; max?: number }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 800,
     color: ["#2f80ff"],
     grid: { left: 42, right: 16, top: 18, bottom: 28 },
     tooltip: {
@@ -4710,7 +4679,6 @@ function HealthMiniLineChart({ data, max = 10000 }: { data: HealthLineConfig; ma
 
 function HealthBarChart({ data, max = 2000, unit }: { data: number[]; max?: number; unit: string }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 800,
     color: ["#327bf6"],
     grid: { left: 60, right: 34, top: 40, bottom: 52 },
     tooltip: {
@@ -4763,7 +4731,6 @@ function HealthGauge({
   value?: number;
 }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     series: [
       {
         type: "gauge",
@@ -4997,7 +4964,6 @@ function LandPeriodSelect({ value = "Tháng 1/2026" }: { value?: string }) {
 
 function LandComboChart({ chart }: { chart: LandComboChartConfig }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 850,
     color: ["#2f6df6", "#f5a10a"],
     grid: { left: 42, right: 52, top: 70, bottom: 64 },
     legend: {
@@ -5069,7 +5035,6 @@ function LandComboChart({ chart }: { chart: LandComboChartConfig }) {
 
 function LandGauge({ color, label, value }: { color: "#16c993" | "#f5a10a"; label: string; value: number }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 900,
     series: [
       {
         type: "gauge",
@@ -5123,7 +5088,6 @@ function MineralTrendChart({
   label: string;
 }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    animationDuration: 850,
     color: [color],
     grid: { left: 44, right: 28, top: 28, bottom: 36 },
     tooltip: {
