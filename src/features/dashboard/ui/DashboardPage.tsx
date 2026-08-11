@@ -1,6 +1,25 @@
 import { type CSSProperties, type ReactNode, useMemo, useState } from "react";
+import * as echarts from "echarts/core";
 import type { EChartsCoreOption } from "echarts/core";
+import {
+  BadgeDollarSign,
+  BookOpen,
+  BriefcaseBusiness,
+  Building2,
+  ClipboardCheck,
+  Factory,
+  FileText,
+  HeartPulse,
+  Landmark,
+  ListChecks,
+  MapPinned,
+  Sprout,
+  Store,
+  TrendingUp,
+  type LucideIcon,
+} from "lucide-react";
 import EChart from "../../../shared/components/EChart";
+import haTinhGeoJson from "../model/geo/haTinh.json";
 import type { DashboardFilters } from "../model/types";
 import { DashboardHeader } from "./DashboardHeader";
 
@@ -23,204 +42,6 @@ type DetailData = {
   table: Array<{ name: string; date: string; status: string }>;
   pie: Array<{ label: string; value: number; tone: string }>;
 };
-
-type OverviewSignalPanel = {
-  title: string;
-  items: ReadonlyArray<{
-    label: string;
-    value: string;
-    unit: string;
-    tone: "green" | "amber" | "cyan" | "red" | "white";
-  }>;
-};
-
-const overviewKpis: KpiItem[] = [
-  {
-    label: "GRDP bình quân đầu người",
-    value: "8,67",
-    unit: "%",
-    trend: "12,6% so với cùng kỳ năm trước",
-  },
-  {
-    label: "Thu nhập bình quân đầu người",
-    value: "68,23",
-    unit: "Triệu đồng/người/năm",
-    trend: "12,6% so với cùng kỳ năm trước",
-  },
-  {
-    label: "Số người hưởng trợ cấp xã hội hằng tháng và trợ cấp hưu trí xã hội",
-    value: "3,231",
-    unit: "Người",
-    trend: "12,6% so với cùng kỳ năm trước",
-  },
-  {
-    label: "Tỷ lệ bao phủ bảo hiểm y tế",
-    value: "89,78",
-    unit: "%",
-    trend: "12,6% so với cùng kỳ năm trước",
-  },
-];
-
-type OverviewPanel = {
-  title: string;
-  icon: "coin" | "service" | "investment";
-  metrics: Array<{
-    label: string;
-    value: string;
-    unit: string;
-    note?: string;
-    tone?: "green" | "amber" | "white";
-  }>;
-};
-
-const overviewPanels: OverviewPanel[] = [
-  {
-    title: "Thu và chi ngân sách",
-    icon: "coin",
-    metrics: [
-      {
-        label: "Tổng các khoản thu NSNN",
-        value: "15,212",
-        unit: "Triệu đồng",
-        note: "89,6% so với dự toán",
-      },
-      {
-        label: "Tổng chi ngân sách địa phương",
-        value: "421",
-        unit: "Tỷ đồng",
-        note: "89,6% so với dự toán",
-      },
-    ],
-  },
-  {
-    title: "Cải cách hành chính",
-    icon: "service",
-    metrics: [
-      {
-        label: "Tỷ lệ người dân sử dụng dịch vụ công trực tuyến",
-        value: "98,21",
-        unit: "%",
-        tone: "green",
-      },
-      {
-        label: "Tỷ lệ hồ sơ giải quyết đúng hạn",
-        value: "78,22",
-        unit: "%",
-        tone: "amber",
-      },
-    ],
-  },
-  {
-    title: "Đầu tư công",
-    icon: "investment",
-    metrics: [
-      {
-        label: "Tổng số dự án đầu tư công",
-        value: "36",
-        unit: "Dự án",
-        tone: "green",
-      },
-      {
-        label: "Tổng vốn bố trí",
-        value: "1,985",
-        unit: "Tỷ đồng",
-        tone: "white",
-      },
-    ],
-  },
-];
-
-const overviewSignalPanels: OverviewSignalPanel[] = [
-  {
-    title: "Thương mại dịch vụ",
-    items: [
-      { label: "Tổng kim ngạch xuất nhập khẩu", value: "1.234", unit: "Lượt khách", tone: "green" },
-      { label: "Tổng mức bán lẻ hàng hóa", value: "42,8", unit: "Nghìn tỷ", tone: "amber" },
-      { label: "Doanh thu lưu trú, ăn uống", value: "688", unit: "Tỷ đồng", tone: "white" },
-    ],
-  },
-  {
-    title: "Công nghiệp",
-    items: [
-      { label: "Sản phẩm công nghiệp (Thép)", value: "84,2", unit: "%", tone: "green" },
-      { label: "Chỉ số sản xuất công nghiệp", value: "109,4", unit: "%", tone: "cyan" },
-      { label: "Sản lượng điện thương phẩm", value: "1.206", unit: "Triệu kWh", tone: "white" },
-    ],
-  },
-  {
-    title: "Doanh nghiệp và đầu tư",
-    items: [
-      { label: "Doanh nghiệp hoạt động trong nền kinh tế", value: "1233", unit: "DN", tone: "amber" },
-      { label: "Dự án đang triển khai", value: "25", unit: "Dự án", tone: "white" },
-      { label: "Doanh nghiệp thành lập mới", value: "345", unit: "DN", tone: "green" },
-    ],
-  },
-  {
-    title: "Nông nghiệp - môi trường",
-    items: [
-      { label: "Tỷ lệ che phủ rừng", value: "34,24", unit: "%", tone: "red" },
-      { label: "Sản lượng thủy sản", value: "31,7", unit: "Nghìn tấn", tone: "cyan" },
-      { label: "Xã đạt chuẩn nông thôn mới", value: "178", unit: "Xã", tone: "amber" },
-    ],
-  },
-  {
-    title: "Y tế, an sinh xã hội",
-    items: [
-      { label: "Tỷ lệ dân số tham gia BHYT", value: "99,43", unit: "%", tone: "green" },
-      { label: "Tỷ lệ hộ nghèo", value: "87,29", unit: "%", tone: "green" },
-      { label: "Tổng số lượt khám bệnh", value: "13.421", unit: "Lượt khám", tone: "white" },
-    ],
-  },
-  {
-    title: "Giáo dục",
-    items: [
-      { label: "Trường đạt chuẩn quốc gia", value: "214", unit: "Trường", tone: "white" },
-      { label: "Tỷ lệ huy động trẻ 3-5 tuổi đến lớp", value: "1,424", unit: "Tỷ đồng", tone: "amber" },
-      { label: "Cơ sở giáo dục số hóa", value: "156", unit: "Cơ sở", tone: "cyan" },
-    ],
-  },
-];
-
-const overviewExtraPanels: OverviewSignalPanel[] = [
-  {
-    title: "Văn bản chỉ đạo",
-    items: [
-      { label: "Tổng số văn bản chỉ đạo", value: "123", unit: "VB", tone: "green" },
-      { label: "Số văn bản chờ ký", value: "12", unit: "VB", tone: "red" },
-      { label: "Văn bản đã xử lý trong ngày", value: "345", unit: "VB", tone: "amber" },
-    ],
-  },
-  {
-    title: "Dự án trọng điểm",
-    items: [
-      { label: "Tổng số dự án", value: "25", unit: "Dự án", tone: "white" },
-      { label: "Dự án chậm tiến độ", value: "12", unit: "Dự án", tone: "red" },
-      { label: "Dự án đạt mốc tiến độ", value: "85,4", unit: "%", tone: "green" },
-    ],
-  },
-  {
-    title: "Đất đai, khoáng sản",
-    items: [
-      { label: "Số giấy CNQSDĐ cấp mới", value: "108", unit: "GCN", tone: "green" },
-      { label: "Hồ sơ đất đai đang xử lý", value: "688", unit: "Hồ sơ", tone: "amber" },
-      { label: "Mỏ khoáng sản đang quản lý", value: "87", unit: "Mỏ", tone: "cyan" },
-    ],
-  },
-  {
-    title: "Tài sản, nhà đất",
-    items: [
-      { label: "Tổng số cơ sở nhà đất", value: "126", unit: "Cơ sở", tone: "amber" },
-      { label: "Cơ sở đã cập nhật dữ liệu", value: "85,4", unit: "%", tone: "green" },
-    ],
-  },
-  {
-    title: "Nhiệm vụ quá hạn",
-    items: [
-      { label: "Số lượng VB quá hạn", value: "5", unit: "VB", tone: "red" },
-      { label: "Nhiệm vụ cần đôn đốc", value: "17", unit: "Nhiệm vụ", tone: "amber" },
-    ],
-  },
-];
 
 const overviewResolutionRows = [
   { name: "Nghị quyết số 57-NQ/TW", date: "22/12/2024", status: "Đang thực hiện" },
@@ -344,26 +165,22 @@ const resolutionFocusCards: ResolutionFocusCard[] = [
   },
 ];
 
-const overviewProgramRows = [
-  { name: "Tỷ trọng giá trị tăng thêm của kinh tế số trong GRDP", value: "8,78", unit: "%" },
-  { name: "Tỷ lệ ứng dụng AI trong hoạt động quản lý, điều hành", value: "74,32", unit: "%" },
-  { name: "Tỷ lệ doanh nghiệp công nghệ số trong tổng số doanh nghiệp", value: "12,23", unit: "%" },
-  { name: "Số lượng văn bản, nhiệm vụ quá hạn", value: "5", unit: "VB" },
-  { name: "Tỷ lệ hoàn thành chỉ tiêu kinh tế - xã hội", value: "85,4", unit: "%" },
-];
+const HA_TINH_MAP_NAME = "ha-tinh-province";
 
-const mapLabels = [
-  "Nghi Xuân",
-  "Hương Sơn",
-  "TX Hồng Lĩnh",
-  "Đức Thọ",
-  "Can Lộc",
-  "Lộc Hà",
-  "Vũ Quang",
-  "TP. Hà Tĩnh",
-  "Thạch Hà",
-  "Hương Khê",
-  "Cẩm Xuyên",
+echarts.registerMap(HA_TINH_MAP_NAME, haTinhGeoJson as Parameters<typeof echarts.registerMap>[1]);
+
+const haTinhMapPoints = [
+  { name: "Nghi Xuân", value: [105.78, 18.66, 2850] },
+  { name: "Hương Sơn", value: [105.43, 18.38, 2350] },
+  { name: "TX Hồng Lĩnh", value: [105.72, 18.54, 2650] },
+  { name: "Đức Thọ", value: [105.62, 18.48, 2100] },
+  { name: "Can Lộc", value: [105.77, 18.43, 1950] },
+  { name: "Lộc Hà", value: [105.9, 18.45, 1720] },
+  { name: "Vũ Quang", value: [105.36, 18.32, 1240] },
+  { name: "TP. Hà Tĩnh", value: [105.9, 18.34, 3300] },
+  { name: "Thạch Hà", value: [105.86, 18.35, 1880] },
+  { name: "Hương Khê", value: [105.69, 18.18, 1450] },
+  { name: "Cẩm Xuyên", value: [106.0, 18.25, 2180] },
 ];
 
 const detailSeeds = [
@@ -1728,113 +1545,83 @@ function ExpenseBudgetCard({
   );
 }
 
-function OverviewMiniPanel({
-  className = "",
-  panel,
-}: {
-  className?: string;
-  panel: OverviewSignalPanel;
-}) {
-  return (
-    <article className={`overview-mini-panel ${className}`}>
-      <div className="panel-title amber">
-        <span className="service-icon" aria-hidden="true" />
-        {panel.title}
-      </div>
-      {panel.items.slice(0, 2).map((item) => (
-        <div className={`overview-mini-metric ${item.tone}`} key={item.label}>
-          <h3>{item.label}</h3>
-          <div>
-            <strong>{item.value}</strong>
-            <span>{item.unit}</span>
-          </div>
-          <p>12,6% so với cùng kỳ năm trước</p>
-        </div>
-      ))}
-    </article>
-  );
-}
-
-function OverviewMetricTile({
-  className = "",
-  item,
-  title,
-}: {
-  className?: string;
-  item: {
-    label: string;
-    value: string;
-    unit: string;
-    note?: string;
-    tone?: "green" | "amber" | "white";
-  };
-  title: string;
-}) {
-  return (
-    <article className={`overview-metric-tile ${className}`}>
-      <div className="panel-title amber">
-        <span className="service-icon" aria-hidden="true" />
-        {title}
-      </div>
-      <div className={`panel-metric compact ${item.tone ?? ""}`}>
-        <h2>{item.label}</h2>
-        <div>
-          <strong>{item.value}</strong>
-          <span>{item.unit}</span>
-        </div>
-        <p>12,6% so với cùng kỳ năm trước</p>
-      </div>
-    </article>
-  );
-}
-
-function ResolutionTable({ className = "" }: { className?: string }) {
-  return (
-    <article className={`overview-resolution-panel ${className}`}>
-      <div className="panel-title cyan">
-        <span className="investment-icon" aria-hidden="true" />
-        Kết quả thực hiện nghị quyết trọng tâm
-      </div>
-      <div className="overview-resolution-table">
-        <div className="overview-resolution-head">
-          <span>Tên nghị quyết</span>
-          <span>Ngày ban hành</span>
-          <span>Trạng thái</span>
-        </div>
-        {overviewResolutionRows.map((row) => (
-          <div className="overview-resolution-row" key={row.name}>
-            <span>{row.name}</span>
-            <span>{row.date}</span>
-            <strong>{row.status}</strong>
-          </div>
-        ))}
-      </div>
-    </article>
-  );
-}
-
-function ProgramPanel({ className = "" }: { className?: string }) {
-  return (
-    <article className={`overview-program-panel ${className}`}>
-      <div className="panel-title cyan">
-        <span className="metric-icon" aria-hidden="true" />
-        Chỉ tiêu theo nghị quyết đại hội Đảng bộ lần thứ XX
-      </div>
-      {overviewProgramRows.slice(0, 3).map((row) => (
-        <div className="overview-program-metric" key={row.name}>
-          <h3>{row.name}</h3>
-          <div>
-            <strong>{row.value}</strong>
-            <span>{row.unit}</span>
-          </div>
-          <p>12,6% so với cùng kỳ năm trước</p>
-        </div>
-      ))}
-    </article>
-  );
-}
-
 function MapCanvas({ className = "", title }: { className?: string; title: string }) {
+  const option = useMemo<EChartsCoreOption>(() => ({
+    backgroundColor: "transparent",
+    tooltip: {
+      trigger: "item",
+      borderWidth: 0,
+      backgroundColor: "rgba(5, 16, 32, 0.92)",
+      textStyle: { color: "#f8fbff", fontSize: 12 },
+      formatter: (params: { name?: string; value?: unknown }) => {
+        const value = Array.isArray(params.value) ? params.value[2] : undefined;
+        return value ? `${params.name}<br/>Giá trị: ${Number(value).toLocaleString("vi-VN")}` : params.name;
+      },
+    },
+    visualMap: {
+      show: false,
+      min: 0,
+      max: 3600,
+      dimension: 2,
+      inRange: {
+        color: ["#5ba9ff", "#51e572", "#f1ec72", "#ffbc4e"],
+      },
+    },
+    geo: {
+      map: HA_TINH_MAP_NAME,
+      roam: false,
+      left: "7%",
+      right: "7%",
+      top: "4%",
+      bottom: "4%",
+      silent: true,
+      itemStyle: {
+        areaColor: "rgba(26, 99, 83, 0.82)",
+        borderColor: "rgba(255, 218, 80, 0.95)",
+        borderWidth: 2,
+        shadowBlur: 18,
+        shadowColor: "rgba(0, 0, 0, 0.3)",
+      },
+      emphasis: {
+        disabled: true,
+      },
+    },
+    series: [
+      {
+        name: "Chỉ số theo địa bàn",
+        type: "scatter",
+        coordinateSystem: "geo",
+        data: haTinhMapPoints,
+        symbolSize: (value: unknown) => {
+          const metric = Array.isArray(value) ? Number(value[2]) : 0;
+          return Math.max(8, Math.min(18, metric / 210));
+        },
+        label: {
+          show: true,
+          formatter: "{b}",
+          position: "top",
+          color: "#f1f6f7",
+          fontSize: 11,
+          fontWeight: 700,
+          textShadowColor: "#000000",
+          textShadowBlur: 5,
+        },
+        itemStyle: {
+          borderColor: "rgba(255, 255, 255, 0.9)",
+          borderWidth: 1,
+          shadowBlur: 10,
+          shadowColor: "rgba(0, 0, 0, 0.35)",
+        },
+        emphasis: {
+          scale: 1.25,
+          label: {
+            color: "#ffd453",
+          },
+        },
+      },
+    ],
+  }), []);
+
   return (
     <article className={`map-panel ${className}`}>
       <div className="panel-title green">
@@ -1842,7 +1629,7 @@ function MapCanvas({ className = "", title }: { className?: string; title: strin
         {title}
       </div>
       <div className="map-canvas" role="img" aria-label="Bản đồ tỉnh Hà Tĩnh">
-        <div className="province-outline" />
+        <EChart className="ha-tinh-map-chart" option={option} ariaLabel="Bản đồ ECharts tỉnh Hà Tĩnh" />
         <div className="map-legend">
           <span className="legend high">Trên 3.000</span>
           <span className="legend mid">2.000 - 3.000</span>
@@ -1853,99 +1640,307 @@ function MapCanvas({ className = "", title }: { className?: string; title: strin
           <span>+</span>
           <span>-</span>
         </div>
-        {mapLabels.map((label, index) => (
-          <span className={`map-label label-${index + 1}`} key={label}>
-            {label}
-          </span>
-        ))}
       </div>
     </article>
   );
 }
 
+const overviewIndustryRows = [
+  { label: "Chế biến chế tạo", value: 68.2 },
+  { label: "Sản xuất điện", value: 18.6 },
+  { label: "Cung cấp nước", value: 8.7 },
+  { label: "Khai khoáng", value: 4.1 },
+  { label: "Khác", value: 0.8 },
+];
+
+const overviewEnterpriseRows = [
+  { label: "Doanh nghiệp thành lập mới", value: "722 / 1.000", percent: 72 },
+  { label: "Doanh nghiệp quay trở lại HĐ", value: "456 / 800", percent: 57 },
+  { label: "Hợp tác xã thành lập mới", value: "122 / 200", percent: 61 },
+];
+
+const overviewProgramTargets = [
+  "Tốc độ tăng trưởng GRDP",
+  "GRDP bình quân đầu người",
+  "Tổng vốn đầu tư toàn xã hội",
+  "Tỷ lệ đô thị hóa",
+  "Tỷ lệ hộ nghèo đa chiều",
+  "Tỷ lệ lao động qua đào tạo",
+  "Tỷ lệ trường đạt chuẩn quốc gia",
+  "Giường bệnh/1 vạn dân",
+];
+
+type OverviewIcon = "admin" | "agriculture" | "budget" | "education" | "enterprise" | "grdp" | "health" | "industry" | "investment" | "land" | "planning" | "resolution" | "service" | "target";
+
+const overviewIcons: Record<OverviewIcon, LucideIcon> = {
+  admin: ClipboardCheck,
+  agriculture: Sprout,
+  budget: BadgeDollarSign,
+  education: BookOpen,
+  enterprise: Building2,
+  grdp: TrendingUp,
+  health: HeartPulse,
+  industry: Factory,
+  investment: Landmark,
+  land: MapPinned,
+  planning: BriefcaseBusiness,
+  resolution: FileText,
+  service: Store,
+  target: ListChecks,
+};
+
+function OverviewCard({
+  children,
+  className = "",
+  icon = "service",
+  title,
+}: {
+  children: ReactNode;
+  className?: string;
+  icon?: OverviewIcon;
+  title: string;
+}) {
+  const Icon = overviewIcons[icon];
+
+  return (
+    <article className={`overview-ioc-card ${className}`}>
+      <div className="overview-ioc-title">
+        <span className="overview-card-icon" aria-hidden="true">
+          <Icon size={16} strokeWidth={2.4} />
+        </span>
+        {title}
+      </div>
+      {children}
+    </article>
+  );
+}
+
+function OverviewValue({
+  className = "",
+  label,
+  note = "12,6% so với cùng kỳ",
+  unit,
+  value,
+}: {
+  className?: string;
+  label: string;
+  note?: string;
+  unit: string;
+  value: string;
+}) {
+  return (
+    <div className={`overview-value ${className}`}>
+      <span>{label}</span>
+      <div>
+        <strong>{value}</strong>
+        <small>{unit}</small>
+      </div>
+      <p>{note}</p>
+    </div>
+  );
+}
+
+function OverviewProgressList({
+  rows,
+}: {
+  rows: ReadonlyArray<{ label: string; percent: number; value: string }>;
+}) {
+  return (
+    <div className="overview-progress-list">
+      {rows.map((row) => (
+        <div className="overview-progress-row" key={row.label}>
+          <div>
+            <span>{row.label}</span>
+            <strong>{row.value}</strong>
+          </div>
+          <i>
+            <b style={{ width: `${row.percent}%` }} />
+          </i>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function OverviewSimpleTable({
+  rows,
+  type = "resolution",
+}: {
+  rows: ReadonlyArray<{ name: string; date?: string; status: string }>;
+  type?: "resolution" | "target";
+}) {
+  return (
+    <div className={`overview-simple-table ${type}`}>
+      <div className="overview-simple-head">
+        <span>{type === "target" ? "Chỉ tiêu" : "Tên nghị quyết"}</span>
+        <span>{type === "target" ? "Hạn hoàn thành" : "Ngày ban hành"}</span>
+        <span>{type === "target" ? "Kết quả" : "Trạng thái"}</span>
+      </div>
+      {rows.map((row, index) => (
+        <div className="overview-simple-row" key={`${row.name}-${row.date ?? row.status}-${index}`}>
+          <span>{row.name}</span>
+          <span>{row.date ?? "2030"}</span>
+          <strong>{row.status}</strong>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function OverviewDashboard() {
   return (
-    <>
-      <section className="ioc-band" aria-label="Chỉ tiêu kinh tế xã hội">
-        <div className="band-title">
-          <span className="metric-icon" aria-hidden="true" />
-          Chỉ tiêu kinh tế xã hội
-        </div>
-        <div className="ioc-kpi-grid">
-          {overviewKpis.map((item) => (
-            <article className="ioc-kpi" key={item.label}>
-              <h2>{item.label}</h2>
-              <div className="ioc-kpi-value">
-                <strong>{item.value}</strong>
-                <span>{item.unit}</span>
-              </div>
-              <p>{item.trend}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+    <section className="overview-ioc" aria-label="Tab tổng hợp">
+      <div className="overview-ioc-grid">
+        <OverviewCard className="overview-ioc-grdp" icon="grdp" title="Tình hình kinh tế - GRDP">
+          <div className="overview-kpi-strip">
+            <OverviewValue label="GRDP 6 tháng 2026" value="8,67" unit="%" />
+            <OverviewValue label="GRDP bình quân đầu người" value="68,23" unit="Triệu đồng/người" />
+            <OverviewValue label="Tốc độ tăng trưởng" value="7,24" unit="%" note="0,8% so với quý trước" />
+          </div>
+        </OverviewCard>
 
-      <section className="overview-dashboard-grid" aria-label="Tổng quan điều hành">
-        <MapCanvas className="overview-area-map" title="Bản đồ GIS tổng hợp Hà Tĩnh" />
-        <OverviewMetricTile className="overview-area-revenue" item={overviewPanels[0].metrics[0]} title="Thu ngân sách" />
-        <OverviewMetricTile className="overview-area-expense" item={overviewPanels[0].metrics[1]} title="Chi ngân sách" />
-        <OverviewMetricTile className="overview-area-admin-online" item={overviewPanels[1].metrics[0]} title="Cải cách hành chính" />
-        <OverviewMetricTile className="overview-area-admin-deadline" item={overviewPanels[1].metrics[1]} title="Cải cách hành chính" />
-        <OverviewMetricTile className="overview-area-invest-projects" item={overviewPanels[2].metrics[0]} title="Đầu tư công" />
-        <OverviewMetricTile className="overview-area-invest-capital" item={overviewPanels[2].metrics[1]} title="Đầu tư công" />
-        <ResolutionTable className="overview-area-resolution" />
-        <ProgramPanel className="overview-area-program" />
-        <OverviewMiniPanel className="overview-area-trade" panel={overviewSignalPanels[0]} />
-        <OverviewMiniPanel className="overview-area-industry" panel={overviewSignalPanels[1]} />
-        <OverviewMiniPanel className="overview-area-enterprise" panel={overviewSignalPanels[2]} />
-        <article className="overview-chart-panel overview-area-pie">
-          <div className="panel-title amber">
-            <span className="coin-icon" aria-hidden="true" />
-            Cơ cấu chi tiết doanh nghiệp
-          </div>
-          <PieChartBlock
-            items={[
-              { label: "Doanh nghiệp hoạt động trở lại", value: 41, tone: "#16d196" },
-              { label: "Doanh nghiệp đăng ký tạm ngừng", value: 18, tone: "#f4b45e" },
-              { label: "Doanh nghiệp mới báo cáo thuế", value: 15, tone: "#63c7ff" },
-              { label: "Thành lập mới", value: 26, tone: "#ff8a65" },
-            ]}
-          />
-        </article>
-        <OverviewMiniPanel className="overview-area-agriculture" panel={overviewSignalPanels[3]} />
-        <OverviewMiniPanel className="overview-area-health" panel={overviewSignalPanels[4]} />
-        <OverviewMiniPanel className="overview-area-education" panel={overviewSignalPanels[5]} />
-        <article className="overview-chart-panel wide overview-area-trend">
-          <div className="panel-title amber">
-            <span className="metric-icon" aria-hidden="true" />
-            Xu hướng dữ liệu 6 tháng gần nhất
-          </div>
-          <MiniLineChart />
-        </article>
-        <article className="overview-gauge-panel overview-area-gauge">
-          <div className="panel-title amber">
-            <span className="investment-icon" aria-hidden="true" />
-            Quy hoạch, xây dựng, tài sản công
-          </div>
-          <div className="overview-gauge">
-            <strong>85,4%</strong>
-            <span>Mức tiêu thực hiện</span>
-          </div>
-          <div className="overview-mini-metric white">
-            <h3>Tổng số cơ sở nhà đất</h3>
-            <div>
-              <strong>126</strong>
-              <span>Cơ sở</span>
+        <MapCanvas className="overview-ioc-map" title="Bản đồ tổng quan Hà Tĩnh" />
+
+        <OverviewCard className="overview-ioc-industry" icon="industry" title="Công nghiệp">
+          <div className="overview-split">
+            <OverviewValue label="Chỉ số sản xuất công nghiệp (IIP)" value="112,4" unit="" />
+            <div className="overview-small-bars">
+              {overviewIndustryRows.map((row) => (
+                <div key={row.label}>
+                  <span>{row.label}</span>
+                  <i><b style={{ width: `${row.value}%` }} /></i>
+                  <strong>{row.value}</strong>
+                </div>
+              ))}
             </div>
           </div>
-        </article>
-        <OverviewMiniPanel className="overview-area-documents" panel={overviewExtraPanels[0]} />
-        <OverviewMiniPanel className="overview-area-projects" panel={overviewExtraPanels[1]} />
-        <OverviewMiniPanel className="overview-area-land" panel={overviewExtraPanels[2]} />
-        <OverviewMiniPanel className="overview-area-assets" panel={overviewExtraPanels[3]} />
-        <OverviewMiniPanel className="overview-area-overdue" panel={overviewExtraPanels[4]} />
-      </section>
-    </>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-agriculture" icon="agriculture" title="Nông nghiệp">
+          <div className="overview-split">
+            <OverviewValue label="Tốc độ tăng trưởng 6 tháng" value="3,56" unit="%" note="0,6% so với cùng kỳ" />
+            <PieChartBlock
+              items={[
+                { label: "Trồng trọt", value: 55, tone: "#8d72ff" },
+                { label: "Chăn nuôi", value: 28, tone: "#55c8ff" },
+                { label: "Thủy sản", value: 12, tone: "#d56fff" },
+                { label: "Lâm nghiệp", value: 5, tone: "#34d399" },
+              ]}
+            />
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-projects" icon="investment" title="Dự án trọng điểm">
+          <div className="overview-two-kpis">
+            <OverviewValue className="white" label="Tổng số dự án" value="25" unit="Dự án" note="" />
+            <OverviewValue className="red" label="Dự án chậm tiến độ" value="12" unit="Dự án" note="" />
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-land" icon="land" title="Tài nguyên đất đai & khoáng sản">
+          <OverviewValue label="Giấy chứng nhận QSDĐ cấp mới" value="108" unit="GCN" note="" />
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-budget" icon="budget" title="Thu ngân sách">
+          <div className="overview-two-kpis">
+            <OverviewValue label="Tổng thu NSNN" value="15.212" unit="Tỷ đồng" note="89,6% dự toán" />
+            <OverviewValue label="Tổng chi ngân sách địa phương" value="13.421" unit="Tỷ đồng" note="89,6% dự toán" />
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-trade" icon="service" title="Thương mại dịch vụ">
+          <div className="overview-trade-layout">
+            <div className="overview-donut">
+              <strong>1.985</strong>
+              <span>Tỷ USD</span>
+            </div>
+            <div className="overview-legend-list">
+              <span><i className="green" />Xuất khẩu <strong>65%</strong></span>
+              <span><i className="blue" />Nhập khẩu <strong>35%</strong></span>
+            </div>
+            <OverviewValue label="Khách du lịch" value="1.234.567" unit="Lượt khách" note="16,2% so với cùng kỳ" />
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-enterprise" icon="enterprise" title="Doanh nghiệp và hợp tác xã">
+          <div className="overview-split">
+            <OverviewValue label="Tổng số doanh nghiệp & HTX" value="1.233" unit="DN/HTX" note="9,8% so với cùng kỳ" />
+            <OverviewProgressList rows={overviewEnterpriseRows} />
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-admin" icon="admin" title="Nội vụ - cải cách hành chính - lao động">
+          <div className="overview-admin-grid">
+            <OverviewValue label="Tỷ lệ hồ sơ giải quyết đúng hạn" value="98,21" unit="%" note="1,2% so với cùng kỳ" />
+            <OverviewValue label="Tỷ lệ số hóa hồ sơ" value="78,22" unit="%" note="2,1% so với cùng kỳ" />
+            <OverviewValue label="Chỉ số CCHC (PAR INDEX)" value="85,4" unit="/100" note="3,4 điểm" />
+            <div className="overview-donut small"><strong>722</strong><span>Nghìn người</span></div>
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-education" icon="education" title="Giáo dục">
+          <div className="overview-trade-layout">
+            <PieChartBlock
+              items={[
+                { label: "Mầm non", value: 28, tone: "#5dd6d6" },
+                { label: "Tiểu học", value: 32, tone: "#d955b7" },
+                { label: "THCS", value: 24, tone: "#64d2ff" },
+                { label: "THPT", value: 16, tone: "#f8c35a" },
+              ]}
+            />
+            <div className="overview-gauge large"><strong>95,2%</strong><span>0% - 100%</span></div>
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-public" icon="investment" title="Đầu tư công">
+          <OverviewValue className="hero" label="Tổng số dự án" value="36" unit="Dự án" note="" />
+          <div className="overview-two-kpis lined">
+            <OverviewValue label="Tổng vốn đầu tư" value="9.842" unit="Tỷ đồng" note="" />
+            <OverviewValue label="Giải ngân 6T/2026" value="5.124" unit="Tỷ đồng" note="52,1% kế hoạch" />
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-attract" icon="investment" title="Thu hút đầu tư">
+          <div className="overview-two-kpis">
+            <OverviewValue label="Dự án trong nước" value="178" unit="Dự án" note="" />
+            <OverviewValue label="Tổng vốn đăng ký" value="17.856" unit="Tỷ đồng" note="" />
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-assets" icon="planning" title="Quy hoạch - xây dựng - tài sản công">
+          <div className="overview-trade-layout">
+            <div className="overview-gauge"><strong>68,3%</strong><span>Kế hoạch 2026</span></div>
+            <OverviewValue label="Nhà ở xã hội hoàn thành" value="1.892" unit="Căn" note="" />
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-health" icon="health" title="Y tế - an sinh xã hội">
+          <div className="overview-health-grid">
+            <OverviewValue label="Tỷ lệ bao phủ BHYT" value="99,43" unit="%" note="" />
+            <OverviewValue label="Tỷ lệ hộ nghèo" value="2,71" unit="%" note="" />
+            <OverviewValue label="Số giường bệnh/1 vạn dân" value="32,4" unit="Giường" note="" />
+            <OverviewValue label="Người có công được hỗ trợ" value="98,7" unit="%" note="" />
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-resolution" icon="resolution" title="Nhiệm vụ thực hiện các nghị quyết trọng tâm">
+          <OverviewSimpleTable rows={[...overviewResolutionRows, ...overviewResolutionRows.slice(4)]} />
+          <button className="overview-link" type="button">Xem thêm nhiệm vụ &rarr;</button>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-targets" icon="target" title="Chỉ tiêu phát triển KT-XH giai đoạn 2025-2030">
+          <OverviewSimpleTable
+            type="target"
+            rows={overviewProgramTargets.map((name) => ({
+              name,
+              date: "2030",
+              status: "Đang thực hiện",
+            }))}
+          />
+          <button className="overview-link" type="button">Xem thêm chỉ tiêu &rarr;</button>
+        </OverviewCard>
+      </div>
+    </section>
   );
 }
 
@@ -5240,7 +5235,7 @@ void investmentPieItems;
 void investmentTaskRows;
 
 export function DashboardPage() {
-  const [activeCategory, setActiveCategory] = useState("resolution-tasks");
+  const [activeCategory, setActiveCategory] = useState("overview");
   const [filters, setFilters] = useState<DashboardFilters>({
     period: "today",
     unit: "all",
