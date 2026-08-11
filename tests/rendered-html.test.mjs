@@ -5,7 +5,7 @@ import test from "node:test";
 test("builds a React/Vite dashboard shell", async () => {
   const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
 
-  assert.match(html, /<title>Ha Tinh Operations Dashboard<\/title>/i);
+  assert.match(html, /<title>Dashboard Điều hành Hà Tĩnh<\/title>/i);
   assert.match(html, /<div id="root"><\/div>/i);
   assert.match(html, /type="module"/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/);
