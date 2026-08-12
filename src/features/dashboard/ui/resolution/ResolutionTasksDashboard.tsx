@@ -39,7 +39,6 @@ function ResolutionFocusCard({ card }: { card: ResolutionFocusCard }) {
       <div className="resolution-task-table">
         <div className="resolution-task-head">
           <span>Mã - tên nhiệm vụ</span>
-          <span>Cơ quan</span>
           <span>Thời hạn</span>
           <span>Trạng thái</span>
         </div>
@@ -49,7 +48,6 @@ function ResolutionFocusCard({ card }: { card: ResolutionFocusCard }) {
               <small>{task.group}</small>
               <span><b>{task.code}:</b> {task.name}</span>
             </div>
-            <span>{task.agency}</span>
             <span>{task.deadline}</span>
             <ResolutionStatusBadge status={task.status} />
           </div>

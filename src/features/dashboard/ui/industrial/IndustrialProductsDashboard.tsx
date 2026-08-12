@@ -27,7 +27,7 @@ function IndustrialProductChart({ item }: { item: IndustrialChartConfig }) {
     grid: {
       left: 64,
       right: 28,
-      top: 56,
+      top: 80,
       bottom: item.series.length > 1 ? 58 : 34,
     },
     legend: {
