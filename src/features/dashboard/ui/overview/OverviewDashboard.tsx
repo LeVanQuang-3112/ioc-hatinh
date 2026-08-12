@@ -49,14 +49,6 @@ const enterpriseRows = [
   { label: "Số tổ hợp tác xã ngừng hoạt động: 456", percent: 60, tone: "#a889ff" },
 ];
 
-const adminRows = [
-  { label: "Kiến nghị đang xử lý", value: "38", unit: "Kiến nghị", percent: 62, tone: "#55a7e8" },
-  { label: "Lao động qua đào tạo", value: "78,5", unit: "%", percent: 78.5, tone: "#1bd088" },
-  { label: "Giới thiệu việc làm", value: "522", unit: "Người", percent: 66, tone: "#69d28a" },
-  { label: "LĐ về quê làm việc", value: "200", unit: "Người", percent: 34, tone: "#ff8b86" },
-  { label: "VB quá hạn", value: "5", unit: "VB", percent: 18, tone: "#ff5d83" },
-];
-
 type OverviewIcon = "admin" | "agriculture" | "budget" | "education" | "enterprise" | "grdp" | "health" | "industry" | "investment" | "land" | "planning" | "resolution" | "service" | "target";
 
 const overviewIcons: Record<OverviewIcon, LucideIcon> = {
@@ -85,7 +77,7 @@ function OverviewCard({ children, className = "", icon = "service", title }: { c
         <span className="overview-card-icon" aria-hidden="true">
           <Icon size={16} strokeWidth={2.4} />
         </span>
-        {title}
+        <span className="overview-ioc-title-text">{title}</span>
       </div>
       {children}
     </article>
@@ -113,27 +105,6 @@ function OverviewValue({
         <small>{unit}</small>
       </div>
       {note ? <p>{note}</p> : null}
-    </div>
-  );
-}
-
-function OverviewMiniMetrics({
-  rows,
-}: {
-  rows: ReadonlyArray<{ label: string; percent: number; tone: string; unit: string; value: string }>;
-}) {
-  return (
-    <div className="overview-mini-metrics">
-      {rows.map((row) => (
-        <div className="overview-mini-metric" key={row.label}>
-          <span>{row.label}</span>
-          <strong>
-            {row.value}
-            <small>{row.unit}</small>
-          </strong>
-          <i><b style={{ width: `${row.percent}%`, background: row.tone }} /></i>
-        </div>
-      ))}
     </div>
   );
 }
@@ -184,12 +155,12 @@ function OverviewPieChart({
     series: [
       {
         type: "pie",
-        radius: type === "donut" ? ["52%", "74%"] : ["0%", "72%"],
-        center: ["50%", "48%"],
+        radius: className.includes("trade") ? ["0%", "76%"] : type === "donut" ? ["52%", "74%"] : ["0%", "72%"],
+        center: className.includes("trade") ? ["50%", "45%"] : ["50%", "48%"],
         avoidLabelOverlap: true,
         label: {
           color: "rgba(255, 255, 255, 0.82)",
-          fontSize: 10,
+          fontSize: className.includes("trade") ? 11 : 10,
           formatter: "{d}%",
         },
         labelLine: { show: false },
@@ -200,7 +171,7 @@ function OverviewPieChart({
         data: items.map((item) => ({ name: item.label, value: item.value })),
       },
     ],
-  }), [items, type]);
+  }), [className, items, type]);
 
   return (
     <div className={`overview-real-pie ${className}`}>
@@ -218,53 +189,12 @@ function OverviewPieChart({
 }
 
 function OverviewGaugeChart({ label = "MỤC TIÊU: 100%", value }: { label?: string; value: number }) {
-  const option = useMemo<EChartsCoreOption>(() => ({
-    series: [
-      {
-        type: "gauge",
-        startAngle: 205,
-        endAngle: -25,
-        min: 0,
-        max: 100,
-        radius: "96%",
-        center: ["50%", "64%"],
-        axisLine: {
-          lineStyle: {
-            width: 18,
-            color: [
-              [value / 100, "#18c68b"],
-              [1, "rgba(104, 126, 160, 0.28)"],
-            ],
-          },
-        },
-        pointer: { show: false },
-        progress: { show: false },
-        axisTick: { show: false },
-        splitLine: { show: false },
-        axisLabel: { show: false },
-        detail: {
-          color: "#16d392",
-          fontSize: 31,
-          fontWeight: 900,
-          offsetCenter: [0, "18%"],
-          formatter: `${value}%`,
-        },
-        title: {
-          color: "rgba(237, 246, 255, 0.92)",
-          fontSize: 10,
-          fontWeight: 900,
-          offsetCenter: [0, "52%"],
-        },
-        data: [{ value, name: label }],
-      },
-    ],
-  }), [label, value]);
-
-  return <EChart className="overview-gauge-chart" option={option} ariaLabel={label} />;
+  return <OverviewPlanningCoverageChart value={value} ariaLabel={label} />;
 }
 
-function OverviewPlanningCoverageChart({ value }: { value: number }) {
+function OverviewPlanningCoverageChart({ ariaLabel = "Tỷ lệ phủ kín quy hoạch chung", value }: { ariaLabel?: string; value: number }) {
   const option = useMemo<EChartsCoreOption>(() => ({
+    animation: false,
     series: [
       {
         type: "gauge",
@@ -273,7 +203,7 @@ function OverviewPlanningCoverageChart({ value }: { value: number }) {
         min: 0,
         max: 100,
         radius: "92%",
-        center: ["50%", "62%"],
+        center: ["50%", "54%"],
         progress: {
           show: true,
           roundCap: true,
@@ -319,23 +249,42 @@ function OverviewPlanningCoverageChart({ value }: { value: number }) {
         },
         detail: {
           color: "#16d392",
-          fontSize: 26,
+          fontSize: 24,
           fontWeight: 900,
-          offsetCenter: [0, "26%"],
-          formatter: "{value}%",
+          lineHeight: 24,
+          offsetCenter: [0, "42%"],
+          formatter: (chartValue: number) => `{value|${chartValue}}\n{spacer|}\n{unit|%}`,
+          rich: {
+            value: {
+              color: "#16d392",
+              fontSize: 25,
+              fontWeight: 900,
+              lineHeight: 22,
+            },
+            spacer: {
+              height: 8,
+              lineHeight: 8,
+            },
+            unit: {
+              color: "#16d392",
+              fontSize: 16,
+              fontWeight: 900,
+              lineHeight: 18,
+            },
+          },
         },
         title: {
           color: "rgba(237, 246, 255, 0.78)",
           fontSize: 9,
           fontWeight: 800,
-          offsetCenter: [0, "52%"],
+          offsetCenter: [0, "82%"],
         },
         data: [{ value, name: "Mục tiêu: 100%" }],
       },
     ],
   }), [value]);
 
-  return <EChart className="overview-planning-coverage-chart" option={option} ariaLabel="Tỷ lệ phủ kín quy hoạch chung" />;
+  return <EChart className="overview-planning-coverage-chart" option={option} ariaLabel={ariaLabel} />;
 }
 
 function OverviewBarChart() {
@@ -420,6 +369,10 @@ function OverviewLaborDonut() {
     <div className="overview-labor-chart-wrap">
       <h3>Số Lao Động Được Giải Quyết Việc Làm</h3>
       <EChart className="overview-labor-donut-chart" option={option} ariaLabel="Số lao động được giải quyết việc làm" />
+      <div className="overview-labor-legend">
+        <span><i className="green" />Số LĐ được giới thiệu việc làm cho các dự án, doanh nghiệp: 522 người (66%)</span>
+        <span><i className="salmon" />Lao động về quê làm việc: 200 người (34%)</span>
+      </div>
     </div>
   );
 }
@@ -483,19 +436,21 @@ export function OverviewDashboard() {
           <OverviewValue label="Số Giấy CNQSDĐ Cấp Mới" value="108" unit="GCN" />
         </OverviewCard>
 
-        <OverviewCard className="overview-ioc-budget" icon="budget" title="Thu ngân sách">
-          <OverviewValue label="Tổng Các Khoản Thu NSNN" value="15.212" unit="Tỷ đồng" note="Lũy kế đến 08/2026 · 89,6% so với dự toán" />
-        </OverviewCard>
+        <div className="overview-ioc-budget-strip">
+          <OverviewCard className="overview-ioc-budget" icon="budget" title="Thu ngân sách">
+            <OverviewValue label="Tổng Các Khoản Thu NSNN" value="15.212" unit="Tỷ đồng" note="Lũy kế đến 08/2026 · 89,6% so với dự toán" />
+          </OverviewCard>
 
-        <OverviewCard className="overview-ioc-expense" icon="budget" title="Chi ngân sách">
-          <OverviewValue label="Tổng Chi Ngân Sách Địa Phương" value="421" unit="Tỷ đồng" note="12,6% so với cùng kỳ năm trước · 89,6% so với dự toán" />
-        </OverviewCard>
+          <OverviewCard className="overview-ioc-expense" icon="budget" title="Chi ngân sách">
+            <OverviewValue label="Tổng Chi Ngân Sách Địa Phương" value="421" unit="Tỷ đồng" note="12,6% so với cùng kỳ năm trước · 89,6% so với dự toán" />
+          </OverviewCard>
+        </div>
 
         <OverviewCard className="overview-ioc-trade" icon="service" title="Thương mại dịch vụ">
           <div className="overview-trade-layout">
             <div className="overview-pie-cell">
               <h3>Tổng Kim Ngạch Xuất Nhập Khẩu</h3>
-              <OverviewPieChart items={[
+              <OverviewPieChart className="trade" items={[
                 { label: "Xuất khẩu", value: 35, color: "#8c78ff" },
                 { label: "Nhập khẩu", value: 65, color: "#ff8b86" },
               ]} />
@@ -521,10 +476,10 @@ export function OverviewDashboard() {
 
         <OverviewCard className="overview-ioc-admin" icon="admin" title="Nội vụ - cải cách hành chính, lao động">
           <div className="overview-admin-grid">
-            <OverviewValue label="Tỷ Lệ Người Dân Sử Dụng Dịch Vụ Công Trực Tuyến" value="98,21" unit="%" note="Lũy kế đến 08/2026" />
+            <OverviewValue label="Tỷ Lệ Người Dân Sử Dụng Dịch Vụ Công Trực Tuyến" value="98,21" unit="%" note="12,6% so với cùng kỳ năm trước" />
             <OverviewLaborDonut />
-            <OverviewValue label="Tỷ Lệ Hồ Sơ Giải Quyết Đúng Hạn" value="78,22" unit="%" note="Tăng 4,3 điểm % so với tháng trước" />
-            <OverviewMiniMetrics rows={adminRows} />
+            <OverviewValue className="amber" label="Tỷ Lệ Hồ Sơ Giải Quyết Đúng Hạn" value="78,22" unit="%" note="12,6% so với cùng kỳ năm trước" />
+            <OverviewValue className="red overdue" label="Số Lượng VB Quá Hạn" value="5" unit="VB" note="" />
           </div>
         </OverviewCard>
 
@@ -576,7 +531,7 @@ export function OverviewDashboard() {
           <div className="overview-health-grid">
             <OverviewValue label="Tỷ Lệ Bao Phủ Bảo Hiểm Y Tế" value="99,43" unit="%" note="" />
             <OverviewValue label="Người Dân Được Khám Sức Khỏe Định Kỳ Hoặc Khám Sàng Lọc Miễn Phí Ít Nhất 01 Lần Trong Năm" value="8,67" unit="%" note="" />
-            <OverviewValue label="Tổng Số Lượt Khám Bệnh" value="13,421" unit="Lượt khám" note="12,6% so với cùng kỳ tháng trước" />
+            <OverviewValue className="tight-number" label="Tổng Số Lượt Khám Bệnh" value="13,421" unit="Lượt khám" note="12,6% so với cùng kỳ tháng trước" />
             <OverviewValue label="Tỷ Lệ Hoàn Thành Kế Hoạch Giảm Nghèo" value="87,29" unit="%" note="" />
           </div>
         </OverviewCard>
