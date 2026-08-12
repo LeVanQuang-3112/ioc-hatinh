@@ -3,7 +3,16 @@ import type { GeoJsonObject } from "geojson";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Minus, Plus } from "lucide-react";
-import { haTinhGeoJson, haTinhMapPoints } from "../../model/dashboardContent";
+import {
+  getHaTinhAdministrativeUnit,
+  haTinhAdministrativeUnits,
+  haTinhMapPoints,
+} from "../../model/administrativeUnits";
+import { haTinhGeoJson } from "../../model/dashboardContent";
+
+function getShortAdministrativeName(name: string) {
+  return name.replace(/^(Xã|Phường)\s+/, "");
+}
 
 export function MapCanvas({ className = "", title }: { className?: string; title: string }) {
   const mapNodeRef = useRef<HTMLDivElement | null>(null);
@@ -31,14 +40,28 @@ export function MapCanvas({ className = "", title }: { className?: string; title
       maxZoom: 18,
     }).addTo(map);
 
-    L.geoJSON(haTinhGeoJson as unknown as GeoJsonObject, {
-      style: {
-        color: "#ffd34f",
-        dashArray: "8 6",
-        fillColor: "#1f7a58",
-        fillOpacity: 0.12,
-        opacity: 0.96,
-        weight: 2.4,
+    const administrativeBoundaryLayer = L.geoJSON(haTinhGeoJson as unknown as GeoJsonObject, {
+      style: (feature) => {
+        const isWard = String(feature?.properties?.fullName ?? "").startsWith("Phường ");
+        return {
+          color: isWard ? "#ffd34f" : "rgba(185, 242, 218, 0.9)",
+          fillColor: isWard ? "#d69d26" : "#1f7a58",
+          fillOpacity: isWard ? 0.2 : 0.12,
+          opacity: 0.92,
+          weight: isWard ? 1.5 : 1,
+        };
+      },
+      onEachFeature: (feature, layer) => {
+        const fullName = String(feature.properties?.fullName ?? feature.properties?.name ?? "");
+        const code = String(feature.properties?.code ?? feature.id ?? "");
+        const area = Number(feature.properties?.areaKm2);
+        const areaText = Number.isFinite(area) ? `<br>Diện tích: ${area.toLocaleString("vi-VN")} km²` : "";
+
+        layer.bindTooltip(`<strong>${fullName}</strong><br>Mã: ${code}${areaText}`, {
+          className: "ha-tinh-boundary-tooltip",
+          direction: "top",
+          sticky: true,
+        });
       },
     }).addTo(map);
 
@@ -46,7 +69,12 @@ export function MapCanvas({ className = "", title }: { className?: string; title
 
     haTinhMapPoints.forEach((point) => {
       const [lng, lat, metric] = point.value;
-      const isCapital = point.name.includes("TP.");
+      const administrativeUnit = getHaTinhAdministrativeUnit(point.wardCode);
+      if (!administrativeUnit) {
+        return;
+      }
+
+      const isCapital = point.wardCode === "18073";
       const tone = metric >= 3000 ? "#ffbc4e" : metric >= 2000 ? "#f1ec72" : metric >= 1000 ? "#51e572" : "#5ba9ff";
 
       L.circleMarker([lat, lng], {
@@ -58,7 +86,7 @@ export function MapCanvas({ className = "", title }: { className?: string; title
         radius: isCapital ? 6.5 : 4.4,
         weight: 1.8,
       })
-        .bindTooltip(point.name, {
+        .bindTooltip(getShortAdministrativeName(administrativeUnit.name), {
           className: isCapital ? "ha-tinh-place-label capital" : "ha-tinh-place-label",
           direction: "top",
           offset: [0, -4],
@@ -68,7 +96,7 @@ export function MapCanvas({ className = "", title }: { className?: string; title
         .addTo(pointLayer);
     });
 
-    const bounds = L.geoJSON(haTinhGeoJson as unknown as GeoJsonObject).getBounds();
+    const bounds = administrativeBoundaryLayer.getBounds();
     map.fitBounds(bounds, { padding: [22, 22] });
     map.setZoom(Math.min(11.2, map.getZoom() + 0.25));
     map.setMaxBounds(bounds.pad(0.72));
@@ -93,6 +121,10 @@ export function MapCanvas({ className = "", title }: { className?: string; title
       </div>
       <div className="map-canvas" role="img" aria-label="Bản đồ tỉnh Hà Tĩnh">
         <div ref={mapNodeRef} className="ha-tinh-leaflet-map" />
+        <div className="administrative-unit-summary">
+          <strong>{haTinhAdministrativeUnits.length}</strong>
+          <span>đơn vị cấp xã</span>
+        </div>
         <div className="map-legend">
           <span className="legend high">Trên 3.000</span>
           <span className="legend mid">2.000 - 3.000</span>

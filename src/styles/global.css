@@ -928,6 +928,25 @@ button {
   font-weight: 900;
 }
 
+.ha-tinh-boundary-tooltip {
+  border: 1px solid rgba(255, 211, 79, 0.55);
+  background: rgba(7, 19, 28, 0.94);
+  color: rgba(241, 246, 247, 0.96);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  line-height: 1.45;
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.36);
+}
+
+.ha-tinh-boundary-tooltip strong {
+  color: #ffd453;
+  font-size: 12px;
+}
+
+.ha-tinh-boundary-tooltip::before {
+  border-top-color: rgba(255, 211, 79, 0.55);
+}
+
 .province-outline {
   position: absolute;
   left: 21%;
@@ -972,6 +991,28 @@ button {
   padding: 8px 10px;
   font-size: 10px;
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
+}
+
+.administrative-unit-summary {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 4;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  border: 1px solid rgba(255, 211, 79, 0.42);
+  border-radius: 5px;
+  background: rgba(9, 13, 22, 0.82);
+  padding: 7px 10px;
+  color: rgba(241, 246, 247, 0.92);
+  font-size: 10px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
+}
+
+.administrative-unit-summary strong {
+  color: #ffd453;
+  font-size: 16px;
 }
 
 .legend::before {

@@ -149,20 +149,6 @@ export const HA_TINH_MAP_NAME = "ha-tinh-province";
 
 echarts.registerMap(HA_TINH_MAP_NAME, haTinhGeoJson as Parameters<typeof echarts.registerMap>[1]);
 
-export const haTinhMapPoints = [
-  { name: "Nghi Xuân", value: [105.78, 18.66, 2850] },
-  { name: "Hương Sơn", value: [105.43, 18.38, 2350] },
-  { name: "TX Hồng Lĩnh", value: [105.72, 18.54, 2650] },
-  { name: "Đức Thọ", value: [105.62, 18.48, 2100] },
-  { name: "Can Lộc", value: [105.77, 18.43, 1950] },
-  { name: "Lộc Hà", value: [105.9, 18.45, 1720] },
-  { name: "Vũ Quang", value: [105.36, 18.32, 1240] },
-  { name: "TP. Hà Tĩnh", value: [105.9, 18.34, 3300] },
-  { name: "Thạch Hà", value: [105.86, 18.35, 1880] },
-  { name: "Hương Khê", value: [105.69, 18.18, 1450] },
-  { name: "Cẩm Xuyên", value: [106.0, 18.25, 2180] },
-];
-
 export const detailSeeds = [
   {
     id: "grdp",
