@@ -2,15 +2,16 @@ import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
 import { agricultureCharts, agriculturePeriods, type AgricultureChartConfig } from "../../model/dashboardContent";
+import { currentReportingPeriod } from "../../model/reportingPeriod";
 
 function AgriculturePeriodSelect() {
   return (
     <label className="agriculture-period">
       <span>Kỳ báo cáo</span>
-      <select defaultValue="q1-2026" aria-label="Kỳ báo cáo">
+      <select defaultValue={currentReportingPeriod.quarterShortValue} aria-label="Kỳ báo cáo">
+        <option value={currentReportingPeriod.quarterShortValue}>{currentReportingPeriod.quarterLabel}</option>
         <option value="q1-2026">Quý I/2026</option>
         <option value="q2-2026">Quý II/2026</option>
-        <option value="q3-2026">Quý III/2026</option>
       </select>
     </label>
   );

@@ -2,15 +2,16 @@ import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
 import { industrialCharts, industrialMonths, type IndustrialChartConfig } from "../../model/dashboardContent";
+import { currentReportingPeriod } from "../../model/reportingPeriod";
 
 function IndustrialPeriodSelect() {
   return (
     <label className="industrial-period">
       <span>Kỳ báo cáo</span>
-      <select defaultValue="month-1-2026" aria-label="Kỳ báo cáo">
-        <option value="month-1-2026">Tháng 1/2026</option>
-        <option value="month-2-2026">Tháng 2/2026</option>
-        <option value="quarter-1-2026">Quý 1/2026</option>
+      <select defaultValue={currentReportingPeriod.monthValue} aria-label="Kỳ báo cáo">
+        <option value={currentReportingPeriod.monthValue}>{currentReportingPeriod.monthLabel}</option>
+        <option value={currentReportingPeriod.quarterValue}>{currentReportingPeriod.quarterNumericLabel}</option>
+        <option value="month-7-2026">Tháng 7/2026</option>
       </select>
     </label>
   );

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
+import { currentReportingPeriod } from "../../model/reportingPeriod";
 
 const adminLaborStaffBars = [
   { label: "Tuyển mới", values: [25, 0, 0, 0] },
@@ -25,9 +26,9 @@ const adminLaborRows = [
 ] as const;
 
 function AdminPeriodSelect({
-  defaultValue = "quarter-1",
+  defaultValue = currentReportingPeriod.quarterValue,
   options = [
-    ["quarter-1", "Quý I/2026"],
+    [currentReportingPeriod.quarterValue, currentReportingPeriod.quarterLabel],
     ["quarter-2", "Quý II/2026"],
   ],
 }: {
@@ -174,10 +175,10 @@ export function InternalAdminLaborDashboard() {
         <article className="admin-panel admin-procedure-panel">
           <div className="admin-panel-title">Giải quyết thủ tục hành chính</div>
           <AdminPeriodSelect
-            defaultValue="day-month"
+            defaultValue={currentReportingPeriod.dayMonthValue}
             options={[
-              ["day-month", "Ngày/Tháng/2026"],
-              ["quarter-1", "Quý I/2026"],
+              [currentReportingPeriod.dayMonthValue, currentReportingPeriod.dayMonthLabel],
+              [currentReportingPeriod.quarterValue, currentReportingPeriod.quarterLabel],
             ]}
           />
           <div className="admin-procedure-total">

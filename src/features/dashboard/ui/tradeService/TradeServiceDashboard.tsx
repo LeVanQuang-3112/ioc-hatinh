@@ -1,15 +1,16 @@
 import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
+import { currentReportingPeriod } from "../../model/reportingPeriod";
 
-function TradeServicePeriodSelect({ value = "Quý II/2026" }: { value?: string }) {
+function TradeServicePeriodSelect({ value = currentReportingPeriod.quarterLabel }: { value?: string }) {
   return (
     <label className="trade-service-period">
       <span>Kỳ báo cáo</span>
       <select defaultValue={value} aria-label="Kỳ báo cáo">
+        <option value={currentReportingPeriod.quarterLabel}>{currentReportingPeriod.quarterLabel}</option>
         <option value="Quý I/2026">Quý I/2026</option>
         <option value="Quý II/2026">Quý II/2026</option>
-        <option value="Quý III/2026">Quý III/2026</option>
       </select>
     </label>
   );
@@ -186,7 +187,7 @@ export function TradeServiceDashboard() {
 
         <article className="trade-service-panel trade-service-tourism-panel">
           <h3>Số lượng khách du lịch</h3>
-          <TradeServicePeriodSelect value="Quý I/2026" />
+          <TradeServicePeriodSelect />
           <TradeServiceTourismChart />
         </article>
       </div>

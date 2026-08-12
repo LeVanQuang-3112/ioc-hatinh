@@ -1,13 +1,14 @@
 import { resolutionFocusCards, type ResolutionFocusCard, type ResolutionTaskStatus } from "../../model/dashboardContent";
+import { currentReportingPeriod } from "../../model/reportingPeriod";
 
 function ResolutionPeriodSelect() {
   return (
     <label className="resolution-period-select">
       <span>Kỳ báo cáo</span>
-      <select defaultValue="month-1" aria-label="Kỳ báo cáo">
-        <option value="month-1">Tháng 1/2026</option>
+      <select defaultValue={currentReportingPeriod.monthValue} aria-label="Kỳ báo cáo">
+        <option value={currentReportingPeriod.monthValue}>{currentReportingPeriod.monthLabel}</option>
+        <option value={currentReportingPeriod.quarterValue}>{currentReportingPeriod.quarterLabel}</option>
         <option value="month-2">Tháng 2/2026</option>
-        <option value="quarter-1">Quý I/2026</option>
       </select>
     </label>
   );

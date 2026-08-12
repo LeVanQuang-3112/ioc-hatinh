@@ -70,11 +70,12 @@ button {
 
 .dashboard-titlebar {
   display: grid;
-  grid-template-columns: 70px minmax(0, 1fr) auto;
+  position: relative;
+  grid-template-columns: 70px minmax(0, 1fr);
   align-items: center;
   gap: 16px;
   min-height: 78px;
-  padding: 8px 18px;
+  padding: 8px min(680px, 34vw) 8px 18px;
 }
 
 .province-seal {
@@ -107,16 +108,91 @@ button {
 .dashboard-actions {
   position: absolute;
   right: 18px;
-  top: 42px;
+  top: 50%;
   z-index: 2;
+  transform: translateY(-50%);
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  align-self: center;
+  flex-wrap: nowrap;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 14px;
+  min-width: 0;
+  color: #d7e3f2;
+}
+
+.dashboard-updated {
+  color: rgba(220, 232, 247, 0.82);
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.dashboard-updated strong {
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.dashboard-updated span {
+  margin: 0 8px;
+  color: rgba(220, 232, 247, 0.52);
+}
+
+.dashboard-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.dashboard-user-avatar {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 38%, #b5c2d2 0 5px, transparent 6px),
+    radial-gradient(circle at 50% 72%, #b5c2d2 0 9px, transparent 10px),
+    #f8fbff;
+}
+
+.dashboard-user strong,
+.dashboard-user small {
+  display: block;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.dashboard-user strong {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.dashboard-user small {
+  margin-top: 4px;
+  color: rgba(220, 232, 247, 0.72);
+  font-size: 11px;
+}
+
+.dashboard-admin-button {
+  display: inline-grid;
+  width: 46px;
+  height: 42px;
+  place-items: center;
+  border: 0;
+  border-radius: 3px;
+  background: #3f8df7;
+  color: #061025;
+}
+
+.dashboard-admin-label {
+  color: rgba(220, 232, 247, 0.82);
+  font-size: 15px;
+  white-space: nowrap;
 }
 
 .dashboard-actions select,
-.dashboard-actions button {
+.dashboard-actions button:not(.dashboard-admin-button) {
   min-height: 32px;
   border: 1px solid rgba(189, 225, 255, 0.58);
   border-radius: 4px;
@@ -125,7 +201,7 @@ button {
   padding: 0 12px;
 }
 
-.dashboard-actions button {
+.dashboard-actions button:not(.dashboard-admin-button) {
   background: #1f48d7;
   font-weight: 700;
 }
@@ -2641,8 +2717,8 @@ button {
 .overview-ioc-grid {
   display: grid;
   grid-template-columns: repeat(24, minmax(0, 1fr));
-  grid-auto-rows: minmax(136px, auto);
-  gap: 10px;
+  grid-auto-rows: minmax(118px, auto);
+  gap: 8px;
   max-width: 1920px;
   margin: 0 auto;
 }
@@ -2955,7 +3031,8 @@ button {
 .overview-ioc-agriculture { grid-column: 1 / 8; grid-row: 5 / 7; }
 .overview-ioc-projects { grid-column: 1 / 8; grid-row: 7 / 8; }
 .overview-ioc-land { grid-column: 1 / 8; grid-row: 8 / 9; }
-.overview-ioc-budget { grid-column: 8 / 15; grid-row: 1 / 2; }
+.overview-ioc-budget { grid-column: 8 / 11; grid-row: 1 / 2; }
+.overview-ioc-expense { grid-column: 11 / 15; grid-row: 1 / 2; }
 .overview-ioc-trade { grid-column: 8 / 15; grid-row: 2 / 4; }
 .overview-ioc-enterprise { grid-column: 8 / 15; grid-row: 4 / 5; }
 .overview-ioc-admin { grid-column: 8 / 15; grid-row: 5 / 7; }
@@ -2978,6 +3055,7 @@ button {
 }
 
 .overview-kpi-strip,
+.overview-agriculture-grid,
 .overview-two-kpis,
 .overview-split,
 .overview-admin-grid,
@@ -2992,8 +3070,16 @@ button {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.overview-kpi-strip.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .overview-two-kpis {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.overview-two-kpis.vertical {
+  grid-template-columns: 1fr;
 }
 
 .overview-two-kpis.lined {
@@ -3008,8 +3094,8 @@ button {
 .overview-ioc-agriculture .overview-split,
 .overview-ioc-education .overview-trade-layout {
   align-items: center;
-  gap: 8px;
-  padding: 10px 12px 12px;
+  gap: 4px;
+  padding: 6px 8px 8px;
 }
 
 .overview-admin-grid,
@@ -3022,8 +3108,38 @@ button {
 }
 
 .overview-ioc-admin .overview-admin-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
   align-items: stretch;
+}
+
+.overview-agriculture-grid {
+  grid-template-columns: minmax(0, 0.88fr) minmax(180px, 1.12fr);
+  align-items: stretch;
+}
+
+.overview-ioc-agriculture .overview-value {
+  justify-content: flex-start;
+  padding: 34px 18px 18px;
+}
+
+.overview-ioc-agriculture .overview-pie-cell {
+  align-content: start;
+  gap: 14px;
+  padding: 18px 20px;
+}
+
+.overview-ioc-agriculture .overview-real-pie {
+  gap: 10px;
+}
+
+.overview-ioc-admin .overview-value {
+  padding: 6px 9px;
+}
+
+.overview-ioc-agriculture .overview-value strong,
+.overview-ioc-admin .overview-value strong {
+  font-size: clamp(24px, 2.2vw, 38px);
 }
 
 .overview-ioc-health .overview-health-grid {
@@ -3036,11 +3152,11 @@ button {
 }
 
 .overview-ioc-trade .overview-trade-layout {
-  grid-template-columns: minmax(150px, 0.8fr) minmax(0, 1fr);
-  grid-template-rows: 1fr auto auto 1fr;
+  grid-template-columns: minmax(180px, 1fr) minmax(0, 1fr);
+  grid-template-rows: 1fr;
   align-items: center;
-  column-gap: 24px;
-  padding: 18px 28px 22px;
+  column-gap: 8px;
+  padding: 0;
 }
 
 .overview-ioc-trade .overview-donut {
@@ -3058,13 +3174,15 @@ button {
 }
 
 .overview-ioc-trade .overview-trade-layout .overview-value {
-  grid-column: 2;
+  grid-column: auto;
   align-self: start;
   min-width: 0;
   width: 100%;
-  border-top: 1px solid rgba(98, 155, 196, 0.36);
+  height: 100%;
+  border-top: 0;
+  border-left: 1px solid rgba(98, 155, 196, 0.36);
   border-right: 0;
-  padding: 22px 0 0;
+  padding: 18px 14px;
 }
 
 .overview-ioc-trade .overview-value strong {
@@ -3086,7 +3204,7 @@ button {
   flex-direction: column;
   justify-content: center;
   border-right: 1px solid rgba(98, 155, 196, 0.27);
-  padding: 10px 14px;
+  padding: 8px 12px;
 }
 
 .overview-value:last-child {
@@ -3105,15 +3223,15 @@ button {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 7px;
+  gap: 6px;
+  margin-top: 5px;
 }
 
 .overview-value strong {
   color: #24e384;
   font-family: var(--font-display);
   max-width: 100%;
-  font-size: clamp(24px, 2.45vw, 42px);
+  font-size: clamp(26px, 2.75vw, 50px);
   font-weight: 900;
   line-height: 0.95;
   overflow-wrap: anywhere;
@@ -3126,14 +3244,14 @@ button {
 }
 
 .overview-value p {
-  margin: 7px 0 0;
+  margin: 5px 0 0;
   color: rgba(56, 236, 139, 0.85);
   font-size: 11px;
   line-height: 1.2;
 }
 
 .overview-value p:not(:empty)::before {
-  content: "^ ";
+  content: "▲ ";
 }
 
 .overview-value.white strong {
@@ -3146,7 +3264,7 @@ button {
 
 .overview-value.hero {
   align-items: center;
-  min-height: 132px;
+  min-height: 118px;
   text-align: center;
 }
 
@@ -3155,6 +3273,7 @@ button {
 }
 
 .overview-small-bars,
+.overview-mini-metrics,
 .overview-progress-list,
 .overview-legend-list {
   display: grid;
@@ -3163,6 +3282,60 @@ button {
   min-width: 0;
   min-height: 0;
   padding: 10px 14px;
+}
+
+.overview-mini-metrics {
+  align-content: center;
+  gap: 4px;
+  border-left: 1px solid rgba(98, 155, 196, 0.27);
+  padding: 6px 9px;
+}
+
+.overview-mini-metric {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 7px;
+  min-width: 0;
+}
+
+.overview-mini-metric span {
+  color: rgba(221, 234, 247, 0.82);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.overview-mini-metric strong {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  color: rgba(237, 246, 255, 0.94);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.overview-mini-metric small {
+  color: rgba(214, 229, 242, 0.72);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.overview-mini-metric i {
+  grid-column: 1 / -1;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.overview-mini-metric b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
 }
 
 .overview-small-bars div,
@@ -3226,6 +3399,226 @@ button {
   background:
     radial-gradient(circle, #07172b 0 52%, transparent 53%),
     conic-gradient(#31d178 0 65%, #5ba9ff 65% 100%);
+}
+
+.overview-bar-panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  gap: 6px;
+  height: 100%;
+  padding: 10px 14px 8px;
+}
+
+.overview-bar-panel h3,
+.overview-pie-cell h3,
+.overview-progress-list h3,
+.overview-assets-stack h3 {
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  color: rgba(237, 246, 255, 0.92);
+  font-size: clamp(10px, 0.7vw, 12px);
+  font-weight: 900;
+  line-height: 1.16;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.overview-bar-chart {
+  width: 100%;
+  min-height: 130px;
+}
+
+.overview-bar-panel small {
+  justify-self: center;
+  color: rgba(54, 236, 139, 0.92);
+  font-size: 11px;
+}
+
+.overview-pie-cell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: center;
+  justify-items: center;
+  gap: 4px;
+  min-width: 0;
+  min-height: 0;
+  padding: 6px 8px;
+}
+
+.overview-real-pie {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  min-width: 0;
+  width: 100%;
+}
+
+.overview-real-pie-chart {
+  width: 100%;
+  min-height: 108px;
+}
+
+.overview-ioc-education .overview-real-pie-chart {
+  min-height: 118px;
+}
+
+.overview-ioc-agriculture .overview-real-pie-chart {
+  min-height: 78px;
+}
+
+.overview-pie-legend,
+.overview-labor-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.overview-pie-legend span,
+.overview-labor-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: rgba(221, 234, 247, 0.82);
+  font-size: 10px;
+}
+
+.overview-pie-legend i,
+.overview-labor-legend i {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+
+.overview-labor-legend {
+  display: grid;
+  justify-content: stretch;
+  gap: 6px;
+  padding: 0 8px 8px;
+}
+
+.overview-labor-legend span {
+  align-items: flex-start;
+  color: rgba(221, 234, 247, 0.82);
+  line-height: 1.25;
+}
+
+.overview-labor-legend .green {
+  background: #69d28a;
+}
+
+.overview-labor-legend .salmon {
+  background: #ff8b86;
+}
+
+.overview-gauge-chart {
+  width: 100%;
+  height: clamp(96px, 7.8vw, 124px);
+  min-height: 0;
+}
+
+.overview-planning-coverage-chart {
+  width: 100%;
+  height: clamp(104px, 8.2vw, 130px);
+  min-height: 0;
+}
+
+.overview-labor-chart-wrap {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  border-left: 1px solid rgba(98, 155, 196, 0.27);
+  padding-top: 6px;
+}
+
+.overview-labor-chart-wrap h3 {
+  margin: 0;
+  padding: 0 10px;
+  color: rgba(237, 246, 255, 0.92);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.overview-labor-donut-chart {
+  width: 100%;
+  min-height: 82px;
+}
+
+.overview-assets-stack {
+  display: grid;
+  grid-template-rows: minmax(116px, 0.82fr) minmax(104px, 0.9fr);
+  height: 100%;
+  min-height: 0;
+}
+
+.overview-assets-stack > div:first-child {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: stretch;
+  justify-items: center;
+  gap: 2px;
+  min-width: 0;
+  min-height: 0;
+  padding: 6px 8px 4px;
+  text-align: center;
+}
+
+.overview-planning-metric {
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 0;
+  border-top: 1px solid rgba(98, 155, 196, 0.27);
+  padding: 12px 14px 10px;
+}
+
+.overview-planning-metric h3 {
+  margin: 0;
+  color: rgba(237, 246, 255, 0.86);
+  font-size: clamp(11px, 0.76vw, 13px);
+  font-weight: 900;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
+.overview-planning-metric div {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+
+.overview-planning-metric strong {
+  color: #ffad3a;
+  font-family: var(--font-display);
+  font-size: clamp(46px, 5.4vw, 72px);
+  font-weight: 900;
+  line-height: 0.9;
+}
+
+.overview-planning-metric small {
+  color: rgba(237, 246, 255, 0.92);
+  font-size: clamp(15px, 1.4vw, 23px);
+  white-space: nowrap;
+}
+
+.overview-planning-metric p {
+  margin: 0;
+  color: rgba(56, 236, 139, 0.85);
+  font-size: clamp(10px, 0.9vw, 13px);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.overview-planning-metric p::before {
+  content: "▲ ";
 }
 
 .overview-ioc-assets .overview-trade-layout {
@@ -3494,6 +3887,7 @@ button {
   }
 
   .overview-kpi-strip,
+  .overview-agriculture-grid,
   .overview-two-kpis,
   .overview-split,
   .overview-admin-grid,
@@ -3506,6 +3900,11 @@ button {
   .overview-value,
   .overview-value:last-child {
     border-right: 0;
+    border-bottom: 1px solid rgba(98, 155, 196, 0.27);
+  }
+
+  .overview-mini-metrics {
+    border-left: 0;
     border-bottom: 1px solid rgba(98, 155, 196, 0.27);
   }
 
@@ -3953,21 +4352,24 @@ button {
 @media (max-width: 1320px) {
   .dashboard-titlebar {
     grid-template-columns: 64px minmax(0, 1fr);
-    min-height: 86px;
+    min-height: 78px;
+    padding-right: min(640px, 48vw);
   }
 
   .dashboard-actions {
-    position: static;
-    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: nowrap;
     justify-content: flex-end;
-    padding: 0 18px 10px;
-    background: #061025;
+    padding: 0;
+    background: transparent;
   }
 }
 
 @media (max-width: 980px) {
   .dashboard-titlebar {
     grid-template-columns: 64px minmax(0, 1fr);
+    min-height: 116px;
+    padding-right: 16px;
   }
 
   .province-seal {
@@ -3980,9 +4382,12 @@ button {
 
   .dashboard-actions {
     position: static;
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
     justify-content: start;
-    padding: 0 16px 12px;
-    background: #061025;
+    padding: 0;
+    background: transparent;
+    transform: none;
   }
 
   .dashboard-actions select,
@@ -8585,12 +8990,12 @@ button {
 
 @media (max-width: 1320px) {
   .dashboard-titlebar {
-    align-items: start;
+    align-items: center;
   }
 
   .dashboard-actions {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(132px, auto));
+    display: flex;
+    grid-template-columns: none;
   }
 }
 
@@ -8666,8 +9071,8 @@ button {
   }
 
   .dashboard-actions {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    padding-inline: 14px;
+    grid-template-columns: none;
+    padding-inline: 0;
   }
 
   .dashboard-actions select,

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
+import { currentReportingPeriod } from "../../model/reportingPeriod";
 
 function ExpenseMonthlyBarChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
@@ -21,7 +22,7 @@ function ExpenseMonthlyBarChart() {
     },
     xAxis: {
       type: "category",
-      data: ["Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7"],
+      data: ["Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8"],
       axisLabel: { color: "rgba(245, 248, 252, 0.64)", fontSize: 12 },
       axisLine: { lineStyle: { color: "rgba(245, 248, 252, 0.46)" } },
       axisTick: { show: false },
@@ -42,13 +43,13 @@ function ExpenseMonthlyBarChart() {
         name: "Chi đầu tư phát triển",
         type: "bar",
         barWidth: 46,
-        data: [90, 50, 79, 68],
+        data: [50, 79, 68, 77],
       },
       {
         name: "Chi thường xuyên",
         type: "bar",
         barWidth: 46,
-        data: [65, 88, 51, 89],
+        data: [88, 51, 89, 92],
       },
     ],
   }), []);
@@ -60,9 +61,9 @@ function ExpensePeriodSelect({ label = "Kỳ báo cáo" }: { label?: string }) {
   return (
     <label className="expense-period-select">
       <span>{label}</span>
-      <select defaultValue="quarter">
-        <option value="quarter">Quý I/2026</option>
-        <option value="month">Tháng 1/2026</option>
+      <select defaultValue={currentReportingPeriod.quarterValue}>
+        <option value={currentReportingPeriod.quarterValue}>{currentReportingPeriod.quarterLabel}</option>
+        <option value={currentReportingPeriod.monthValue}>{currentReportingPeriod.monthLabel}</option>
       </select>
     </label>
   );

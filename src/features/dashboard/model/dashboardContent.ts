@@ -636,12 +636,12 @@ export const investmentTaskRows = [
   { name: "Tổng hợp danh mục dự án khởi công mới", date: "05/08/2026", status: "Đúng hạn" },
 ];
 
-export const investmentAttractionMonths = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6"];
-export const investmentAttractionProjects = [62, 76, 92, 57, 99, 77];
-export const investmentAttractionCapital = [1234, 1532, 1872, 1125, 1976, 1543];
+export const investmentAttractionMonths = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8"];
+export const investmentAttractionProjects = [62, 76, 92, 57, 99, 77, 84, 91];
+export const investmentAttractionCapital = [1234, 1532, 1872, 1125, 1976, 1543, 1688, 1814];
 
 export const trendLabels = ["T1", "T2", "T3", "T4", "T5", "T6"];
-export const grdpDesignQuarterLabels = ["Quý 3/2025", "Quý 4/2025", "Quý 1/2026", "Quý 2/2026"];
+export const grdpDesignQuarterLabels = ["Quý 4/2025", "Quý 1/2026", "Quý 2/2026", "Quý 3/2026"];
 export const grdpDesignPieItems = [
   { label: "Công nghiệp, xây dựng", value: 55, tone: "#58c08a" },
   { label: "Nông nghiệp", value: 30, tone: "#f0aa3a" },

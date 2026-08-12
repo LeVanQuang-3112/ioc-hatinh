@@ -1,12 +1,13 @@
 import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
+import { currentReportingPeriod } from "../../model/reportingPeriod";
 
 const planningWeeklyLabels = ["Tuần 27", "Tuần 28", "Tuần 29", "Tuần 30", "Tuần 31", "Tuần 32"];
 
 function PlanningPeriodSelect({
   compact = false,
-  defaultValue = "month-1",
+  defaultValue = currentReportingPeriod.monthValue,
 }: {
   compact?: boolean;
   defaultValue?: string;
@@ -15,9 +16,9 @@ function PlanningPeriodSelect({
     <label className={`planning-period ${compact ? "compact" : ""}`}>
       <span>Kỳ báo cáo</span>
       <select defaultValue={defaultValue} aria-label="Kỳ báo cáo">
-        <option value="month-1">Tháng 1/2026</option>
+        <option value={currentReportingPeriod.monthValue}>{currentReportingPeriod.monthLabel}</option>
         <option value="week-1">Tuần 1 (27/07/2026-01/08/2026)</option>
-        <option value="quarter-1">Quý I/2026</option>
+        <option value={currentReportingPeriod.quarterValue}>{currentReportingPeriod.quarterLabel}</option>
       </select>
     </label>
   );

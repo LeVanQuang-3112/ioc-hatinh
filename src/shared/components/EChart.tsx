@@ -4,6 +4,7 @@ import { BarChart, GaugeChart, LineChart, MapChart, PieChart, ScatterChart } fro
 import {
   GeoComponent,
   GridComponent,
+  GraphicComponent,
   LegendComponent,
   TooltipComponent,
   VisualMapComponent,
@@ -20,6 +21,7 @@ echarts.use([
   ScatterChart,
   GeoComponent,
   GridComponent,
+  GraphicComponent,
   LegendComponent,
   TooltipComponent,
   VisualMapComponent,

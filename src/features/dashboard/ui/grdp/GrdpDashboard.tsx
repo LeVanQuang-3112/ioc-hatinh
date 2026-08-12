@@ -5,12 +5,14 @@ import {
   grdpDesignPieItems,
   grdpDesignQuarterLabels,
 } from "../../model/dashboardContent";
+import { currentReportingPeriod } from "../../model/reportingPeriod";
 
 function ReportPeriodSelect() {
   return (
     <label className="grdp-period">
       <span>Kỳ báo cáo</span>
-      <select defaultValue="q1-2026" aria-label="Kỳ báo cáo">
+      <select defaultValue={currentReportingPeriod.quarterShortValue} aria-label="Kỳ báo cáo">
+        <option value={currentReportingPeriod.quarterShortValue}>{currentReportingPeriod.quarterNumericLabel}</option>
         <option value="q1-2026">Quý 1/2026</option>
         <option value="q2-2026">Quý 2/2026</option>
         <option value="q4-2025">Quý 4/2025</option>

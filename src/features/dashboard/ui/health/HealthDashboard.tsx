@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
+import { currentReportingPeriod } from "../../model/reportingPeriod";
 
 const healthMonths = ["T1/2026", "T2/2026", "T3/2026", "T4/2026", "T5/2026", "T6/2026", "T7/2026", "T8/2026"];
 const healthShortMonths = ["T3/2026", "T4/2026", "T5/2026", "T6/2026", "T7/2026", "T8/2026"];
@@ -28,13 +29,13 @@ const healthBeneficiaryLines: HealthLineConfig[] = [
   { label: "BHTN", series: [2940, 3150, 2970, 3680, 4040, 4340], value: "4.340" },
 ];
 
-function HealthPeriodSelect({ value = "Tháng 1/2026" }: { value?: string }) {
+function HealthPeriodSelect({ value = currentReportingPeriod.monthLabel }: { value?: string }) {
   return (
     <label className="health-period">
       <span>Kỳ báo cáo</span>
       <select defaultValue={value} aria-label="Kỳ báo cáo">
-        <option value="Tháng 1/2026">Tháng 1/2026</option>
-        <option value="Quý I/2026">Quý I/2026</option>
+        <option value={currentReportingPeriod.monthLabel}>{currentReportingPeriod.monthLabel}</option>
+        <option value={currentReportingPeriod.quarterLabel}>{currentReportingPeriod.quarterLabel}</option>
         <option value="Năm 2026">Năm 2026</option>
       </select>
     </label>
@@ -327,7 +328,7 @@ export function HealthDashboard() {
 
         <article className="health-panel health-coverage-panel">
           <div className="health-card-title">Tỷ lệ bao phủ BHYT và tỷ lệ LLLĐ tham gia BHXH</div>
-          <HealthPeriodSelect value="Quý I/2026" />
+          <HealthPeriodSelect value={currentReportingPeriod.quarterLabel} />
           <div className="health-gauge-row">
             <HealthGauge label="BAO PHỦ BHYT" />
             <HealthGauge label="LLLĐ THAM GIA BHXH" />

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
+import { currentReportingPeriod } from "../../model/reportingPeriod";
 
 function RevenueDonutChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
@@ -77,7 +78,7 @@ function RevenueColumnChart({ compact = false }: { compact?: boolean }) {
     },
     xAxis: {
       type: "category",
-      data: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6"],
+      data: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8"],
       axisLabel: { color: "rgba(245, 248, 252, 0.72)", fontSize: 11 },
       axisLine: { lineStyle: { color: "rgba(245, 248, 252, 0.38)" } },
       axisTick: { show: false },
@@ -95,7 +96,7 @@ function RevenueColumnChart({ compact = false }: { compact?: boolean }) {
       {
         type: "bar",
         barWidth: compact ? 54 : 48,
-        data: [1230, 1540, 1875, 1120, 1980, 1550],
+        data: [1230, 1540, 1875, 1120, 1980, 1550, 1725, 1840],
         itemStyle: {
           color: "#7565d8",
         },
@@ -106,13 +107,13 @@ function RevenueColumnChart({ compact = false }: { compact?: boolean }) {
   return <EChart className="treasury-bar-chart" option={option} ariaLabel="Biểu đồ thu ngân sách theo tháng" />;
 }
 
-function TreasuryPeriodSelect({ value = "Tháng1/2026" }: { value?: string }) {
+function TreasuryPeriodSelect({ value = currentReportingPeriod.monthLabel }: { value?: string }) {
   return (
     <label className="treasury-period">
       <span>Kỳ báo cáo</span>
       <select defaultValue={value} aria-label="Kỳ báo cáo">
-        <option value="Tháng1/2026">Tháng1/2026</option>
-        <option value="Quý I/2026">Quý I/2026</option>
+        <option value={currentReportingPeriod.monthLabel}>{currentReportingPeriod.monthLabel}</option>
+        <option value={currentReportingPeriod.quarterLabel}>{currentReportingPeriod.quarterLabel}</option>
         <option value="Quý II/2026">Quý II/2026</option>
       </select>
     </label>
@@ -137,7 +138,7 @@ function TreasuryProgressCard({
   return (
     <article className={`treasury-panel treasury-card ${className}`}>
       <div className="treasury-title">{title}</div>
-      <TreasuryPeriodSelect value="Quý I/2026" />
+      <TreasuryPeriodSelect value={currentReportingPeriod.quarterLabel} />
       <div className="treasury-card-value">
         <strong>{value}</strong>
         <span>Triệu đồng</span>
@@ -195,7 +196,7 @@ export function RevenueDashboard() {
 
         <article className="treasury-panel treasury-debt-card">
           <div className="treasury-title">Tổng số tiền nợ thuế</div>
-          <TreasuryPeriodSelect value="Quý I/2026" />
+          <TreasuryPeriodSelect value={currentReportingPeriod.quarterLabel} />
           <div className="treasury-debt-value">
             <strong>234</strong>
             <span>Triệu đồng</span>

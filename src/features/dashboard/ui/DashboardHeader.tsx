@@ -1,5 +1,3 @@
-import { Button } from "@/shared/components/Button";
-import { SelectField } from "@/shared/components/SelectField";
 import {
   BookOpen,
   ChartColumnBig,
@@ -10,6 +8,7 @@ import {
   Grid2x2,
   HeartPulse,
   ListChecks,
+  LogIn,
   MapPinned,
   Medal,
   PiggyBank,
@@ -78,27 +77,9 @@ export const dashboardCategories: DashboardCategory[] = [
   },
 ];
 
-const periodOptions: Array<{
-  label: string;
-  value: DashboardFilters["period"];
-}> = [
-  { label: "Hôm nay", value: "today" },
-  { label: "7 ngày", value: "week" },
-  { label: "Tháng này", value: "month" },
-];
-
-const unitOptions: Array<{ label: string; value: DashboardFilters["unit"] }> = [
-  { label: "Toàn tỉnh", value: "all" },
-  { label: "TP Hà Tĩnh", value: "city" },
-  { label: "Cụm Bắc", value: "north" },
-  { label: "Cụm Nam", value: "south" },
-];
-
 export function DashboardHeader({
   activeCategory,
-  filters,
   onCategoryChange,
-  onFiltersChange,
 }: Props) {
   return (
     <header className="dashboard-header">
@@ -115,33 +96,25 @@ export function DashboardHeader({
             PHỤC VỤ CHỈ ĐẠO ĐIỀU HÀNH CỦA LÃNH ĐẠO TỈNH
           </p>
         </div>
-      </div>
 
-      <div className="dashboard-actions" aria-label="Bộ lọc dashboard">
-        <SelectField
-          aria-label="Thời gian"
-          options={periodOptions}
-          value={filters.period}
-          onValueChange={(period) =>
-            onFiltersChange({
-              ...filters,
-              period,
-            })
-          }
-        />
-        <SelectField
-          aria-label="Đơn vị"
-          options={unitOptions}
-          value={filters.unit}
-          onValueChange={(unit) =>
-            onFiltersChange({
-              ...filters,
-              unit,
-            })
-          }
-        />
-        <Button aria-label="Làm mới dữ liệu">Làm mới</Button>
-        <Button aria-label="Xuất dữ liệu">Xuất dữ liệu</Button>
+        <div className="dashboard-actions" aria-label="Thông tin người dùng dashboard">
+          <div className="dashboard-updated">
+            Cập nhật lúc: <strong>10:30</strong>
+            <span>|</span>
+            <strong>08/09/2026</strong>
+          </div>
+          <div className="dashboard-user">
+            <span className="dashboard-user-avatar" aria-hidden="true" />
+            <div>
+              <strong>Chủ Tịch UBND Tỉnh</strong>
+              <small>Xin chào!</small>
+            </div>
+          </div>
+          <button className="dashboard-admin-button" type="button" aria-label="Đăng xuất">
+            <LogIn size={24} strokeWidth={3} aria-hidden="true" />
+          </button>
+          <span className="dashboard-admin-label">Quản trị dữ liệu</span>
+        </div>
       </div>
 
       <nav className="dashboard-tabs" aria-label="Nhóm chỉ số điều hành">

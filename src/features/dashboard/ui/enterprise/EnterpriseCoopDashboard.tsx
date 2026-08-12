@@ -1,14 +1,15 @@
 import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
+import { currentReportingPeriod } from "../../model/reportingPeriod";
 
-function EnterprisePeriodSelect({ value = "Quý I/2026" }: { value?: string }) {
+function EnterprisePeriodSelect({ value = currentReportingPeriod.quarterLabel }: { value?: string }) {
   return (
     <label className="enterprise-period">
       <span>Kỳ báo cáo</span>
       <select defaultValue={value} aria-label="Kỳ báo cáo">
-        <option value="Quý I/2026">Quý I/2026</option>
-        <option value="Tháng 1/2026">Tháng 1/2026</option>
+        <option value={currentReportingPeriod.quarterLabel}>{currentReportingPeriod.quarterLabel}</option>
+        <option value={currentReportingPeriod.monthLabel}>{currentReportingPeriod.monthLabel}</option>
         <option value="Tháng 2/2026">Tháng 2/2026</option>
       </select>
     </label>
@@ -35,7 +36,7 @@ function EnterpriseActivityChart() {
     },
     xAxis: {
       type: "category",
-      data: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6"],
+      data: ["Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8"],
       axisLabel: { color: "rgba(224, 231, 242, 0.72)", fontSize: 13 },
       axisLine: { lineStyle: { color: "rgba(224, 231, 242, 0.42)" } },
       axisTick: { show: false },
@@ -57,11 +58,11 @@ function EnterpriseActivityChart() {
       splitLine: { lineStyle: { color: "rgba(224, 231, 242, 0.14)", type: "dotted" } },
     },
     series: [
-      { name: "Thành lập mới", type: "bar", barWidth: 13, data: [12, 11, 24, 21, 12, 16], label: { show: true, position: "top", color: "rgba(246, 249, 255, 0.78)", fontSize: 11 } },
-      { name: "Hoạt động trở lại", type: "bar", barWidth: 13, data: [24, 43, 64, 12, 12, 12], label: { show: true, position: "top", color: "rgba(246, 249, 255, 0.78)", fontSize: 11 } },
-      { name: "Tạm ngừng đăng ký", type: "bar", barWidth: 13, data: [4, 23, 2, 12, 34, 25], label: { show: true, position: "top", color: "rgba(246, 249, 255, 0.78)", fontSize: 11 } },
-      { name: "Thông báo giải thể", type: "bar", barWidth: 13, data: [45, 23, 23, 12, 68, 12], label: { show: true, position: "top", color: "rgba(246, 249, 255, 0.78)", fontSize: 11 } },
-      { name: "Đã giải thể", type: "bar", barWidth: 13, data: [11, 3, 5, 0, 1, 4], label: { show: true, position: "top", color: "rgba(246, 249, 255, 0.78)", fontSize: 11 } },
+      { name: "Thành lập mới", type: "bar", barWidth: 13, data: [24, 21, 12, 16, 19, 22], label: { show: true, position: "top", color: "rgba(246, 249, 255, 0.78)", fontSize: 11 } },
+      { name: "Hoạt động trở lại", type: "bar", barWidth: 13, data: [64, 12, 12, 12, 18, 21], label: { show: true, position: "top", color: "rgba(246, 249, 255, 0.78)", fontSize: 11 } },
+      { name: "Tạm ngừng đăng ký", type: "bar", barWidth: 13, data: [2, 12, 34, 25, 22, 18], label: { show: true, position: "top", color: "rgba(246, 249, 255, 0.78)", fontSize: 11 } },
+      { name: "Thông báo giải thể", type: "bar", barWidth: 13, data: [23, 12, 68, 12, 21, 17], label: { show: true, position: "top", color: "rgba(246, 249, 255, 0.78)", fontSize: 11 } },
+      { name: "Đã giải thể", type: "bar", barWidth: 13, data: [5, 0, 1, 4, 3, 2], label: { show: true, position: "top", color: "rgba(246, 249, 255, 0.78)", fontSize: 11 } },
     ],
   }), []);
 
@@ -88,7 +89,7 @@ function EnterpriseCoopChart() {
     },
     xAxis: {
       type: "category",
-      data: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6"],
+      data: ["Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8"],
       axisLabel: { color: "rgba(224, 231, 242, 0.72)", fontSize: 13 },
       axisLine: { lineStyle: { color: "rgba(224, 231, 242, 0.42)" } },
       axisTick: { show: false },
@@ -110,9 +111,9 @@ function EnterpriseCoopChart() {
       splitLine: { lineStyle: { color: "rgba(224, 231, 242, 0.14)", type: "dotted" } },
     },
     series: [
-      { name: "Đang hoạt động", type: "bar", barWidth: 24, data: [1230, 1520, 1860, 1120, 1960, 1530] },
-      { name: "Mới thành lập", type: "bar", barWidth: 24, data: [1230, 1510, 1860, 1120, 1960, 1530] },
-      { name: "Ngừng hoạt động", type: "bar", barWidth: 24, data: [1230, 1510, 1860, 1120, 1960, 1530] },
+      { name: "Đang hoạt động", type: "bar", barWidth: 24, data: [1860, 1120, 1960, 1530, 1640, 1710] },
+      { name: "Mới thành lập", type: "bar", barWidth: 24, data: [1860, 1120, 1960, 1530, 1580, 1690] },
+      { name: "Ngừng hoạt động", type: "bar", barWidth: 24, data: [1860, 1120, 1960, 1530, 1510, 1450] },
     ],
   }), []);
 
@@ -135,13 +136,13 @@ export function EnterpriseCoopDashboard() {
 
         <article className="enterprise-panel enterprise-activity-panel">
           <h3>Biến động doanh nghiệp</h3>
-          <EnterprisePeriodSelect value="Tháng 1/2026" />
+          <EnterprisePeriodSelect value={currentReportingPeriod.monthLabel} />
           <EnterpriseActivityChart />
         </article>
 
         <article className="enterprise-panel enterprise-coop-panel">
           <h3>Hợp tác xã, kinh tế tập thể</h3>
-          <EnterprisePeriodSelect value="Tháng 1/2026" />
+          <EnterprisePeriodSelect value={currentReportingPeriod.monthLabel} />
           <EnterpriseCoopChart />
           <div className="enterprise-coop-total">
             <span>Tổng số:</span>

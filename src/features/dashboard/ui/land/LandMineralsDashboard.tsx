@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
+import { currentReportingPeriod } from "../../model/reportingPeriod";
 
 const landMonths = ["T5/2026", "T6/2026", "T7/2026", "T8/2026"];
 const mineralPeriods = ["Q2/25", "Q3/25", "Q4/25", "Q1/26", "Q2/26", "Q3/26", "Q hiện tại"];
@@ -14,13 +15,13 @@ type LandComboChartConfig = {
   title: string;
 };
 
-function LandPeriodSelect({ value = "Tháng 1/2026" }: { value?: string }) {
+function LandPeriodSelect({ value = currentReportingPeriod.monthLabel }: { value?: string }) {
   return (
     <label className="land-period">
       <span>Kỳ báo cáo</span>
       <select defaultValue={value} aria-label="Kỳ báo cáo">
-        <option value="Tháng 1/2026">Tháng 1/2026</option>
-        <option value="Quý 1/2026">Quý 1/2026</option>
+        <option value={currentReportingPeriod.monthLabel}>{currentReportingPeriod.monthLabel}</option>
+        <option value={currentReportingPeriod.quarterNumericLabel}>{currentReportingPeriod.quarterNumericLabel}</option>
         <option value="Quý 2/2026">Quý 2/2026</option>
       </select>
     </label>
@@ -228,7 +229,7 @@ export function LandMineralsDashboard() {
 
         <article className="land-panel land-gauge-panel">
           <h3>Tỷ lệ đáp ứng nhu cầu khoáng sản (nhóm III & IV)</h3>
-          <LandPeriodSelect value="Quý 1/2026" />
+          <LandPeriodSelect value={currentReportingPeriod.quarterNumericLabel} />
           <div className="land-gauge-row">
             <LandGauge color="#16c993" label="Nhóm III" value={90.9} />
             <LandGauge color="#f5a10a" label="Nhóm IV" value={82.6} />
@@ -238,7 +239,7 @@ export function LandMineralsDashboard() {
         <article className="land-panel land-mineral-panel">
           <h3>Khối lượng khoáng sản đã cấp (nhóm III & IV)</h3>
           <span className="land-unit">Đơn vị: m<sup>3</sup> - 2 biểu đồ đường xu hướng độc lập</span>
-          <LandPeriodSelect value="Quý 1/2026" />
+          <LandPeriodSelect value={currentReportingPeriod.quarterNumericLabel} />
           <div className="land-mineral-metrics">
             <strong className="green">Nhóm III <b>350,6 m<sup>3</sup></b></strong>
             <strong className="amber">Nhóm IV <b>451,9 m<sup>3</sup></b></strong>
@@ -257,4 +258,3 @@ export function LandMineralsDashboard() {
     </section>
   );
 }
-

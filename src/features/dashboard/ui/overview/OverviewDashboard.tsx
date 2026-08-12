@@ -1,4 +1,6 @@
-import { type ReactNode } from "react";
+import { type ReactNode, useMemo } from "react";
+import type { EChartsCoreOption } from "echarts/core";
+import EChart from "@/shared/components/EChart";
 import {
   BadgeDollarSign,
   BookOpen,
@@ -16,33 +18,43 @@ import {
   TrendingUp,
   type LucideIcon,
 } from "lucide-react";
-import { overviewResolutionRows } from "../../model/dashboardContent";
-import { PieChartBlock } from "../shared/ChartBlocks";
 import { MapCanvas } from "../shared/MapCanvas";
 
-const overviewIndustryRows = [
-  { label: "Chế biến chế tạo", value: 68.2 },
-  { label: "Sản xuất điện", value: 18.6 },
-  { label: "Cung cấp nước", value: 8.7 },
-  { label: "Khai khoáng", value: 4.1 },
-  { label: "Khác", value: 0.8 },
+const resolutionRows = [
+  { name: "Nghị Quyết Số 57-NQ/TW", date: "22/12/2024", status: "Đang Thực Hiện" },
+  { name: "Nghị Quyết Số 59-NQ/TW", date: "24/01/2025", status: "Đang Thực Hiện" },
+  { name: "Nghị Quyết Số 66-NQ/TW", date: "10/04/2025", status: "Đang Thực Hiện" },
+  { name: "Nghị Quyết Số 68-NQ/TW", date: "04/05/2025", status: "Đang Thực Hiện" },
+  { name: "Nghị Quyết Số 70-NQ/TW", date: "20/08/2025", status: "Đang Thực Hiện" },
+  { name: "Nghị Quyết Số 71-NQ/TW", date: "22/08/2025", status: "Đang Thực Hiện" },
+  { name: "Nghị Quyết Số 72-NQ/TW", date: "09/09/2025", status: "Đang Thực Hiện" },
+  { name: "Nghị Quyết Số 79-NQ/TW", date: "06/01/2026", status: "Đang Thực Hiện" },
+  { name: "Nghị Quyết Số 80-NQ/TW", date: "07/01/2026", status: "Đang Thực Hiện" },
 ];
 
-const overviewEnterpriseRows = [
-  { label: "Doanh nghiệp thành lập mới", value: "722 / 1.000", percent: 72 },
-  { label: "Doanh nghiệp quay trở lại HĐ", value: "456 / 800", percent: 57 },
-  { label: "Hợp tác xã thành lập mới", value: "122 / 200", percent: 61 },
+const targetRows = [
+  { name: "003_NQ66 - Chương Trình Hành Động Thực Hiện Nghị Quyết Số 66-NQ/TW", date: "31/12/2026", status: "Đang Thực Hiện" },
+  { name: "004_NQ66 - Quán Triệt Trách Nhiệm Của Các Cấp Ủy Đảng Trong Lãnh Đạo", date: "31/12/2026", status: "Đang Thực Hiện" },
+  { name: "005_NQ66 - Rà Soát, Hoàn Thiện Pháp Luật", date: "31/12/2026", status: "Đang Thực Hiện" },
+  { name: "006_NQ66 - Xây Dựng Văn Hóa Tuân Thủ Pháp Luật", date: "31/12/2026", status: "Đang Thực Hiện" },
+  { name: "007_NQ66 - Thường Xuyên Đánh Giá Hiệu Quả Của Pháp Luật Sau Ban Hành", date: "31/12/2026", status: "Đang Thực Hiện" },
+  { name: "008_NQ66 - Nâng Cao Chất Lượng Thẩm Định Văn Bản QPPL", date: "31/12/2026", status: "Theo Dõi" },
+  { name: "009_NQ66 - Số Hóa Cơ Sở Dữ Liệu Thi Hành Pháp Luật", date: "31/12/2026", status: "Đang Thực Hiện" },
+  { name: "010_NQ66 - Phổ Biến Giáo Dục Pháp Luật Cho Cơ Sở", date: "31/12/2026", status: "Hoàn Thành" },
 ];
 
-const overviewProgramTargets = [
-  "Tốc độ tăng trưởng GRDP",
-  "GRDP bình quân đầu người",
-  "Tổng vốn đầu tư toàn xã hội",
-  "Tỷ lệ đô thị hóa",
-  "Tỷ lệ hộ nghèo đa chiều",
-  "Tỷ lệ lao động qua đào tạo",
-  "Tỷ lệ trường đạt chuẩn quốc gia",
-  "Giường bệnh/1 vạn dân",
+const enterpriseRows = [
+  { label: "Số hợp tác xã đang hoạt động: 1000", percent: 98, tone: "#1bd088" },
+  { label: "Số tổ hợp tác xã thành lập mới: 34", percent: 72, tone: "#55a7e8" },
+  { label: "Số tổ hợp tác xã ngừng hoạt động: 456", percent: 60, tone: "#a889ff" },
+];
+
+const adminRows = [
+  { label: "Kiến nghị đang xử lý", value: "38", unit: "Kiến nghị", percent: 62, tone: "#55a7e8" },
+  { label: "Lao động qua đào tạo", value: "78,5", unit: "%", percent: 78.5, tone: "#1bd088" },
+  { label: "Giới thiệu việc làm", value: "522", unit: "Người", percent: 66, tone: "#69d28a" },
+  { label: "LĐ về quê làm việc", value: "200", unit: "Người", percent: 34, tone: "#ff8b86" },
+  { label: "VB quá hạn", value: "5", unit: "VB", percent: 18, tone: "#ff5d83" },
 ];
 
 type OverviewIcon = "admin" | "agriculture" | "budget" | "education" | "enterprise" | "grdp" | "health" | "industry" | "investment" | "land" | "planning" | "resolution" | "service" | "target";
@@ -64,17 +76,7 @@ const overviewIcons: Record<OverviewIcon, LucideIcon> = {
   target: ListChecks,
 };
 
-function OverviewCard({
-  children,
-  className = "",
-  icon = "service",
-  title,
-}: {
-  children: ReactNode;
-  className?: string;
-  icon?: OverviewIcon;
-  title: string;
-}) {
+function OverviewCard({ children, className = "", icon = "service", title }: { children: ReactNode; className?: string; icon?: OverviewIcon; title: string }) {
   const Icon = overviewIcons[icon];
 
   return (
@@ -93,7 +95,7 @@ function OverviewCard({
 function OverviewValue({
   className = "",
   label,
-  note = "12,6% so với cùng kỳ",
+  note = "12,6% so với cùng kỳ năm trước",
   unit,
   value,
 }: {
@@ -110,27 +112,26 @@ function OverviewValue({
         <strong>{value}</strong>
         <small>{unit}</small>
       </div>
-      <p>{note}</p>
+      {note ? <p>{note}</p> : null}
     </div>
   );
 }
 
-function OverviewProgressList({
+function OverviewMiniMetrics({
   rows,
 }: {
-  rows: ReadonlyArray<{ label: string; percent: number; value: string }>;
+  rows: ReadonlyArray<{ label: string; percent: number; tone: string; unit: string; value: string }>;
 }) {
   return (
-    <div className="overview-progress-list">
+    <div className="overview-mini-metrics">
       {rows.map((row) => (
-        <div className="overview-progress-row" key={row.label}>
-          <div>
-            <span>{row.label}</span>
-            <strong>{row.value}</strong>
-          </div>
-          <i>
-            <b style={{ width: `${row.percent}%` }} />
-          </i>
+        <div className="overview-mini-metric" key={row.label}>
+          <span>{row.label}</span>
+          <strong>
+            {row.value}
+            <small>{row.unit}</small>
+          </strong>
+          <i><b style={{ width: `${row.percent}%`, background: row.tone }} /></i>
         </div>
       ))}
     </div>
@@ -141,23 +142,297 @@ function OverviewSimpleTable({
   rows,
   type = "resolution",
 }: {
-  rows: ReadonlyArray<{ name: string; date?: string; status: string }>;
+  rows: ReadonlyArray<{ name: string; date: string; status: string }>;
   type?: "resolution" | "target";
 }) {
   return (
     <div className={`overview-simple-table ${type}`}>
       <div className="overview-simple-head">
-        <span>{type === "target" ? "Chỉ tiêu" : "Tên nghị quyết"}</span>
-        <span>{type === "target" ? "Hạn hoàn thành" : "Ngày ban hành"}</span>
-        <span>{type === "target" ? "Kết quả" : "Trạng thái"}</span>
+        <span>{type === "target" ? "Mã - Tên Nhiệm Vụ" : "Tên Nghị Quyết"}</span>
+        <span>{type === "target" ? "Thời Hạn Hoàn Thành" : "Ngày Ban Hành"}</span>
+        <span>{type === "target" ? "Kết Quả Thực Hiện" : "Trạng Thái"}</span>
       </div>
       {rows.map((row, index) => (
-        <div className="overview-simple-row" key={`${row.name}-${row.date ?? row.status}-${index}`}>
+        <div className="overview-simple-row" key={`${row.name}-${row.date}-${index}`}>
           <span>{row.name}</span>
-          <span>{row.date ?? "2030"}</span>
+          <span>{row.date}</span>
           <strong>{row.status}</strong>
         </div>
       ))}
+    </div>
+  );
+}
+
+function OverviewPieChart({
+  className = "",
+  items,
+  type = "pie",
+}: {
+  className?: string;
+  items: ReadonlyArray<{ label: string; value: number; color: string }>;
+  type?: "pie" | "donut";
+}) {
+  const option = useMemo<EChartsCoreOption>(() => ({
+    color: items.map((item) => item.color),
+    tooltip: {
+      trigger: "item",
+      backgroundColor: "rgba(8, 13, 24, 0.96)",
+      borderColor: "rgba(198, 218, 244, 0.16)",
+      formatter: "{b}: {d}%",
+      textStyle: { color: "#f5f8fc" },
+    },
+    series: [
+      {
+        type: "pie",
+        radius: type === "donut" ? ["52%", "74%"] : ["0%", "72%"],
+        center: ["50%", "48%"],
+        avoidLabelOverlap: true,
+        label: {
+          color: "rgba(255, 255, 255, 0.82)",
+          fontSize: 10,
+          formatter: "{d}%",
+        },
+        labelLine: { show: false },
+        itemStyle: {
+          borderColor: "rgba(8, 13, 24, 0.55)",
+          borderWidth: 1,
+        },
+        data: items.map((item) => ({ name: item.label, value: item.value })),
+      },
+    ],
+  }), [items, type]);
+
+  return (
+    <div className={`overview-real-pie ${className}`}>
+      <EChart className="overview-real-pie-chart" option={option} ariaLabel="Biểu đồ cơ cấu" />
+      <div className="overview-pie-legend">
+        {items.map((item) => (
+          <span key={item.label}>
+            <i style={{ backgroundColor: item.color }} />
+            {item.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function OverviewGaugeChart({ label = "MỤC TIÊU: 100%", value }: { label?: string; value: number }) {
+  const option = useMemo<EChartsCoreOption>(() => ({
+    series: [
+      {
+        type: "gauge",
+        startAngle: 205,
+        endAngle: -25,
+        min: 0,
+        max: 100,
+        radius: "96%",
+        center: ["50%", "64%"],
+        axisLine: {
+          lineStyle: {
+            width: 18,
+            color: [
+              [value / 100, "#18c68b"],
+              [1, "rgba(104, 126, 160, 0.28)"],
+            ],
+          },
+        },
+        pointer: { show: false },
+        progress: { show: false },
+        axisTick: { show: false },
+        splitLine: { show: false },
+        axisLabel: { show: false },
+        detail: {
+          color: "#16d392",
+          fontSize: 31,
+          fontWeight: 900,
+          offsetCenter: [0, "18%"],
+          formatter: `${value}%`,
+        },
+        title: {
+          color: "rgba(237, 246, 255, 0.92)",
+          fontSize: 10,
+          fontWeight: 900,
+          offsetCenter: [0, "52%"],
+        },
+        data: [{ value, name: label }],
+      },
+    ],
+  }), [label, value]);
+
+  return <EChart className="overview-gauge-chart" option={option} ariaLabel={label} />;
+}
+
+function OverviewPlanningCoverageChart({ value }: { value: number }) {
+  const option = useMemo<EChartsCoreOption>(() => ({
+    series: [
+      {
+        type: "gauge",
+        startAngle: 205,
+        endAngle: -25,
+        min: 0,
+        max: 100,
+        radius: "92%",
+        center: ["50%", "62%"],
+        progress: {
+          show: true,
+          roundCap: true,
+          width: 14,
+          itemStyle: { color: "#18c68b" },
+        },
+        axisLine: {
+          roundCap: true,
+          lineStyle: {
+            width: 14,
+            color: [
+              [0.75, "rgba(24, 198, 139, 0.28)"],
+              [1, "rgba(104, 126, 160, 0.28)"],
+            ],
+          },
+        },
+        pointer: {
+          show: true,
+          length: "42%",
+          width: 3,
+          itemStyle: { color: "#f7b53b" },
+        },
+        anchor: {
+          show: true,
+          size: 5,
+          itemStyle: { color: "#f7b53b" },
+        },
+        axisTick: {
+          distance: -20,
+          length: 4,
+          lineStyle: { color: "rgba(237, 246, 255, 0.38)", width: 1 },
+        },
+        splitLine: {
+          distance: -22,
+          length: 8,
+          lineStyle: { color: "rgba(237, 246, 255, 0.54)", width: 1 },
+        },
+        axisLabel: {
+          distance: -5,
+          color: "rgba(221, 234, 247, 0.68)",
+          fontSize: 8,
+          formatter: (labelValue: number) => labelValue % 50 === 0 ? `${labelValue}` : "",
+        },
+        detail: {
+          color: "#16d392",
+          fontSize: 26,
+          fontWeight: 900,
+          offsetCenter: [0, "26%"],
+          formatter: "{value}%",
+        },
+        title: {
+          color: "rgba(237, 246, 255, 0.78)",
+          fontSize: 9,
+          fontWeight: 800,
+          offsetCenter: [0, "52%"],
+        },
+        data: [{ value, name: "Mục tiêu: 100%" }],
+      },
+    ],
+  }), [value]);
+
+  return <EChart className="overview-planning-coverage-chart" option={option} ariaLabel="Tỷ lệ phủ kín quy hoạch chung" />;
+}
+
+function OverviewBarChart() {
+  const option = useMemo<EChartsCoreOption>(() => ({
+    color: ["#0bd097"],
+    grid: { left: 104, right: 30, top: 24, bottom: 22 },
+    tooltip: {
+      trigger: "axis",
+      axisPointer: { type: "shadow" },
+      backgroundColor: "rgba(8, 13, 24, 0.96)",
+      borderColor: "rgba(198, 218, 244, 0.16)",
+      textStyle: { color: "#f5f8fc" },
+    },
+    xAxis: {
+      type: "value",
+      max: 100,
+      axisLabel: { color: "rgba(221, 234, 247, 0.82)", fontSize: 11 },
+      axisLine: { show: false },
+      axisTick: { show: false },
+      splitLine: { show: false },
+    },
+    yAxis: {
+      type: "category",
+      data: ["Phôi thép", "Thép thành phẩm"],
+      inverse: true,
+      axisLabel: { color: "rgba(221, 234, 247, 0.82)", fontSize: 11 },
+      axisLine: { lineStyle: { color: "rgba(98, 155, 196, 0.46)" } },
+      axisTick: { show: false },
+    },
+    series: [
+      {
+        type: "bar",
+        barWidth: 22,
+        data: [68, 94],
+        itemStyle: { borderRadius: 0 },
+      },
+    ],
+  }), []);
+
+  return <EChart className="overview-bar-chart" option={option} ariaLabel="Sản phẩm công nghiệp thép" />;
+}
+
+function OverviewLaborDonut() {
+  const option = useMemo<EChartsCoreOption>(() => ({
+    color: ["#69d28a", "#ff8b86"],
+    tooltip: {
+      trigger: "item",
+      backgroundColor: "rgba(8, 13, 24, 0.96)",
+      borderColor: "rgba(198, 218, 244, 0.16)",
+      textStyle: { color: "#f5f8fc" },
+    },
+    series: [
+      {
+        type: "pie",
+        radius: ["58%", "76%"],
+        center: ["50%", "50%"],
+        label: { show: false },
+        labelLine: { show: false },
+        data: [
+          { name: "Số LĐ được giới thiệu việc làm cho các dự án, doanh nghiệp", value: 522 },
+          { name: "Lao động về quê làm việc", value: 200 },
+        ],
+      },
+    ],
+    graphic: [
+      {
+        type: "text",
+        left: "center",
+        top: "39%",
+        style: { text: "722", fill: "#ffffff", fontSize: 24, fontWeight: 900, textAlign: "center" },
+      },
+      {
+        type: "text",
+        left: "center",
+        top: "56%",
+        style: { text: "Lao động", fill: "#ffffff", fontSize: 13, fontWeight: 800, textAlign: "center" },
+      },
+    ],
+  }), []);
+
+  return (
+    <div className="overview-labor-chart-wrap">
+      <h3>Số Lao Động Được Giải Quyết Việc Làm</h3>
+      <EChart className="overview-labor-donut-chart" option={option} ariaLabel="Số lao động được giải quyết việc làm" />
+    </div>
+  );
+}
+
+function OverviewPlanningAssetsMetric() {
+  return (
+    <div className="overview-planning-metric">
+      <h3>Tổng Số Cơ Sở Nhà Đất</h3>
+      <div>
+        <strong>126</strong>
+        <small>Cơ sở</small>
+      </div>
+      <p>12,6% so với cùng kỳ năm trước</p>
     </div>
   );
 }
@@ -166,153 +441,154 @@ export function OverviewDashboard() {
   return (
     <section className="overview-ioc" aria-label="Tab tổng hợp">
       <div className="overview-ioc-grid">
-        <OverviewCard className="overview-ioc-grdp" icon="grdp" title="Tình hình kinh tế - GRDP">
-          <div className="overview-kpi-strip">
-            <OverviewValue label="GRDP 6 tháng 2026" value="8,67" unit="%" />
-            <OverviewValue label="GRDP bình quân đầu người" value="68,23" unit="Triệu đồng/người" />
-            <OverviewValue label="Tốc độ tăng trưởng" value="7,24" unit="%" note="0,8% so với quý trước" />
+        <OverviewCard className="overview-ioc-grdp" icon="grdp" title="Chỉ số về GRDP">
+          <div className="overview-kpi-strip two">
+            <OverviewValue label="Tốc Độ Tăng Trưởng GRDP" value="8,67" unit="%" note="Lũy kế đến 08/2026" />
+            <OverviewValue label="GRDP Bình Quân Đầu Người" value="68,23" unit="Triệu đồng/người/năm" note="Lũy kế đến 08/2026" />
           </div>
         </OverviewCard>
 
         <MapCanvas className="overview-ioc-map" title="Bản đồ GIS tổng hợp Hà Tĩnh" />
 
         <OverviewCard className="overview-ioc-industry" icon="industry" title="Công nghiệp">
+          <div className="overview-bar-panel">
+            <h3>Sản Phẩm Công Nghiệp (Thép)</h3>
+            <OverviewBarChart />
+            <small>Triệu tấn</small>
+            <button className="overview-link" type="button">Xem thêm sản phẩm →</button>
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-agriculture" icon="agriculture" title="Nông nghiệp">
+          <div className="overview-agriculture-grid">
+            <OverviewValue className="red" label="Tỷ Lệ Che Phủ Rừng" value="34,24" unit="%" note="Ổn định so với năm trước" />
+            <div className="overview-pie-cell">
+              <h3>Sản Lượng Thủy Sản: 31,7 nghìn tấn</h3>
+              <OverviewPieChart items={[
+                { label: "Nuôi trồng", value: 35, color: "#8c78ff" },
+                { label: "Khai thác", value: 65, color: "#ff8b86" },
+              ]} />
+            </div>
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-projects" icon="investment" title="Dự án trọng điểm">
+          <div className="overview-two-kpis vertical">
+            <OverviewValue className="white" label="Tổng Số Dự Án" value="25" unit="Dự án" note="" />
+            <OverviewValue className="red" label="Dự Án Chậm Tiến Độ" value="12" unit="Dự án" note="" />
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-land" icon="land" title="Đất đai, khoáng sản">
+          <OverviewValue label="Số Giấy CNQSDĐ Cấp Mới" value="108" unit="GCN" />
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-budget" icon="budget" title="Thu ngân sách">
+          <OverviewValue label="Tổng Các Khoản Thu NSNN" value="15.212" unit="Tỷ đồng" note="Lũy kế đến 08/2026 · 89,6% so với dự toán" />
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-expense" icon="budget" title="Chi ngân sách">
+          <OverviewValue label="Tổng Chi Ngân Sách Địa Phương" value="421" unit="Tỷ đồng" note="12,6% so với cùng kỳ năm trước · 89,6% so với dự toán" />
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-trade" icon="service" title="Thương mại dịch vụ">
+          <div className="overview-trade-layout">
+            <div className="overview-pie-cell">
+              <h3>Tổng Kim Ngạch Xuất Nhập Khẩu</h3>
+              <OverviewPieChart items={[
+                { label: "Xuất khẩu", value: 35, color: "#8c78ff" },
+                { label: "Nhập khẩu", value: 65, color: "#ff8b86" },
+              ]} />
+            </div>
+            <OverviewValue label="Số Lượng Khách Du Lịch" value="1234" unit="Lượt khách" />
+          </div>
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-enterprise" icon="enterprise" title="Doanh nghiệp và hợp tác xã">
           <div className="overview-split">
-            <OverviewValue label="Chỉ số sản xuất công nghiệp (IIP)" value="112,4" unit="" />
-            <div className="overview-small-bars">
-              {overviewIndustryRows.map((row) => (
-                <div key={row.label}>
+            <OverviewValue label="Doanh Nghiệp Hoạt Động Trong Nền Kinh Tế" value="1233" unit="DN" />
+            <div className="overview-progress-list">
+              <h3>Tổng Số Hợp Tác Xã</h3>
+              {enterpriseRows.map((row) => (
+                <div className="overview-progress-row" key={row.label}>
                   <span>{row.label}</span>
-                  <i><b style={{ width: `${row.value}%` }} /></i>
-                  <strong>{row.value}</strong>
+                  <i><b style={{ width: `${row.percent}%`, background: row.tone }} /></i>
                 </div>
               ))}
             </div>
           </div>
         </OverviewCard>
 
-        <OverviewCard className="overview-ioc-agriculture" icon="agriculture" title="Nông nghiệp">
-          <div className="overview-split">
-            <OverviewValue label="Tốc độ tăng trưởng 6 tháng" value="3,56" unit="%" note="0,6% so với cùng kỳ" />
-            <PieChartBlock
-              items={[
-                { label: "Trồng trọt", value: 55, tone: "#8d72ff" },
-                { label: "Chăn nuôi", value: 28, tone: "#55c8ff" },
-                { label: "Thủy sản", value: 12, tone: "#d56fff" },
-                { label: "Lâm nghiệp", value: 5, tone: "#34d399" },
-              ]}
-            />
-          </div>
-        </OverviewCard>
-
-        <OverviewCard className="overview-ioc-projects" icon="investment" title="Dự án trọng điểm">
-          <div className="overview-two-kpis">
-            <OverviewValue className="white" label="Tổng số dự án" value="25" unit="Dự án" note="" />
-            <OverviewValue className="red" label="Dự án chậm tiến độ" value="12" unit="Dự án" note="" />
-          </div>
-        </OverviewCard>
-
-        <OverviewCard className="overview-ioc-land" icon="land" title="Tài nguyên đất đai & khoáng sản">
-          <OverviewValue label="Giấy chứng nhận QSDĐ cấp mới" value="108" unit="GCN" note="" />
-        </OverviewCard>
-
-        <OverviewCard className="overview-ioc-budget" icon="budget" title="Thu ngân sách">
-          <div className="overview-two-kpis">
-            <OverviewValue label="Tổng thu NSNN" value="15.212" unit="Tỷ đồng" note="89,6% dự toán" />
-            <OverviewValue label="Tổng chi ngân sách địa phương" value="13.421" unit="Tỷ đồng" note="89,6% dự toán" />
-          </div>
-        </OverviewCard>
-
-        <OverviewCard className="overview-ioc-trade" icon="service" title="Thương mại dịch vụ">
-          <div className="overview-trade-layout">
-            <div className="overview-donut">
-              <strong>1.985</strong>
-              <span>Tỷ USD</span>
-            </div>
-            <div className="overview-legend-list">
-              <span><i className="green" />Xuất khẩu <strong>65%</strong></span>
-              <span><i className="blue" />Nhập khẩu <strong>35%</strong></span>
-            </div>
-            <OverviewValue label="Khách du lịch" value="1.234.567" unit="Lượt khách" note="16,2% so với cùng kỳ" />
-          </div>
-        </OverviewCard>
-
-        <OverviewCard className="overview-ioc-enterprise" icon="enterprise" title="Doanh nghiệp và hợp tác xã">
-          <div className="overview-split">
-            <OverviewValue label="Tổng số doanh nghiệp & HTX" value="1.233" unit="DN/HTX" note="9,8% so với cùng kỳ" />
-            <OverviewProgressList rows={overviewEnterpriseRows} />
-          </div>
-        </OverviewCard>
-
-        <OverviewCard className="overview-ioc-admin" icon="admin" title="Nội vụ - cải cách hành chính - lao động">
+        <OverviewCard className="overview-ioc-admin" icon="admin" title="Nội vụ - cải cách hành chính, lao động">
           <div className="overview-admin-grid">
-            <OverviewValue label="Tỷ lệ hồ sơ giải quyết đúng hạn" value="98,21" unit="%" note="1,2% so với cùng kỳ" />
-            <OverviewValue label="Tỷ lệ số hóa hồ sơ" value="78,22" unit="%" note="2,1% so với cùng kỳ" />
-            <OverviewValue label="Chỉ số CCHC (PAR INDEX)" value="85,4" unit="/100" note="3,4 điểm" />
-            <div className="overview-donut small"><strong>722</strong><span>Nghìn người</span></div>
+            <OverviewValue label="Tỷ Lệ Người Dân Sử Dụng Dịch Vụ Công Trực Tuyến" value="98,21" unit="%" note="Lũy kế đến 08/2026" />
+            <OverviewLaborDonut />
+            <OverviewValue label="Tỷ Lệ Hồ Sơ Giải Quyết Đúng Hạn" value="78,22" unit="%" note="Tăng 4,3 điểm % so với tháng trước" />
+            <OverviewMiniMetrics rows={adminRows} />
           </div>
         </OverviewCard>
 
         <OverviewCard className="overview-ioc-education" icon="education" title="Giáo dục">
           <div className="overview-trade-layout">
-            <PieChartBlock
-              items={[
-                { label: "Mầm non", value: 28, tone: "#5dd6d6" },
-                { label: "Tiểu học", value: 32, tone: "#d955b7" },
-                { label: "THCS", value: 24, tone: "#64d2ff" },
-                { label: "THPT", value: 16, tone: "#f8c35a" },
-              ]}
-            />
-            <div className="overview-gauge large"><strong>95,2%</strong><span>0% - 100%</span></div>
+            <div className="overview-pie-cell">
+              <h3>Trường Đạt Chuẩn Quốc Gia</h3>
+              <OverviewPieChart className="education" items={[
+                { label: "Trường mầm non", value: 12, color: "#7e6cff" },
+                { label: "Trường tiểu học", value: 34, color: "#ff8b86" },
+                { label: "Trường THCS", value: 24, color: "#36c1d4" },
+                { label: "Trường THPT", value: 20, color: "#ffb34c" },
+                { label: "Cơ sở giáo dục nghề", value: 10, color: "#5488ff" },
+              ]} />
+            </div>
+            <div className="overview-pie-cell">
+              <h3>Tỷ Lệ Huy Động Trẻ Em Từ 3 Đến 5 Tuổi Đến Lớp</h3>
+              <OverviewGaugeChart value={85.4} />
+            </div>
           </div>
         </OverviewCard>
 
         <OverviewCard className="overview-ioc-public" icon="investment" title="Đầu tư công">
-          <OverviewValue className="hero" label="Tổng số dự án" value="36" unit="Dự án" note="" />
-          <div className="overview-two-kpis lined">
-            <OverviewValue label="Tổng vốn đầu tư" value="9.842" unit="Tỷ đồng" note="" />
-            <OverviewValue label="Giải ngân 6T/2026" value="5.124" unit="Tỷ đồng" note="52,1% kế hoạch" />
+          <OverviewValue className="hero" label="Tổng Số Dự Án Đầu Tư Công" value="36" unit="Dự án" />
+          <div className="overview-two-kpis lined vertical">
+            <OverviewValue label="Tổng Vốn Bố Trí Theo Dự Án" value="1,985" unit="Tỷ đồng" note="" />
+            <OverviewValue label="Giá Trị Giải Ngân Theo Dự Án" value="688" unit="Tỷ đồng" note="" />
           </div>
         </OverviewCard>
 
         <OverviewCard className="overview-ioc-attract" icon="investment" title="Thu hút đầu tư">
-          <div className="overview-two-kpis">
-            <OverviewValue label="Dự án trong nước" value="178" unit="Dự án" note="" />
-            <OverviewValue label="Tổng vốn đăng ký" value="17.856" unit="Tỷ đồng" note="" />
+          <div className="overview-two-kpis vertical">
+            <OverviewValue label="Tổng Số Dự Án Trong Nước" value="167" unit="Dự án" note="" />
+            <OverviewValue label="Tổng Vốn Đăng Ký Đầu Tư Của Dự Án Trong Nước" value="178" unit="Tỷ đồng" note="" />
           </div>
         </OverviewCard>
 
-        <OverviewCard className="overview-ioc-assets" icon="planning" title="Quy hoạch - xây dựng - tài sản công">
-          <div className="overview-trade-layout">
-            <div className="overview-gauge"><strong>68,3%</strong><span>Kế hoạch 2026</span></div>
-            <OverviewValue label="Nhà ở xã hội hoàn thành" value="1.892" unit="Căn" note="" />
+        <OverviewCard className="overview-ioc-assets" icon="planning" title="Quy hoạch, xây dựng, tài sản công">
+          <div className="overview-assets-stack">
+            <div>
+              <h3>Tỷ Lệ Phủ Kín Quy Hoạch Chung</h3>
+              <OverviewPlanningCoverageChart value={85.4} />
+            </div>
+            <OverviewPlanningAssetsMetric />
           </div>
         </OverviewCard>
 
-        <OverviewCard className="overview-ioc-health" icon="health" title="Y tế - an sinh xã hội">
+        <OverviewCard className="overview-ioc-health" icon="health" title="Y tế, an sinh xã hội">
           <div className="overview-health-grid">
-            <OverviewValue label="Tỷ lệ bao phủ BHYT" value="99,43" unit="%" note="" />
-            <OverviewValue label="Tỷ lệ hộ nghèo" value="2,71" unit="%" note="" />
-            <OverviewValue label="Số giường bệnh/1 vạn dân" value="32,4" unit="Giường" note="" />
-            <OverviewValue label="Người có công được hỗ trợ" value="98,7" unit="%" note="" />
+            <OverviewValue label="Tỷ Lệ Bao Phủ Bảo Hiểm Y Tế" value="99,43" unit="%" note="" />
+            <OverviewValue label="Người Dân Được Khám Sức Khỏe Định Kỳ Hoặc Khám Sàng Lọc Miễn Phí Ít Nhất 01 Lần Trong Năm" value="8,67" unit="%" note="" />
+            <OverviewValue label="Tổng Số Lượt Khám Bệnh" value="13,421" unit="Lượt khám" note="12,6% so với cùng kỳ tháng trước" />
+            <OverviewValue label="Tỷ Lệ Hoàn Thành Kế Hoạch Giảm Nghèo" value="87,29" unit="%" note="" />
           </div>
         </OverviewCard>
 
-        <OverviewCard className="overview-ioc-resolution" icon="resolution" title="Nhiệm vụ thực hiện các nghị quyết trọng tâm">
-          <OverviewSimpleTable rows={[...overviewResolutionRows, ...overviewResolutionRows.slice(4)]} />
-          <button className="overview-link" type="button">Xem thêm nhiệm vụ &rarr;</button>
+        <OverviewCard className="overview-ioc-resolution" icon="resolution" title="🇻🇳 Nhiệm vụ thực hiện các nghị quyết trọng tâm">
+          <OverviewSimpleTable rows={resolutionRows} />
+          <button className="overview-link" type="button">Xem thêm nghị quyết →</button>
         </OverviewCard>
 
-        <OverviewCard className="overview-ioc-targets" icon="target" title="Chỉ tiêu phát triển KT-XH giai đoạn 2025-2030">
-          <OverviewSimpleTable
-            type="target"
-            rows={overviewProgramTargets.map((name) => ({
-              name,
-              date: "2030",
-              status: "Đang thực hiện",
-            }))}
-          />
-          <button className="overview-link" type="button">Xem thêm chỉ tiêu &rarr;</button>
+        <OverviewCard className="overview-ioc-targets" icon="target" title="🇻🇳 Chỉ tiêu phát triển kinh tế - xã hội giai đoạn 2025-2030">
+          <OverviewSimpleTable type="target" rows={targetRows} />
+          <button className="overview-link" type="button">Xem thêm nhiệm vụ →</button>
         </OverviewCard>
       </div>
     </section>
