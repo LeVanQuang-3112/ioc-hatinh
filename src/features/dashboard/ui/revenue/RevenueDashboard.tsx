@@ -17,7 +17,7 @@ function RevenueDonutChart() {
       {
         type: "pie",
         radius: ["54%", "74%"],
-        center: ["54%", "47%"],
+        center: ["50%", "50%"],
         avoidLabelOverlap: true,
         label: {
           color: "rgba(245, 248, 252, 0.86)",
@@ -113,8 +113,6 @@ function TreasuryPeriodSelect({ value = currentReportingPeriod.monthLabel }: { v
       <span>Kỳ báo cáo</span>
       <select defaultValue={value} aria-label="Kỳ báo cáo">
         <option value={currentReportingPeriod.monthLabel}>{currentReportingPeriod.monthLabel}</option>
-        <option value={currentReportingPeriod.quarterLabel}>{currentReportingPeriod.quarterLabel}</option>
-        <option value="Quý II/2026">Quý II/2026</option>
       </select>
     </label>
   );
@@ -138,7 +136,7 @@ function TreasuryProgressCard({
   return (
     <article className={`treasury-panel treasury-card ${className}`}>
       <div className="treasury-title">{title}</div>
-      <TreasuryPeriodSelect value={currentReportingPeriod.quarterLabel} />
+      <TreasuryPeriodSelect />
       <div className="treasury-card-value">
         <strong>{value}</strong>
         <span>Triệu đồng</span>
@@ -196,7 +194,7 @@ export function RevenueDashboard() {
 
         <article className="treasury-panel treasury-debt-card">
           <div className="treasury-title">Tổng số tiền nợ thuế</div>
-          <TreasuryPeriodSelect value={currentReportingPeriod.quarterLabel} />
+          <TreasuryPeriodSelect />
           <div className="treasury-debt-value">
             <strong>234</strong>
             <span>Triệu đồng</span>

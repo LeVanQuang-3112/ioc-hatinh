@@ -61,8 +61,7 @@ function ExpensePeriodSelect({ label = "Kỳ báo cáo" }: { label?: string }) {
   return (
     <label className="expense-period-select">
       <span>{label}</span>
-      <select defaultValue={currentReportingPeriod.quarterValue}>
-        <option value={currentReportingPeriod.quarterValue}>{currentReportingPeriod.quarterLabel}</option>
+      <select defaultValue={currentReportingPeriod.monthValue}>
         <option value={currentReportingPeriod.monthValue}>{currentReportingPeriod.monthLabel}</option>
       </select>
     </label>

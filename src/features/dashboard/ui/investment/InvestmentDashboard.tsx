@@ -145,12 +145,11 @@ function PublicInvestmentDonutChart() {
   return <EChart className="public-investment-donut-chart" option={option} ariaLabel="Cơ cấu ngân sách trung ương và địa phương" />;
 }
 
-function PublicInvestmentPeriodSelect({ value = currentReportingPeriod.quarterLabel }: { value?: string }) {
+function PublicInvestmentPeriodSelect({ value = currentReportingPeriod.monthLabel }: { value?: string }) {
   return (
     <label className="public-investment-period">
       <span>Kỳ báo cáo</span>
       <select defaultValue={value} aria-label="Kỳ báo cáo">
-        <option value={currentReportingPeriod.quarterLabel}>{currentReportingPeriod.quarterLabel}</option>
         <option value={currentReportingPeriod.monthLabel}>{currentReportingPeriod.monthLabel}</option>
         <option value="Tháng 2/2026">Tháng 2/2026</option>
       </select>
@@ -184,13 +183,13 @@ export function InvestmentDashboard() {
 
         <article className="public-investment-panel public-investment-monthly-panel">
           <h3>Tổng giá trị giải ngân vốn đầu tư công theo bộ ngành và địa phương</h3>
-          <PublicInvestmentPeriodSelect value={currentReportingPeriod.monthLabel} />
+          <PublicInvestmentPeriodSelect />
           <PublicInvestmentMonthlyChart />
         </article>
 
         <article className="public-investment-panel public-investment-sources-panel">
           <h3>Giải ngân theo các nguồn vốn (NSTW & NSĐP)</h3>
-          <PublicInvestmentPeriodSelect value={currentReportingPeriod.monthLabel} />
+          <PublicInvestmentPeriodSelect />
           <span className="public-investment-chart-unit">Tỷ đồng</span>
           <PublicInvestmentSourcesChart />
         </article>
@@ -217,7 +216,6 @@ function InvestmentAttractionPeriodSelect() {
       <span>Kỳ báo cáo</span>
       <select defaultValue={currentReportingPeriod.monthLabel} aria-label="Kỳ báo cáo">
         <option value={currentReportingPeriod.monthLabel}>{currentReportingPeriod.monthLabel}</option>
-        <option value={currentReportingPeriod.quarterLabel}>{currentReportingPeriod.quarterLabel}</option>
         <option value="Tháng 2/2026">Tháng 2/2026</option>
       </select>
     </label>

@@ -7,7 +7,20 @@ import {
 } from "../../model/dashboardContent";
 import { currentReportingPeriod } from "../../model/reportingPeriod";
 
-function ReportPeriodSelect() {
+function ReportPeriodSelect({ variant = "quarter" }: { variant?: "quarter" | "year" }) {
+  if (variant === "year") {
+    return (
+      <label className="grdp-period">
+        <span>Kỳ báo cáo</span>
+        <select defaultValue="2025" aria-label="Kỳ báo cáo">
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2026">2026</option>
+        </select>
+      </label>
+    );
+  }
+
   return (
     <label className="grdp-period">
       <span>Kỳ báo cáo</span>
@@ -134,11 +147,13 @@ function GrdpPieChart() {
       {
         type: "pie",
         radius: "78%",
-        center: ["50%", "52%"],
+        center: ["50%", "50%"],
         label: {
           show: true,
+          position: "inside",
           color: "#ffffff",
-          fontSize: 11,
+          fontSize: 17,
+          fontWeight: 700,
           formatter: "{b}\n{d}%",
         },
         labelLine: { show: false },
@@ -169,6 +184,7 @@ function GrdpValueBlock({
   children,
   className = "",
   label,
+  periodVariant = "quarter",
   trend = "12,6% so với cùng kỳ năm trước",
   unit,
   value,
@@ -176,6 +192,7 @@ function GrdpValueBlock({
   children?: ReactNode;
   className?: string;
   label: string;
+  periodVariant?: "quarter" | "year";
   trend?: string;
   unit: string;
   value: string;
@@ -185,7 +202,7 @@ function GrdpValueBlock({
       <div className="grdp-panel-title">
         <span>{label}</span>
       </div>
-      <ReportPeriodSelect />
+      <ReportPeriodSelect variant={periodVariant} />
       <div className="grdp-value">
         <strong>{value}</strong>
         <span>{unit}</span>
@@ -204,12 +221,12 @@ export function GrdpDashboard() {
           <div className="grdp-panel-title">
             <span>Tốc độ tăng trưởng kinh tế (GRDP)</span>
           </div>
+          <ReportPeriodSelect />
           <div className="grdp-accordion-row active">
             <span className="grdp-row-icon factory-icon" aria-hidden="true" />
             <strong>Khu vực công nghiệp, xây dựng</strong>
             <i>⌃</i>
           </div>
-          <ReportPeriodSelect />
           <GrdpTrendChart />
           <div className="grdp-accordion-row">
             <span className="grdp-row-icon fish-icon" aria-hidden="true" />
@@ -231,11 +248,16 @@ export function GrdpDashboard() {
             <span>%</span>
           </div>
           <p className="grdp-trend">▲ 12,6% so với cùng kỳ năm trước</p>
-          <div className="grdp-accordion-row muted">
+          <div className="grdp-accordion-row">
             <span className="grdp-row-icon tax-icon" aria-hidden="true" />
             <span>Thuế sản phẩm trừ trợ cấp sản phẩm</span>
             <i>⌄</i>
           </div>
+          <div className="grdp-inline-value">
+            <strong>78,35</strong>
+            <span>%</span>
+          </div>
+          <p className="grdp-trend">▲ 12,6% so với cùng kỳ năm trước</p>
         </article>
 
         <div className="grdp-middle-column">
@@ -250,14 +272,15 @@ export function GrdpDashboard() {
           <GrdpValueBlock
             className="grdp-industry-card"
             label="Tỷ trọng giá trị tăng thêm ngành công nghiệp chế biến, chế tạo trong GRDP"
+            periodVariant="year"
             unit="%"
             value="24,62"
           />
         </div>
 
         <div className="grdp-side-column">
-          <GrdpValueBlock label="GRDP bình quân đầu người" unit="%" value="8,78" />
-          <GrdpValueBlock label="Thu nhập bình quân đầu người" unit="Triệu đồng/người/năm" value="60,14" />
+          <GrdpValueBlock label="GRDP bình quân đầu người" periodVariant="year" unit="%" value="8,78" />
+          <GrdpValueBlock label="Thu nhập bình quân đầu người" periodVariant="year" unit="Triệu đồng/người/năm" value="60,14" />
           <GrdpValueBlock
             className="grdp-investment-card"
             label="Tổng vốn đầu tư thực hiện toàn xã hội"
