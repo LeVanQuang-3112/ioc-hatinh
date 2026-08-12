@@ -4,7 +4,6 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Minus, Plus } from "lucide-react";
 import {
-  getHaTinhAdministrativeUnit,
   haTinhAdministrativeUnits,
   haTinhMapPoints,
 } from "../../model/administrativeUnits";
@@ -53,14 +52,20 @@ export function MapCanvas({ className = "", title }: { className?: string; title
       },
       onEachFeature: (feature, layer) => {
         const fullName = String(feature.properties?.fullName ?? feature.properties?.name ?? "");
+        const shortName = getShortAdministrativeName(fullName);
         const code = String(feature.properties?.code ?? feature.id ?? "");
         const area = Number(feature.properties?.areaKm2);
         const areaText = Number.isFinite(area) ? `<br>Diện tích: ${area.toLocaleString("vi-VN")} km²` : "";
+        const isWard = fullName.startsWith("Phường ");
 
-        layer.bindTooltip(`<strong>${fullName}</strong><br>Mã: ${code}${areaText}`, {
-          className: "ha-tinh-boundary-tooltip",
-          direction: "top",
-          sticky: true,
+        layer.bindTooltip(shortName, {
+          className: isWard ? "ha-tinh-boundary-label ward" : "ha-tinh-boundary-label",
+          direction: "center",
+          opacity: 1,
+          permanent: true,
+        });
+        layer.bindPopup(`<strong>${fullName}</strong><br>Mã: ${code}${areaText}`, {
+          className: "ha-tinh-boundary-popup",
         });
       },
     }).addTo(map);
@@ -69,11 +74,6 @@ export function MapCanvas({ className = "", title }: { className?: string; title
 
     haTinhMapPoints.forEach((point) => {
       const [lng, lat, metric] = point.value;
-      const administrativeUnit = getHaTinhAdministrativeUnit(point.wardCode);
-      if (!administrativeUnit) {
-        return;
-      }
-
       const isCapital = point.wardCode === "18073";
       const tone = metric >= 3000 ? "#ffbc4e" : metric >= 2000 ? "#f1ec72" : metric >= 1000 ? "#51e572" : "#5ba9ff";
 
@@ -85,15 +85,7 @@ export function MapCanvas({ className = "", title }: { className?: string; title
         opacity: 1,
         radius: isCapital ? 6.5 : 4.4,
         weight: 1.8,
-      })
-        .bindTooltip(getShortAdministrativeName(administrativeUnit.name), {
-          className: isCapital ? "ha-tinh-place-label capital" : "ha-tinh-place-label",
-          direction: "top",
-          offset: [0, -4],
-          opacity: 1,
-          permanent: true,
-        })
-        .addTo(pointLayer);
+      }).addTo(pointLayer);
     });
 
     const bounds = administrativeBoundaryLayer.getBounds();

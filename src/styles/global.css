@@ -928,23 +928,47 @@ button {
   font-weight: 900;
 }
 
-.ha-tinh-boundary-tooltip {
-  border: 1px solid rgba(255, 211, 79, 0.55);
-  background: rgba(7, 19, 28, 0.94);
+.ha-tinh-boundary-label {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
   color: rgba(241, 246, 247, 0.96);
   font-family: var(--font-ui);
-  font-size: 11px;
-  line-height: 1.45;
-  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.36);
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  text-shadow:
+    0 1px 3px #000,
+    0 0 6px #000;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
-.ha-tinh-boundary-tooltip strong {
+.ha-tinh-boundary-label.ward {
+  color: #ffd453;
+}
+
+.ha-tinh-boundary-label::before {
+  display: none;
+}
+
+.ha-tinh-boundary-popup .leaflet-popup-content-wrapper,
+.ha-tinh-boundary-popup .leaflet-popup-tip {
+  border: 1px solid rgba(255, 211, 79, 0.55);
+  background: rgba(7, 19, 28, 0.96);
+  color: rgba(241, 246, 247, 0.96);
+}
+
+.ha-tinh-boundary-popup .leaflet-popup-content {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.ha-tinh-boundary-popup strong {
   color: #ffd453;
   font-size: 12px;
-}
-
-.ha-tinh-boundary-tooltip::before {
-  border-top-color: rgba(255, 211, 79, 0.55);
 }
 
 .province-outline {
