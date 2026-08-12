@@ -3249,11 +3249,28 @@ button {
 }
 
 .overview-ioc-trade .overview-trade-layout {
-  grid-template-columns: minmax(180px, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(260px, 1.05fr) minmax(0, 0.95fr);
   grid-template-rows: 1fr;
   align-items: center;
   column-gap: 8px;
   padding: 0;
+}
+
+.overview-ioc-trade .overview-pie-cell {
+  gap: 10px;
+  padding: 12px 18px 14px;
+}
+
+.overview-ioc-trade .overview-real-pie {
+  gap: 8px;
+}
+
+.overview-ioc-trade .overview-real-pie-chart {
+  min-height: 198px;
+}
+
+.overview-ioc-trade .overview-pie-legend span {
+  font-size: 12px;
 }
 
 .overview-ioc-trade .overview-donut {

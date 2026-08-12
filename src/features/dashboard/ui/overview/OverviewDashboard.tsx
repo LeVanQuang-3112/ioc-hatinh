@@ -155,12 +155,12 @@ function OverviewPieChart({
     series: [
       {
         type: "pie",
-        radius: type === "donut" ? ["52%", "74%"] : ["0%", "72%"],
-        center: ["50%", "48%"],
+        radius: className.includes("trade") ? ["0%", "76%"] : type === "donut" ? ["52%", "74%"] : ["0%", "72%"],
+        center: className.includes("trade") ? ["50%", "45%"] : ["50%", "48%"],
         avoidLabelOverlap: true,
         label: {
           color: "rgba(255, 255, 255, 0.82)",
-          fontSize: 10,
+          fontSize: className.includes("trade") ? 11 : 10,
           formatter: "{d}%",
         },
         labelLine: { show: false },
@@ -171,7 +171,7 @@ function OverviewPieChart({
         data: items.map((item) => ({ name: item.label, value: item.value })),
       },
     ],
-  }), [items, type]);
+  }), [className, items, type]);
 
   return (
     <div className={`overview-real-pie ${className}`}>
@@ -450,7 +450,7 @@ export function OverviewDashboard() {
           <div className="overview-trade-layout">
             <div className="overview-pie-cell">
               <h3>Tổng Kim Ngạch Xuất Nhập Khẩu</h3>
-              <OverviewPieChart items={[
+              <OverviewPieChart className="trade" items={[
                 { label: "Xuất khẩu", value: 35, color: "#8c78ff" },
                 { label: "Nhập khẩu", value: 65, color: "#ff8b86" },
               ]} />
