@@ -3057,8 +3057,7 @@ button {
 .overview-ioc-agriculture { grid-column: 1 / 8; grid-row: 5 / 7; }
 .overview-ioc-projects { grid-column: 1 / 8; grid-row: 7 / 8; }
 .overview-ioc-land { grid-column: 1 / 8; grid-row: 8 / 9; }
-.overview-ioc-budget { grid-column: 8 / 11; grid-row: 1 / 2; }
-.overview-ioc-expense { grid-column: 11 / 15; grid-row: 1 / 2; }
+.overview-ioc-budget-strip { grid-column: 8 / 15; grid-row: 1 / 2; }
 .overview-ioc-trade { grid-column: 8 / 15; grid-row: 2 / 4; }
 .overview-ioc-enterprise { grid-column: 8 / 15; grid-row: 4 / 5; }
 .overview-ioc-admin { grid-column: 8 / 15; grid-row: 5 / 7; }
@@ -3069,6 +3068,20 @@ button {
 .overview-ioc-health { grid-column: 15 / 19; grid-row: 6 / 9; }
 .overview-ioc-resolution { grid-column: 19 / 25; grid-row: 1 / 5; }
 .overview-ioc-targets { grid-column: 19 / 25; grid-row: 5 / 9; }
+
+.overview-ioc-budget-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+}
+
+.overview-ioc-budget-strip .overview-ioc-budget,
+.overview-ioc-budget-strip .overview-ioc-expense {
+  grid-column: auto;
+  grid-row: auto;
+}
 
 .overview-ioc-public,
 .overview-ioc-resolution,

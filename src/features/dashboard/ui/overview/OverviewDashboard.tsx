@@ -436,13 +436,15 @@ export function OverviewDashboard() {
           <OverviewValue label="Số Giấy CNQSDĐ Cấp Mới" value="108" unit="GCN" />
         </OverviewCard>
 
-        <OverviewCard className="overview-ioc-budget" icon="budget" title="Thu ngân sách">
-          <OverviewValue label="Tổng Các Khoản Thu NSNN" value="15.212" unit="Tỷ đồng" note="Lũy kế đến 08/2026 · 89,6% so với dự toán" />
-        </OverviewCard>
+        <div className="overview-ioc-budget-strip">
+          <OverviewCard className="overview-ioc-budget" icon="budget" title="Thu ngân sách">
+            <OverviewValue label="Tổng Các Khoản Thu NSNN" value="15.212" unit="Tỷ đồng" note="Lũy kế đến 08/2026 · 89,6% so với dự toán" />
+          </OverviewCard>
 
-        <OverviewCard className="overview-ioc-expense" icon="budget" title="Chi ngân sách">
-          <OverviewValue label="Tổng Chi Ngân Sách Địa Phương" value="421" unit="Tỷ đồng" note="12,6% so với cùng kỳ năm trước · 89,6% so với dự toán" />
-        </OverviewCard>
+          <OverviewCard className="overview-ioc-expense" icon="budget" title="Chi ngân sách">
+            <OverviewValue label="Tổng Chi Ngân Sách Địa Phương" value="421" unit="Tỷ đồng" note="12,6% so với cùng kỳ năm trước · 89,6% so với dự toán" />
+          </OverviewCard>
+        </div>
 
         <OverviewCard className="overview-ioc-trade" icon="service" title="Thương mại dịch vụ">
           <div className="overview-trade-layout">
