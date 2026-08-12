@@ -40,9 +40,17 @@ export const dashboardCategories: DashboardCategory[] = [
   { id: "expense", label: "Chi ngân sách", icon: PiggyBank },
   { id: "investment", label: "Đầu tư công", icon: PiggyBank },
   { id: "trade-service", label: "Nhóm thương mại dịch vụ", icon: ShoppingBag },
-  { id: "enterprise-coop", label: "Nhóm doanh nghiệp, HTX", icon: SquareUserRound },
+  {
+    id: "enterprise-coop",
+    label: "Nhóm doanh nghiệp, HTX",
+    icon: SquareUserRound,
+  },
   { id: "investment-attraction", label: "Thu hút đầu tư", icon: PiggyBank },
-  { id: "industrial-products", label: "Nhóm sản phẩm công nghiệp", icon: Factory },
+  {
+    id: "industrial-products",
+    label: "Nhóm sản phẩm công nghiệp",
+    icon: Factory,
+  },
   { id: "agriculture", label: "Nhóm chỉ tiêu nông nghiệp", icon: Sprout },
   { id: "key-projects", label: "Nhóm dự án trọng điểm", icon: FolderKanban },
   {
@@ -52,7 +60,11 @@ export const dashboardCategories: DashboardCategory[] = [
   },
   { id: "health-social", label: "Y tế an sinh xã hội", icon: HeartPulse },
   { id: "education", label: "Nhóm giáo dục", icon: BookOpen },
-  { id: "planning-public-assets", label: "Quy hoạch, xây dựng tài sản công", icon: MapPinned },
+  {
+    id: "planning-public-assets",
+    label: "Quy hoạch, xây dựng tài sản công",
+    icon: MapPinned,
+  },
   { id: "land-minerals", label: "Đất đai, khoáng sản", icon: MapPinned },
   {
     id: "resolution-tasks",
@@ -66,7 +78,10 @@ export const dashboardCategories: DashboardCategory[] = [
   },
 ];
 
-const periodOptions: Array<{ label: string; value: DashboardFilters["period"] }> = [
+const periodOptions: Array<{
+  label: string;
+  value: DashboardFilters["period"];
+}> = [
   { label: "Hôm nay", value: "today" },
   { label: "7 ngày", value: "week" },
   { label: "Tháng này", value: "month" },
@@ -88,7 +103,12 @@ export function DashboardHeader({
   return (
     <header className="dashboard-header">
       <div className="dashboard-titlebar">
-        <img className="province-seal" src="/quoc-huy.png" alt="" aria-hidden="true" />
+        <img
+          className="province-seal"
+          src="/quoc-huy.png"
+          alt=""
+          aria-hidden="true"
+        />
         <div>
           <h1>DASHBOARD ĐIỀU HÀNH IOC TỈNH HÀ TĨNH</h1>
           <p className="dashboard-eyebrow">
@@ -120,12 +140,8 @@ export function DashboardHeader({
             })
           }
         />
-        <Button aria-label="Làm mới dữ liệu">
-          Làm mới
-        </Button>
-        <Button aria-label="Xuất dữ liệu">
-          Xuất dữ liệu
-        </Button>
+        <Button aria-label="Làm mới dữ liệu">Làm mới</Button>
+        <Button aria-label="Xuất dữ liệu">Xuất dữ liệu</Button>
       </div>
 
       <nav className="dashboard-tabs" aria-label="Nhóm chỉ số điều hành">
