@@ -29,18 +29,36 @@ const healthBeneficiaryLines: HealthLineConfig[] = [
   { label: "BHTN", series: [2940, 3150, 2970, 3680, 4040, 4340], value: "4.340" },
 ];
 
-function HealthPeriodSelect({ value = currentReportingPeriod.monthLabel }: { value?: string }) {
+function HealthPeriodSelect({
+  value = currentReportingPeriod.monthLabel,
+  options,
+}: {
+  value?: string;
+  options?: Array<[string, string]>;
+}) {
+  const resolvedOptions: Array<[string, string]> = options ?? [
+    [currentReportingPeriod.monthLabel, currentReportingPeriod.monthLabel],
+    [currentReportingPeriod.quarterLabel, currentReportingPeriod.quarterLabel],
+    ["Năm 2026", "Năm 2026"],
+  ];
+
   return (
     <label className="health-period">
       <span>Kỳ báo cáo</span>
       <select defaultValue={value} aria-label="Kỳ báo cáo">
-        <option value={currentReportingPeriod.monthLabel}>{currentReportingPeriod.monthLabel}</option>
-        <option value={currentReportingPeriod.quarterLabel}>{currentReportingPeriod.quarterLabel}</option>
-        <option value="Năm 2026">Năm 2026</option>
+        {resolvedOptions.map(([optionValue, label]) => (
+          <option key={optionValue} value={optionValue}>{label}</option>
+        ))}
       </select>
     </label>
   );
 }
+
+const healthWeeklyPeriodOptions: Array<[string, string]> = [
+  ["Tuần 33/2026", "Tuần 33/2026"],
+  ["Tuần 32/2026", "Tuần 32/2026"],
+  ["Tuần 31/2026", "Tuần 31/2026"],
+];
 
 function HealthMiniLineChart({ data, max = 10000 }: { data: HealthLineConfig; max?: number }) {
   const option = useMemo<EChartsCoreOption>(() => ({
@@ -158,14 +176,15 @@ function HealthGauge({
             color: [[0.7, "#2fa75a"], [1, "#ffd15f"]],
           },
         },
-        pointer: { length: "42%", width: 6, offsetCenter: [0, "-8%"], itemStyle: { color: "#f7fbff" } },
+        pointer: { length: "38%", width: 6, offsetCenter: [0, "-18%"], itemStyle: { color: "#f7fbff" } },
+        anchor: { show: false },
         axisTick: { show: false },
         splitLine: { show: false },
         axisLabel: { show: false },
         detail: {
           valueAnimation: true,
           formatter: "{value}%",
-          offsetCenter: [0, "0%"],
+          offsetCenter: [0, "22%"],
           color: "#2faf60",
           fontSize: 30,
           fontWeight: 900,
@@ -227,7 +246,7 @@ function HealthLineGroup({
     <article className={`health-panel health-line-group ${className}`}>
       <div className="health-card-title">{title}</div>
       <HealthPeriodSelect />
-      <p className="health-chart-note">Đơn vị: Người - từng chỉ tiêu theo tháng riêng để trình lệch tỷ lệ</p>
+      <p className="health-chart-note">Đơn vị: Người</p>
       <div className="health-line-grid">
         {items.map((item) => (
           <div className="health-line-item" key={item.label}>
@@ -258,7 +277,7 @@ export function HealthDashboard() {
         <article className="health-panel health-service-panel">
           <div className="health-card-title">Số bác sĩ và giường bệnh trên 1 vạn dân</div>
           <HealthPeriodSelect value="Năm 2026" />
-          <p className="health-chart-note">Đơn vị: trên vạn dân - từng chỉ tiêu theo tháng riêng để trình lệch tỷ lệ</p>
+          <p className="health-chart-note">Đơn vị: trên vạn dân</p>
           <div className="health-line-grid two">
             {healthServiceLines.map((item) => (
               <div className="health-line-item" key={item.label}>
@@ -275,7 +294,7 @@ export function HealthDashboard() {
 
         <article className="health-panel health-screening-panel">
           <div className="health-card-title">Người dân khám sức khỏe định kỳ/sàng lọc miễn phí 2 lần/năm</div>
-          <HealthPeriodSelect />
+          <HealthPeriodSelect value="Tuần 33/2026" options={healthWeeklyPeriodOptions} />
           <HealthGauge label="MỤC TIÊU: 55%" target="55%" />
         </article>
 

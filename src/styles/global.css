@@ -1679,267 +1679,188 @@ button {
   padding: 0 7px;
 }
 
-.education-standard-panel { grid-column: 1 / 4; grid-row: 1 / 3; }
-.education-enrollment-panel { grid-column: 4 / 10; grid-row: 1 / 3; }
-.education-digital-panel { grid-column: 10 / 13; grid-row: 1 / 3; }
-.education-grade-panel { grid-column: 1 / 5; grid-row: 3 / 5; }
-.education-teacher-panel { grid-column: 5 / 8; grid-row: 3 / 4; }
-.education-quality-panel { grid-column: 8 / 13; grid-row: 3 / 5; }
-.education-gauge-panel { grid-column: 5 / 8; grid-row: 4 / 5; }
+.education-cert-panel { grid-column: 1 / 6; grid-row: 1 / 3; }
+.education-student-panel { grid-column: 6 / 10; grid-row: 1 / 3; }
+.education-teacher-ratio-panel { grid-column: 10 / 13; grid-row: 1 / 3; }
 
-.education-hero-value,
-.education-digital-value,
-.education-split-kpis div {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
+.education-teacher-ratio-panel .education-panel-title {
+  padding-right: 18px;
 }
 
-.education-hero-value {
-  margin: 28px 18px 0;
-}
-
-.education-digital-value {
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-  margin: 58px 18px 22px;
-  text-align: center;
-}
-
-.education-hero-value strong,
-.education-digital-value strong,
-.education-split-kpis strong {
-  color: var(--warning);
-  font-family: var(--font-display);
-  font-size: clamp(42px, 4.4vw, 68px);
-  font-weight: 900;
-  line-height: 0.95;
-}
-
-.education-digital-value strong {
-  color: #56d7ff;
-}
-
-.education-hero-value span,
-.education-digital-value span,
-.education-split-kpis span {
-  color: rgba(245, 248, 252, 0.66);
-  font-size: 14px;
-}
-
-.education-trend {
-  margin: 10px 18px 0;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.education-trend.green {
-  color: rgba(92, 255, 183, 0.74);
-}
-
-.education-standard-chart,
-.education-enrollment-chart {
-  width: calc(100% - 24px);
-  margin: 8px 12px 0;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    rgba(0, 0, 0, 0.18);
-  background-size: 100% 42px, 92px 100%;
-}
-
-.education-standard-chart {
-  height: 220px;
-}
-
-.education-enrollment-chart {
-  height: 342px;
-  margin-top: 34px;
-}
-
-.education-grade-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto 56px;
-  align-items: baseline;
-  gap: 10px;
-  min-height: 70px;
-  border-top: 1px solid rgba(198, 218, 244, 0.16);
+.education-teacher-ratio-panel .education-period {
+  position: static;
+  justify-content: flex-end;
   padding: 0 18px;
 }
 
-.education-grade-row span {
-  color: rgba(245, 248, 252, 0.86);
-  font-size: 14px;
-  font-weight: 800;
+.education-teacher-ratio-panel .education-period select {
+  width: 132px;
+}
+.education-admin-panel { grid-column: 1 / 13; grid-row: 3 / 4; }
+
+.education-cert-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 28px;
+  row-gap: 22px;
+  padding: 44px 24px 0;
 }
 
-.education-grade-row strong {
-  color: var(--good);
-  font-family: var(--font-display);
-  font-size: 30px;
+.education-cert-row span {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(245, 248, 252, 0.86);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.education-cert-row strong {
+  color: currentColor;
   font-weight: 900;
 }
 
-.education-grade-row.cyan strong { color: #56d7ff; }
-.education-grade-row.amber strong { color: var(--warning); }
-.education-grade-row.red strong { color: var(--danger); }
-
-.education-grade-row em {
-  color: rgba(245, 248, 252, 0.56);
-  font-size: 12px;
-  font-style: normal;
-}
-
-.education-grade-row i,
-.education-quality-row i {
-  grid-column: 1 / -1;
+.education-cert-row i {
   display: block;
-  height: 8px;
+  height: 7px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.14);
 }
 
-.education-grade-row b,
-.education-quality-row b {
+.education-cert-row b {
   display: block;
   height: 100%;
   border-radius: inherit;
   background: currentColor;
 }
 
-.education-grade-row.green,
-.education-quality-row.green { color: var(--good); }
-.education-grade-row.cyan,
-.education-quality-row.cyan { color: #56d7ff; }
-.education-grade-row.amber,
-.education-quality-row.amber { color: var(--warning); }
-.education-grade-row.red,
-.education-quality-row.red { color: var(--danger); }
-.education-quality-row.purple { color: #a88bff; }
-
-.education-split-kpis {
-  display: grid;
-  gap: 12px;
-  padding: 42px 18px 18px;
-}
-
-.education-split-kpis div {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  align-items: end;
-  min-height: 62px;
-  border: 1px solid rgba(198, 218, 244, 0.16);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.045);
-  padding: 10px 12px;
-}
-
-.education-split-kpis h3 {
-  margin: 0;
-  color: rgba(245, 248, 252, 0.86);
-  font-size: 12px;
-  line-height: 1.25;
-}
-
-.education-split-kpis strong {
-  color: var(--good);
-  font-size: 34px;
-}
-
-.education-quality-list {
-  display: grid;
-  gap: 10px;
-  padding: 48px 18px 18px;
-}
-
-.education-quality-row {
-  display: grid;
-  gap: 10px;
-  border: 1px solid rgba(198, 218, 244, 0.16);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.045);
-  padding: 12px;
-}
-
-.education-quality-row div {
+.education-cert-highlight {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
+  margin: 24px 20px 20px;
+  border: 1px solid rgba(198, 218, 244, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 16px 18px;
 }
 
-.education-quality-row span {
-  color: rgba(245, 248, 252, 0.84);
+.education-cert-highlight span {
+  color: rgba(245, 248, 252, 0.86);
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
 }
 
-.education-quality-row strong {
-  color: currentColor;
+.education-cert-highlight strong {
+  color: var(--good);
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 900;
   white-space: nowrap;
 }
 
-.education-quality-row small {
-  color: rgba(245, 248, 252, 0.58);
-  font-family: var(--font-ui);
+.education-unit-note {
+  margin: 44px 20px 0;
+  color: rgba(245, 248, 252, 0.62);
   font-size: 11px;
-}
-
-.education-gauge,
-.education-gauge-pair {
-  display: grid;
-  place-items: center;
-}
-
-.education-gauge-pair {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  height: calc(100% - 42px);
-  padding: 8px 14px 18px;
-}
-
-.education-gauge {
-  gap: 7px;
+  font-style: italic;
   text-align: center;
 }
 
-.education-gauge-ring {
+.education-student-chart {
+  width: calc(100% - 24px);
+  height: calc(100% - 96px);
+  min-height: 200px;
+  margin: 8px 12px 0;
+}
+
+.education-teacher-stats {
   display: grid;
-  width: 118px;
-  aspect-ratio: 1;
-  place-items: center;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, rgba(7, 11, 18, 0.98) 0 55%, transparent 56%),
-    conic-gradient(var(--good) 0 var(--value), #ffcf5c var(--value) calc(var(--value) + 7%), rgba(255, 255, 255, 0.12) 0);
+  gap: 18px;
+  padding: 16px 18px 18px;
 }
 
-.education-gauge-ring strong {
-  color: var(--good);
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 900;
+.education-teacher-stats div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.education-gauge span {
-  max-width: 160px;
-  color: rgba(245, 248, 252, 0.88);
+.education-teacher-stats span {
+  color: rgba(245, 248, 252, 0.78);
   font-size: 12px;
-  font-weight: 900;
-  line-height: 1.25;
-  text-transform: uppercase;
+  font-weight: 700;
 }
 
-.education-gauge small {
+.education-teacher-stats div > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.education-teacher-stats strong {
+  color: rgba(245, 248, 252, 0.94);
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.education-teacher-stats .cyan strong {
+  color: #38bdf8;
+}
+
+.education-teacher-stats em {
   color: rgba(245, 248, 252, 0.62);
+  font-size: 12px;
+  font-style: normal;
+}
+
+.education-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding: 44px 20px 24px;
+}
+
+.education-admin-card {
+  border: 1px solid rgba(198, 218, 244, 0.16);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.045);
+  padding: 16px 18px;
+}
+
+.education-admin-card > span {
+  display: block;
+  color: rgba(245, 248, 252, 0.84);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.education-admin-card div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.education-admin-card strong {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.education-admin-card em {
+  color: rgba(245, 248, 252, 0.66);
+  font-size: 13px;
+  font-style: normal;
+}
+
+.education-admin-card p {
+  margin: 10px 0 0;
+  color: rgba(245, 248, 252, 0.56);
   font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
 }
 
 .industrial-dashboard {
@@ -2287,7 +2208,7 @@ button {
 }
 
 .grdp-middle-column {
-  grid-template-rows: minmax(280px, 1.05fr) minmax(190px, 0.82fr);
+  grid-template-rows: minmax(440px, 1.3fr) minmax(190px, 0.7fr);
 }
 
 .grdp-side-column {
@@ -2304,6 +2225,11 @@ button {
   gap: 10px;
   color: rgba(245, 248, 252, 0.82);
   font-size: 11px;
+}
+
+.grdp-growth-panel .grdp-period {
+  top: 9px;
+  right: 12px;
 }
 
 .grdp-period select {
@@ -2415,36 +2341,43 @@ button {
   line-height: 1.25;
 }
 
+.grdp-structure-panel {
+  display: flex;
+  flex-direction: column;
+}
+
 .grdp-pie-wrap {
   display: grid;
-  grid-template-columns: minmax(190px, 1fr) 170px;
+  grid-template-columns: minmax(320px, 1fr) 200px;
   align-items: center;
-  min-height: 262px;
-  padding: 46px 28px 16px;
+  padding: 46px 24px 16px;
 }
 
 .grdp-pie-chart {
-  width: min(260px, 100%);
-  min-height: 230px;
+  width: min(480px, 100%);
+  height: min(480px, 100%);
+  min-height: 380px;
+  margin: 0 auto;
 }
 
 .grdp-pie-legend {
   display: grid;
-  gap: 14px;
+  gap: 26px;
 }
 
 .grdp-pie-legend span {
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: rgba(245, 248, 252, 0.88);
-  font-size: 14px;
+  gap: 14px;
+  color: rgba(245, 248, 252, 0.92);
+  font-size: 19px;
+  font-weight: 700;
 }
 
 .grdp-pie-legend i {
-  width: 13px;
-  height: 13px;
-  border-radius: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
 }
 
 .grdp-value-card {
@@ -4506,19 +4439,20 @@ button {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
-  .education-standard-panel,
-  .education-digital-panel,
-  .education-grade-panel,
-  .education-teacher-panel,
-  .education-gauge-panel {
+  .education-cert-panel,
+  .education-student-panel,
+  .education-teacher-ratio-panel {
     grid-column: span 3;
     grid-row: auto;
   }
 
-  .education-enrollment-panel,
-  .education-quality-panel {
+  .education-admin-panel {
     grid-column: 1 / -1;
     grid-row: auto;
+  }
+
+  .education-admin-grid {
+    grid-template-columns: 1fr;
   }
 
   .grdp-grid {
@@ -4632,13 +4566,10 @@ button {
     grid-column: span 1;
   }
 
-  .education-standard-panel,
-  .education-enrollment-panel,
-  .education-digital-panel,
-  .education-grade-panel,
-  .education-teacher-panel,
-  .education-quality-panel,
-  .education-gauge-panel {
+  .education-cert-panel,
+  .education-student-panel,
+  .education-teacher-ratio-panel,
+  .education-admin-panel {
     grid-column: span 1;
     grid-row: auto;
   }
@@ -4735,18 +4666,14 @@ button {
     width: 150px;
   }
 
-  .education-enrollment-chart {
-    height: 280px;
-    margin-top: 14px;
+  .education-student-chart {
+    height: 240px;
   }
 
-  .education-quality-list,
-  .education-split-kpis {
+  .education-cert-list,
+  .education-teacher-stats,
+  .education-admin-grid {
     padding-top: 16px;
-  }
-
-  .education-gauge-pair {
-    grid-template-columns: 1fr;
   }
 
   .industrial-card {
@@ -4831,54 +4758,6 @@ button {
     padding: 0;
     background: transparent;
   }
-}
-
-.grdp-dashboard {
-  padding: 14px 18px 0;
-}
-
-.grdp-grid {
-  grid-template-columns: minmax(360px, 1fr) minmax(360px, 1.03fr) minmax(360px, 1fr);
-  grid-auto-rows: auto;
-  gap: 8px;
-  border-left: 0;
-  min-height: calc(100vh - 160px);
-}
-
-.grdp-accordion-row {
-  min-height: 52px;
-}
-
-.grdp-accordion-row.active {
-  min-height: 46px;
-}
-
-.grdp-trend-chart {
-  height: 220px;
-  margin-top: 36px;
-}
-
-.grdp-inline-value strong,
-.grdp-value strong {
-  font-size: clamp(38px, 4vw, 56px);
-}
-
-.grdp-trend {
-  margin: 8px 20px 12px;
-  font-size: 18px;
-}
-
-.grdp-pie-wrap {
-  min-height: 230px;
-  padding-top: 38px;
-}
-
-.grdp-pie-chart {
-  min-height: 190px;
-}
-
-.grdp-investment-chart {
-  height: 140px;
 }
 
 @media (max-width: 1100px) {
@@ -5248,7 +5127,7 @@ button {
 
 .trade-service-grid {
   display: grid;
-  grid-template-columns: minmax(280px, 0.72fr) minmax(460px, 1.18fr) minmax(460px, 1.12fr);
+  grid-template-columns: minmax(260px, 0.6fr) minmax(480px, 1.35fr) minmax(440px, 1.1fr);
   gap: 12px;
   align-items: stretch;
   max-width: 1840px;
@@ -5259,24 +5138,12 @@ button {
   position: relative;
   display: grid;
   grid-template-rows: 44px auto minmax(0, 1fr);
+  gap: 2px;
   min-width: 0;
   overflow: hidden;
   min-height: min(560px, calc(100vh - 210px));
-  border: 1px solid rgba(45, 56, 74, 0.9);
-  background:
-    linear-gradient(130deg, rgba(255, 255, 255, 0.035), transparent 48%),
-    linear-gradient(90deg, rgba(3, 8, 13, 0.98), rgba(14, 17, 23, 0.92));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-}
-
-.trade-service-panel::after {
-  position: absolute;
-  inset: 44px 0 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 80% 72%, rgba(80, 224, 244, 0.18), transparent 34%),
-    radial-gradient(circle at 0% 100%, rgba(255, 171, 45, 0.26), transparent 42%);
-  content: "";
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .trade-service-panel h3 {
@@ -5284,7 +5151,7 @@ button {
   z-index: 1;
   min-height: 44px;
   margin: 0;
-  border-bottom: 1px solid rgba(58, 70, 88, 0.8);
+  background: rgba(0, 0, 0, 0.6);
   color: var(--warning);
   font-family: var(--font-display);
   font-size: 16px;
@@ -5324,18 +5191,22 @@ button {
   padding: 0 8px;
 }
 
-.trade-service-total-panel {
-  grid-template-rows: 44px auto minmax(0, 1fr) auto;
+.trade-service-total-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  min-height: 0;
+  padding: 18px 20px;
 }
 
 .trade-service-total-value {
-  position: relative;
-  z-index: 1;
   display: grid;
   place-items: center;
-  gap: 18px;
-  min-height: 0;
-  padding: 28px 20px 18px;
+  gap: 8px;
 }
 
 .trade-service-total-value strong {
@@ -5352,15 +5223,11 @@ button {
 }
 
 .trade-service-trend {
-  position: relative;
-  z-index: 1;
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 24px;
   color: rgba(236, 242, 250, 0.9);
   font-size: 17px;
-  padding: 0 24px;
 }
 
 .trade-service-trend i {
@@ -6827,7 +6694,7 @@ button {
   position: relative;
   height: calc(100% - 46px);
   min-height: 330px;
-  padding: 30px 20px 0 26px;
+  padding: 30px 20px 0;
 }
 
 .treasury-donut-chart {
@@ -6837,7 +6704,7 @@ button {
 
 .treasury-donut-center {
   position: absolute;
-  left: 54%;
+  left: 50%;
   top: 152px;
   display: grid;
   width: 124px;
@@ -7338,28 +7205,27 @@ button {
 }
 
 .agriculture-gauge-panel {
-  grid-row: span 1;
+  grid-row: span 2;
 }
 
 .agriculture-gauge-wrap {
   position: relative;
   display: grid;
-  place-items: center;
-  height: calc(100% - 40px);
-  min-height: 242px;
-  padding: 22px 22px 18px;
+  justify-items: center;
+  align-content: start;
+  height: calc(100% - 34px);
+  min-height: 300px;
+  padding: 40px 18px 14px;
 }
 
 .agriculture-gauge {
-  width: min(300px, 100%);
-  height: 210px;
+  width: min(380px, 100%);
+  height: 270px;
 }
 
 .agriculture-gauge-target {
-  position: absolute;
-  top: calc(50% + 42px);
-  left: 0;
   width: 100%;
+  margin-top: -44px;
   color: rgba(255, 255, 255, 0.92);
   font-size: 13px;
   font-weight: 900;
@@ -7399,6 +7265,10 @@ button {
 
   .agriculture-gauge-wrap {
     height: 286px;
+  }
+
+  .agriculture-gauge-panel {
+    grid-row: span 1;
   }
 }
 
@@ -8907,7 +8777,7 @@ button {
 .resolution-task-head,
 .resolution-task-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 76px 82px 78px;
+  grid-template-columns: minmax(0, 1fr) 82px 78px;
   align-items: center;
   gap: 10px;
 }
@@ -9029,7 +8899,7 @@ button {
 
   .resolution-task-head,
   .resolution-task-row {
-    grid-template-columns: minmax(0, 1fr) 62px 72px;
+    grid-template-columns: minmax(0, 1fr) 72px;
   }
 
   .resolution-task-head span:nth-child(2),
@@ -9415,8 +9285,7 @@ button {
   .revenue-hero-kpi strong,
   .socio57-kpi strong,
   .socio57-progress-value strong,
-  .education-hero-value strong,
-  .education-digital-value strong,
+  .education-admin-card strong,
   .treasury-big-metric strong,
   .treasury-card-value strong,
   .treasury-debt-value strong,

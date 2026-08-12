@@ -16,17 +16,30 @@ function TradeServicePeriodSelect({ value = currentReportingPeriod.quarterLabel 
   );
 }
 
+function TradeServiceMonthPeriodSelect({ value = currentReportingPeriod.monthLabel }: { value?: string }) {
+  return (
+    <label className="trade-service-period">
+      <span>Kỳ báo cáo</span>
+      <select defaultValue={value} aria-label="Kỳ báo cáo">
+        <option value={currentReportingPeriod.monthLabel}>{currentReportingPeriod.monthLabel}</option>
+        <option value="Tháng 7/2026">Tháng 7/2026</option>
+        <option value="Tháng 6/2026">Tháng 6/2026</option>
+      </select>
+    </label>
+  );
+}
+
 function TradeServiceExportChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
     color: ["#2e7cff", "#f5a623"],
-    grid: { left: 92, right: 70, top: 82, bottom: 72 },
+    grid: { left: 92, right: 70, top: 82, bottom: 108 },
     legend: {
-      bottom: 16,
+      bottom: 12,
       icon: "rect",
       itemGap: 18,
-      itemHeight: 8,
-      itemWidth: 8,
-      textStyle: { color: "rgba(215, 225, 240, 0.72)", fontSize: 11 },
+      itemHeight: 10,
+      itemWidth: 10,
+      textStyle: { color: "rgba(215, 225, 240, 0.72)", fontSize: 14 },
     },
     tooltip: {
       trigger: "axis",
@@ -95,7 +108,7 @@ function TradeServiceExportChart() {
 
 function TradeServiceTourismChart() {
   const option = useMemo<EChartsCoreOption>(() => ({
-    color: ["#7463d4", "#d97973", "#38b5cc"],
+    color: ["#8979ff", "#ff928a", "#3cc3df"],
     grid: { left: 80, right: 58, top: 92, bottom: 102 },
     legend: {
       bottom: 22,
@@ -171,12 +184,14 @@ export function TradeServiceDashboard() {
       <div className="trade-service-grid">
         <article className="trade-service-panel trade-service-total-panel">
           <h3>Tổng kim ngạch xuất nhập khẩu</h3>
-          <TradeServicePeriodSelect />
-          <div className="trade-service-total-value">
-            <strong>234</strong>
-            <span>Triệu USD</span>
+          <TradeServiceMonthPeriodSelect />
+          <div className="trade-service-total-body">
+            <div className="trade-service-total-value">
+              <strong>234</strong>
+              <span>Triệu USD</span>
+            </div>
+            <p className="trade-service-trend"><i aria-hidden="true" /> <strong>12,6%</strong> so với cùng kỳ năm trước</p>
           </div>
-          <p className="trade-service-trend"><i aria-hidden="true" /> <strong>12,6%</strong> so với cùng kỳ năm trước</p>
         </article>
 
         <article className="trade-service-panel trade-service-export-panel">

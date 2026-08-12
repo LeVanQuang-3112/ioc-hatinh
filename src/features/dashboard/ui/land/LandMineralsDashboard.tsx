@@ -31,7 +31,7 @@ function LandPeriodSelect({ value = currentReportingPeriod.monthLabel }: { value
 function LandComboChart({ chart }: { chart: LandComboChartConfig }) {
   const option = useMemo<EChartsCoreOption>(() => ({
     color: ["#2f6df6", "#f5a10a"],
-    grid: { left: 42, right: 52, top: 70, bottom: 64 },
+    grid: { left: 56, right: 66, top: 70, bottom: 64 },
     legend: {
       bottom: 18,
       left: 36,
@@ -60,6 +60,10 @@ function LandComboChart({ chart }: { chart: LandComboChartConfig }) {
         min: 0,
         max: 200,
         interval: 50,
+        name: "Giấy chứng nhận",
+        nameLocation: "end",
+        nameGap: 14,
+        nameTextStyle: { color: "rgba(122, 143, 174, 0.9)", fontSize: 10, fontStyle: "italic", align: "left" },
         axisLabel: { color: "rgba(122, 143, 174, 0.9)", fontSize: 10 },
         splitLine: { lineStyle: { color: "rgba(86, 103, 132, 0.22)", type: "dashed" } },
       },
@@ -68,6 +72,10 @@ function LandComboChart({ chart }: { chart: LandComboChartConfig }) {
         min: 0,
         max: chart.lineMax,
         interval: chart.lineMax / 4,
+        name: "ha",
+        nameLocation: "end",
+        nameGap: 14,
+        nameTextStyle: { color: "rgba(122, 143, 174, 0.9)", fontSize: 10, fontStyle: "italic", align: "right" },
         axisLabel: {
           color: "rgba(122, 143, 174, 0.9)",
           fontSize: 10,
@@ -220,10 +228,8 @@ export function LandMineralsDashboard() {
         {comboCharts.map((chart) => (
           <article className="land-panel land-chart-panel" key={chart.title}>
             <h3>{chart.title}</h3>
-            <span className="land-unit">Trục VT: Cột (trái) - Đường (phải)</span>
             <LandPeriodSelect />
             <LandComboChart chart={chart} />
-            <p className="land-note">Tháng - 2 chỉ tiêu khác đơn vị cùng 1 sự việc - combo 2 trục</p>
           </article>
         ))}
 
@@ -252,7 +258,6 @@ export function LandMineralsDashboard() {
             <span>Xu hướng Nhóm IV</span>
             <MineralTrendChart color="#f5a10a" data={[86, 112, 138, 182, 226, 276, 318]} label="Xu hướng Nhóm IV" />
           </div>
-          <p className="land-note">m<sup>3</sup> - Quý - Tách 2 nhóm khoáng sản thành 2 biểu đồ đường riêng biệt</p>
         </article>
       </div>
     </section>

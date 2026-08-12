@@ -99,9 +99,9 @@ function ForestCoverageGauge() {
         },
         pointer: {
           icon: "rect",
-          length: "45%",
+          length: "40%",
           width: 6,
-          offsetCenter: [0, "-8%"],
+          offsetCenter: [0, "-18%"],
           itemStyle: { color: "#ffffff" },
         },
         anchor: { show: false },
@@ -110,7 +110,7 @@ function ForestCoverageGauge() {
         axisLabel: { show: false },
         detail: {
           valueAnimation: true,
-          offsetCenter: [0, "-5%"],
+          offsetCenter: [0, "22%"],
           formatter: "{value}%",
           color: "#30b762",
           fontSize: 34,
@@ -144,6 +144,7 @@ export function AgricultureDashboard() {
 
         <article className="agriculture-panel agriculture-gauge-panel">
           <h3>Tỷ lệ che phủ rừng</h3>
+          <AgriculturePeriodSelect />
           <ForestCoverageGauge />
         </article>
 
