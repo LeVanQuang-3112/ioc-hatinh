@@ -1,8 +1,3 @@
-import * as echarts from "echarts/core";
-import haTinhGeoJson from "./geo/haTinh.json";
-
-export { haTinhGeoJson };
-
 export type KpiItem = {
   label: string;
   value: string;
@@ -144,10 +139,6 @@ export const resolutionFocusCards: ResolutionFocusCard[] = [
     ],
   },
 ];
-
-export const HA_TINH_MAP_NAME = "ha-tinh-province";
-
-echarts.registerMap(HA_TINH_MAP_NAME, haTinhGeoJson as Parameters<typeof echarts.registerMap>[1]);
 
 export const detailSeeds = [
   {

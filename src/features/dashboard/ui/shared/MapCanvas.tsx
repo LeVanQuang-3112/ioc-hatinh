@@ -7,7 +7,7 @@ import {
   haTinhAdministrativeUnits,
   haTinhMapPoints,
 } from "../../model/administrativeUnits";
-import { haTinhGeoJson } from "../../model/dashboardContent";
+import { haTinhGeoJson } from "../../model/haTinhGeoJson";
 
 function getShortAdministrativeName(name: string) {
   return name.replace(/^(Xã|Phường)\s+/, "");
