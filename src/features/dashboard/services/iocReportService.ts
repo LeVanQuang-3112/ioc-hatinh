@@ -28,17 +28,17 @@ const IOC_ACCESS_TOKEN =
 export async function fetchIocReport(
   code: string,
   period: string,
-  signal?: AbortSignal,
+  options?: { org?: string; signal?: AbortSignal },
 ): Promise<IocReportResponse> {
   const res = await fetch(IOC_REPORT_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       func: "getReport",
-      data: { header: { code, org: IOC_ORG, period } },
+      data: { header: { code, org: options?.org ?? IOC_ORG, period } },
       access_token: IOC_ACCESS_TOKEN,
     }),
-    signal,
+    signal: options?.signal,
   });
 
   if (!res.ok) {
@@ -57,7 +57,8 @@ export function indexIocReport(response: IocReportResponse): Map<string, string>
   const map = new Map<string, string>();
   for (const row of response.data.data) {
     const raw = row.value?.[0];
-    if (raw !== undefined) map.set(row.indicator, raw);
+    // Group-header rows report their value as `null` (not just absent) — skip those too.
+    if (raw != null) map.set(row.indicator, raw);
   }
   return map;
 }

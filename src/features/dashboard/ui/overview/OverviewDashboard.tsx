@@ -244,6 +244,80 @@ function OverviewPieChart({
   );
 }
 
+/**
+ * Concentric progress rings — one ring per item, each reading its own independent 0-100 value.
+ * Reuses the same wrapper/legend markup as `OverviewPieChart` so the card's layout and CSS stay
+ * identical; only the chart itself differs. A true pie/donut can't represent this data: its slices
+ * are normalized to the sum of all values, so four independent rates (e.g. 84.61 + 84.55 + 83.78 +
+ * 71.05 = 324) would be silently rescaled and misread as shares of a whole.
+ */
+function OverviewRingChart({
+  className = "",
+  items,
+}: {
+  className?: string;
+  items: ReadonlyArray<{ label: string; value: number; color: string }>;
+}) {
+  const option = useMemo<EChartsCoreOption>(() => {
+    const ringWidth = 100 / items.length;
+    return {
+      tooltip: {
+        trigger: "item",
+        backgroundColor: "rgba(8, 13, 24, 0.96)",
+        borderColor: "rgba(198, 218, 244, 0.16)",
+        formatter: "{b}: {c}%",
+        textStyle: { color: "#f5f8fc" },
+      },
+      series: items.map((item, index) => {
+        const outer = 96 - index * ringWidth;
+        const inner = outer - ringWidth * 0.62;
+        return {
+          type: "gauge",
+          name: item.label,
+          startAngle: 90,
+          endAngle: -270,
+          min: 0,
+          max: 100,
+          radius: `${outer}%`,
+          center: ["50%", "50%"],
+          progress: {
+            show: true,
+            roundCap: true,
+            width: outer - inner,
+            itemStyle: { color: item.color },
+          },
+          axisLine: {
+            roundCap: true,
+            lineStyle: { width: outer - inner, color: [[1, "rgba(120, 143, 176, 0.22)"]] },
+          },
+          pointer: { show: false },
+          anchor: { show: false },
+          axisTick: { show: false },
+          splitLine: { show: false },
+          axisLabel: { show: false },
+          title: { show: false },
+          detail: { show: false },
+          data: [{ value: item.value, name: item.label }],
+        };
+      }),
+    };
+  }, [items]);
+
+  return (
+    <div className={`overview-real-pie ${className}`}>
+      <EChart className="overview-real-pie-chart" option={option} ariaLabel="Biểu đồ tỷ lệ đạt chuẩn" />
+      <div className="overview-pie-legend">
+        {items.map((item) => (
+          <span key={item.label}>
+            <i style={{ backgroundColor: item.color }} />
+            {item.label}: {item.value.toLocaleString("vi-VN", { maximumFractionDigits: 2 })}%
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function OverviewGaugeChart({ label = "MỤC TIÊU: 100%", value }: { label?: string; value: number }) {
   return <OverviewPlanningCoverageChart value={value} ariaLabel={label} />;
 }
@@ -457,8 +531,9 @@ function OverviewPlanningAssetsMetric() {
 }
 
 export function OverviewDashboard() {
-  const { monthlyReportPeriod } = getCurrentReportingPeriod();
+  const { monthlyReportPeriod, semiAnnualReportPeriod } = getCurrentReportingPeriod();
   const { indicators } = useIocReport("CTKTXH_THANG", monthlyReportPeriod);
+  const { indicators: educationIndicators } = useIocReport("CTKTXH_6THANG", semiAnnualReportPeriod, "SGDDT");
 
   const seafoodFarmed = pickIocNumber(indicators, "CTDB_IX_7_1", 35);
   const seafoodCaught = pickIocNumber(indicators, "CTDB_IX_7_2", 65);
@@ -471,6 +546,11 @@ export function OverviewDashboard() {
 
   const laborIntroduced = pickIocNumber(indicators, "CTDB_X_3_6_1", 522);
   const laborReturned = pickIocNumber(indicators, "CTDB_X_3_6_2", 200);
+
+  const preschoolStandard = pickIocNumber(educationIndicators, "CTDB_XII_1_1", 84.61);
+  const primaryStandard = pickIocNumber(educationIndicators, "CTDB_XII_1_2", 84.55);
+  const middleSchoolStandard = pickIocNumber(educationIndicators, "CTDB_XII_1_3", 83.78);
+  const highSchoolStandard = pickIocNumber(educationIndicators, "CTDB_XII_1_4", 71.05);
 
   return (
     <section className="overview-ioc" aria-label="Tab tổng hợp">
@@ -568,12 +648,11 @@ export function OverviewDashboard() {
           <div className="overview-trade-layout">
             <div className="overview-pie-cell">
               <h3>Trường Đạt Chuẩn Quốc Gia</h3>
-              <OverviewPieChart className="education" items={[
-                { label: "Trường mầm non", value: 12, color: "#7e6cff" },
-                { label: "Trường tiểu học", value: 34, color: "#ff8b86" },
-                { label: "Trường THCS", value: 24, color: "#36c1d4" },
-                { label: "Trường THPT", value: 20, color: "#ffb34c" },
-                { label: "Cơ sở giáo dục nghề", value: 10, color: "#5488ff" },
+              <OverviewRingChart className="education" items={[
+                { label: "Trường mầm non", value: preschoolStandard, color: "#7e6cff" },
+                { label: "Trường tiểu học", value: primaryStandard, color: "#ff8b86" },
+                { label: "Trường THCS", value: middleSchoolStandard, color: "#36c1d4" },
+                { label: "Trường THPT", value: highSchoolStandard, color: "#ffb34c" },
               ]} />
             </div>
             <div className="overview-pie-cell">
