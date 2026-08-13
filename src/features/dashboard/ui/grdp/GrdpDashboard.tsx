@@ -5,7 +5,9 @@ import {
   grdpDesignPieItems,
   grdpDesignQuarterLabels,
 } from "../../model/dashboardContent";
-import { currentReportingPeriod } from "../../model/reportingPeriod";
+import { useIocReport } from "../../hooks/useIocReport";
+import { currentReportingPeriod, getCurrentReportingPeriod } from "../../model/reportingPeriod";
+import { pickIocNumber, pickIocValue } from "../../services/iocReportService";
 
 function ReportPeriodSelect({ variant = "quarter" }: { variant?: "quarter" | "year" }) {
   if (variant === "year") {
@@ -134,9 +136,9 @@ function GrdpInvestmentChart() {
   return <EChart className="grdp-investment-chart" option={option} ariaLabel="Tổng vốn đầu tư thực hiện toàn xã hội" />;
 }
 
-function GrdpPieChart() {
+function GrdpPieChart({ items }: { items: typeof grdpDesignPieItems }) {
   const option = useMemo<EChartsCoreOption>(() => ({
-    color: grdpDesignPieItems.map((item) => item.tone),
+    color: items.map((item) => item.tone),
     tooltip: {
       trigger: "item",
       backgroundColor: "rgba(8, 13, 24, 0.96)",
@@ -157,19 +159,19 @@ function GrdpPieChart() {
           formatter: "{b}\n{d}%",
         },
         labelLine: { show: false },
-        data: grdpDesignPieItems.map((item) => ({
+        data: items.map((item) => ({
           name: item.label.replace(", xây dựng", ""),
           value: item.value,
         })),
       },
     ],
-  }), []);
+  }), [items]);
 
   return (
     <div className="grdp-pie-wrap">
       <EChart className="grdp-pie-chart" option={option} ariaLabel="Cơ cấu GRDP" />
       <div className="grdp-pie-legend">
-        {grdpDesignPieItems.map((item) => (
+        {items.map((item) => (
           <span key={item.label}>
             <i style={{ backgroundColor: item.tone }} />
             {item.label}
@@ -214,6 +216,18 @@ function GrdpValueBlock({
 }
 
 export function GrdpDashboard() {
+  const { year, quarter } = getCurrentReportingPeriod();
+  const { indicators } = useIocReport("CTKTXH_QUY", `${year}${quarter}`);
+
+  const grdpPieItems = grdpDesignPieItems.map((item) => {
+    const code = item.label.startsWith("Công nghiệp")
+      ? "CTDB_I_2_a"
+      : item.label.startsWith("Nông nghiệp")
+        ? "CTDB_I_2_b"
+        : "CTDB_I_2_c";
+    return { ...item, value: pickIocNumber(indicators, code, item.value) };
+  });
+
   return (
     <section className="grdp-dashboard" aria-label="Nhóm chỉ số về GRDP">
       <div className="grdp-grid">
@@ -234,7 +248,7 @@ export function GrdpDashboard() {
             <i>⌄</i>
           </div>
           <div className="grdp-inline-value">
-            <strong>43,62</strong>
+            <strong>{pickIocValue(indicators, "CTDB_I_1_b", "43,62")}</strong>
             <span>%</span>
           </div>
           <p className="grdp-trend">▲ 12,6% so với cùng kỳ năm trước</p>
@@ -244,7 +258,7 @@ export function GrdpDashboard() {
             <i>⌄</i>
           </div>
           <div className="grdp-inline-value">
-            <strong>23,61</strong>
+            <strong>{pickIocValue(indicators, "CTDB_I_1_c", "23,61")}</strong>
             <span>%</span>
           </div>
           <p className="grdp-trend">▲ 12,6% so với cùng kỳ năm trước</p>
@@ -254,7 +268,7 @@ export function GrdpDashboard() {
             <i>⌄</i>
           </div>
           <div className="grdp-inline-value">
-            <strong>78,35</strong>
+            <strong>{pickIocValue(indicators, "CTDB_I_1_d", "78,35")}</strong>
             <span>%</span>
           </div>
           <p className="grdp-trend">▲ 12,6% so với cùng kỳ năm trước</p>
@@ -266,7 +280,7 @@ export function GrdpDashboard() {
               <span>Cơ cấu GRDP</span>
             </div>
             <ReportPeriodSelect />
-            <GrdpPieChart />
+            <GrdpPieChart items={grdpPieItems} />
           </article>
 
           <GrdpValueBlock
@@ -286,7 +300,7 @@ export function GrdpDashboard() {
             label="Tổng vốn đầu tư thực hiện toàn xã hội"
             trend="11,9% so với cùng kỳ năm trước"
             unit="Tỷ đồng"
-            value="2.931"
+            value={pickIocValue(indicators, "CTDB_I_6", "2.931")}
           >
             <GrdpInvestmentChart />
           </GrdpValueBlock>

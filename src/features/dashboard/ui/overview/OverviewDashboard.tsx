@@ -18,6 +18,9 @@ import {
   TrendingUp,
   type LucideIcon,
 } from "lucide-react";
+import { useIocReport } from "../../hooks/useIocReport";
+import { getCurrentReportingPeriod } from "../../model/reportingPeriod";
+import { pickIocNumber, pickIocValue } from "../../services/iocReportService";
 import { MapCanvas } from "../shared/MapCanvas";
 
 const resolutionRows = [
@@ -380,7 +383,17 @@ function OverviewBarChart() {
   return <EChart className="overview-bar-chart" option={option} ariaLabel="Sản phẩm công nghiệp thép" />;
 }
 
-function OverviewLaborDonut() {
+function OverviewLaborDonut({
+  introduced = 522,
+  returned = 200,
+}: {
+  introduced?: number;
+  returned?: number;
+}) {
+  const total = introduced + returned;
+  const introducedPercent = total > 0 ? Math.round((introduced / total) * 100) : 0;
+  const returnedPercent = total > 0 ? 100 - introducedPercent : 0;
+
   const option = useMemo<EChartsCoreOption>(() => ({
     color: ["#69d28a", "#ff8b86"],
     tooltip: {
@@ -397,8 +410,8 @@ function OverviewLaborDonut() {
         label: { show: false },
         labelLine: { show: false },
         data: [
-          { name: "Số LĐ được giới thiệu việc làm cho các dự án, doanh nghiệp", value: 522 },
-          { name: "Lao động về quê làm việc", value: 200 },
+          { name: "Số LĐ được giới thiệu việc làm cho các dự án, doanh nghiệp", value: introduced },
+          { name: "Lao động về quê làm việc", value: returned },
         ],
       },
     ],
@@ -407,7 +420,7 @@ function OverviewLaborDonut() {
         type: "text",
         left: "center",
         top: "39%",
-        style: { text: "722", fill: "#ffffff", fontSize: 24, fontWeight: 900, textAlign: "center" },
+        style: { text: `${total}`, fill: "#ffffff", fontSize: 24, fontWeight: 900, textAlign: "center" },
       },
       {
         type: "text",
@@ -416,15 +429,15 @@ function OverviewLaborDonut() {
         style: { text: "Lao động", fill: "#ffffff", fontSize: 13, fontWeight: 800, textAlign: "center" },
       },
     ],
-  }), []);
+  }), [introduced, returned, total]);
 
   return (
     <div className="overview-labor-chart-wrap">
       <h3>Số Lao Động Được Giải Quyết Việc Làm</h3>
       <EChart className="overview-labor-donut-chart" option={option} ariaLabel="Số lao động được giải quyết việc làm" />
       <div className="overview-labor-legend">
-        <span><i className="green" />Số LĐ được giới thiệu việc làm cho các dự án, doanh nghiệp: 522 người (66%)</span>
-        <span><i className="salmon" />Lao động về quê làm việc: 200 người (34%)</span>
+        <span><i className="green" />Số LĐ được giới thiệu việc làm cho các dự án, doanh nghiệp: {introduced} người ({introducedPercent}%)</span>
+        <span><i className="salmon" />Lao động về quê làm việc: {returned} người ({returnedPercent}%)</span>
       </div>
     </div>
   );
@@ -444,12 +457,27 @@ function OverviewPlanningAssetsMetric() {
 }
 
 export function OverviewDashboard() {
+  const { year, quarter } = getCurrentReportingPeriod();
+  const { indicators } = useIocReport("CTKTXH_QUY", `${year}${quarter}`);
+
+  const seafoodFarmed = pickIocNumber(indicators, "CTDB_IX_7_1", 35);
+  const seafoodCaught = pickIocNumber(indicators, "CTDB_IX_7_2", 65);
+  const seafoodTotalLabel = indicators
+    ? `${((seafoodFarmed + seafoodCaught) / 1000).toLocaleString("vi-VN", { maximumFractionDigits: 1 })} nghìn tấn`
+    : "31,7 nghìn tấn";
+
+  const tradeExport = pickIocNumber(indicators, "CTDB_V_1_2", 35);
+  const tradeImport = pickIocNumber(indicators, "CTDB_V_1_3", 65);
+
+  const laborIntroduced = pickIocNumber(indicators, "CTDB_X_3_6_1", 522);
+  const laborReturned = pickIocNumber(indicators, "CTDB_X_3_6_2", 200);
+
   return (
     <section className="overview-ioc" aria-label="Tab tổng hợp">
       <div className="overview-ioc-grid">
         <OverviewCard className="overview-ioc-grdp" icon="grdp" title="Chỉ số về GRDP">
           <div className="overview-kpi-strip two">
-            <OverviewValue label="Tốc Độ Tăng Trưởng GRDP" value="8,67" unit="%" note="Lũy kế đến 08/2026" />
+            <OverviewValue label="Tốc Độ Tăng Trưởng GRDP" value={pickIocValue(indicators, "CTDB_I_1", "8,67")} unit="%" note="Lũy kế đến 08/2026" />
             <OverviewValue label="GRDP Bình Quân Đầu Người" value="68,23" unit="Triệu đồng/người/năm" note="Lũy kế đến 08/2026" />
           </div>
         </OverviewCard>
@@ -467,12 +495,12 @@ export function OverviewDashboard() {
 
         <OverviewCard className="overview-ioc-agriculture" icon="agriculture" title="Nông nghiệp">
           <div className="overview-agriculture-grid">
-            <OverviewValue className="red" label="Tỷ Lệ Che Phủ Rừng" value="34,24" unit="%" note="Ổn định so với năm trước" />
+            <OverviewValue className="red" label="Tỷ Lệ Che Phủ Rừng" value={pickIocValue(indicators, "CTDB_IX_6", "34,24")} unit="%" note="Ổn định so với năm trước" />
             <div className="overview-pie-cell">
-              <h3>Sản Lượng Thủy Sản: 31,7 nghìn tấn</h3>
+              <h3>Sản Lượng Thủy Sản: {seafoodTotalLabel}</h3>
               <OverviewPieChart items={[
-                { label: "Nuôi trồng", value: 35, color: "#8c78ff" },
-                { label: "Khai thác", value: 65, color: "#ff8b86" },
+                { label: "Nuôi trồng", value: seafoodFarmed, color: "#8c78ff" },
+                { label: "Khai thác", value: seafoodCaught, color: "#ff8b86" },
               ]} />
             </div>
           </div>
@@ -504,17 +532,17 @@ export function OverviewDashboard() {
             <div className="overview-pie-cell">
               <h3>Tổng Kim Ngạch Xuất Nhập Khẩu</h3>
               <OverviewPieChart className="trade" items={[
-                { label: "Xuất khẩu", value: 35, color: "#8c78ff" },
-                { label: "Nhập khẩu", value: 65, color: "#ff8b86" },
+                { label: "Xuất khẩu", value: tradeExport, color: "#8c78ff" },
+                { label: "Nhập khẩu", value: tradeImport, color: "#ff8b86" },
               ]} />
             </div>
-            <OverviewValue label="Số Lượng Khách Du Lịch" value="1234" unit="Lượt khách" />
+            <OverviewValue label="Số Lượng Khách Du Lịch" value={pickIocValue(indicators, "CTDB_V_2", "1234")} unit="Lượt khách" />
           </div>
         </OverviewCard>
 
         <OverviewCard className="overview-ioc-enterprise" icon="enterprise" title="Doanh nghiệp và hợp tác xã">
           <div className="overview-split">
-            <OverviewValue label="Doanh Nghiệp Hoạt Động Trong Nền Kinh Tế" value="1233" unit="DN" />
+            <OverviewValue label="Doanh Nghiệp Hoạt Động Trong Nền Kinh Tế" value={pickIocValue(indicators, "CTDB_VI_1_1", "1233")} unit="DN" />
             <div className="overview-progress-list">
               <h3>Tổng Số Hợp Tác Xã</h3>
               {enterpriseRows.map((row) => (
@@ -530,7 +558,7 @@ export function OverviewDashboard() {
         <OverviewCard className="overview-ioc-admin" icon="admin" title="Nội vụ - cải cách hành chính, lao động">
           <div className="overview-admin-grid">
             <OverviewValue label="Tỷ Lệ Người Dân Sử Dụng Dịch Vụ Công Trực Tuyến" value="98,21" unit="%" note="12,6% so với cùng kỳ năm trước" />
-            <OverviewLaborDonut />
+            <OverviewLaborDonut introduced={laborIntroduced} returned={laborReturned} />
             <OverviewValue className="amber" label="Tỷ Lệ Hồ Sơ Giải Quyết Đúng Hạn" value="78,22" unit="%" note="12,6% so với cùng kỳ năm trước" />
             <OverviewValue className="red overdue" label="Số Lượng VB Quá Hạn" value="5" unit="VB" note="" />
           </div>
@@ -580,15 +608,6 @@ export function OverviewDashboard() {
           </div>
         </OverviewCard>
 
-        <OverviewCard className="overview-ioc-health" icon="health" title="Y tế, an sinh xã hội">
-          <div className="overview-health-grid">
-            <OverviewValue label="Tỷ Lệ Bao Phủ Bảo Hiểm Y Tế" value="99,43" unit="%" note="" />
-            <OverviewValue label="Người Dân Được Khám Sức Khỏe Định Kỳ Hoặc Khám Sàng Lọc Miễn Phí Ít Nhất 01 Lần Trong Năm" value="8,67" unit="%" note="" />
-            <OverviewValue className="tight-number" label="Tổng Số Lượt Khám Bệnh" value="13,421" unit="Lượt khám" note="12,6% so với cùng kỳ tháng trước" />
-            <OverviewValue label="Tỷ Lệ Hoàn Thành Kế Hoạch Giảm Nghèo" value="87,29" unit="%" note="" />
-          </div>
-        </OverviewCard>
-
         <OverviewCard className="overview-ioc-resolution" icon="resolution" title="🇻🇳 Nhiệm vụ thực hiện các nghị quyết trọng tâm">
           <OverviewSimpleTable rows={resolutionRows} />
           <button className="overview-link" type="button">Xem thêm nghị quyết →</button>
@@ -596,6 +615,15 @@ export function OverviewDashboard() {
 
         <OverviewCard className="overview-ioc-targets" icon="target" title="🇻🇳 Chỉ tiêu phát triển kinh tế - xã hội giai đoạn 2025-2030">
           <OverviewSimpleTable type="target" rows={targetRows} />
+        </OverviewCard>
+
+        <OverviewCard className="overview-ioc-health" icon="health" title="Y tế, an sinh xã hội">
+          <div className="overview-health-grid">
+            <OverviewValue label="Tỷ Lệ Bao Phủ Bảo Hiểm Y Tế" value={pickIocValue(indicators, "CTDB_XI_5_5_1", "99,43")} unit="%" note="" />
+            <OverviewValue label="Người Dân Được Khám Sức Khỏe Định Kỳ Hoặc Khám Sàng Lọc Miễn Phí Ít Nhất 01 Lần Trong Năm" value="8,67" unit="%" note="" />
+            <OverviewValue className="tight-number" label="Tổng Số Lượt Khám Bệnh" value="13,421" unit="Lượt khám" note="12,6% so với cùng kỳ tháng trước" />
+            <OverviewValue label="Tỷ Lệ Hoàn Thành Kế Hoạch Giảm Nghèo" value="87,29" unit="%" note="" />
+          </div>
         </OverviewCard>
       </div>
     </section>

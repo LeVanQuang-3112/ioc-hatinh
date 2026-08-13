@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
-import { currentReportingPeriod } from "../../model/reportingPeriod";
+import { useIocReport } from "../../hooks/useIocReport";
+import { currentReportingPeriod, getCurrentReportingPeriod } from "../../model/reportingPeriod";
+import { pickIocNumber, pickIocValue } from "../../services/iocReportService";
 
 const landMonths = ["T5/2026", "T6/2026", "T7/2026", "T8/2026"];
 const mineralPeriods = ["Q2/25", "Q3/25", "Q4/25", "Q1/26", "Q2/26", "Q3/26", "Q hiện tại"];
@@ -203,6 +205,9 @@ function MineralTrendChart({
 }
 
 export function LandMineralsDashboard() {
+  const { year, quarter } = getCurrentReportingPeriod();
+  const { indicators } = useIocReport("CTKTXH_QUY", `${year}${quarter}`);
+
   const comboCharts: LandComboChartConfig[] = [
     {
       title: "Số Giấy CNQSDĐ và tài sản khác gắn liền với đất được cấp mới",
@@ -237,7 +242,7 @@ export function LandMineralsDashboard() {
           <h3>Tỷ lệ đáp ứng nhu cầu khoáng sản (nhóm III & IV)</h3>
           <LandPeriodSelect value={currentReportingPeriod.quarterNumericLabel} />
           <div className="land-gauge-row">
-            <LandGauge color="#16c993" label="Nhóm III" value={90.9} />
+            <LandGauge color="#16c993" label="Nhóm III" value={pickIocNumber(indicators, "CTDB_XIV_2_1_2", 90.9)} />
             <LandGauge color="#f5a10a" label="Nhóm IV" value={82.6} />
           </div>
         </article>
@@ -247,8 +252,8 @@ export function LandMineralsDashboard() {
           <span className="land-unit">Đơn vị: m<sup>3</sup> - 2 biểu đồ đường xu hướng độc lập</span>
           <LandPeriodSelect value={currentReportingPeriod.quarterNumericLabel} />
           <div className="land-mineral-metrics">
-            <strong className="green">Nhóm III <b>350,6 m<sup>3</sup></b></strong>
-            <strong className="amber">Nhóm IV <b>451,9 m<sup>3</sup></b></strong>
+            <strong className="green">Nhóm III <b>{pickIocValue(indicators, "CTDB_XIV_2_1_1", "350,6")} m<sup>3</sup></b></strong>
+            <strong className="amber">Nhóm IV <b>{pickIocValue(indicators, "CTDB_XIV_2_2_1", "451,9")} m<sup>3</sup></b></strong>
           </div>
           <div className="mineral-chart-block green">
             <span>Xu hướng Nhóm III</span>

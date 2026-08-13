@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
-import { currentReportingPeriod } from "../../model/reportingPeriod";
+import { useIocReport } from "../../hooks/useIocReport";
+import { currentReportingPeriod, getCurrentReportingPeriod } from "../../model/reportingPeriod";
+import { pickIocNumber } from "../../services/iocReportService";
 
 const healthMonths = ["T1/2026", "T2/2026", "T3/2026", "T4/2026", "T5/2026", "T6/2026", "T7/2026", "T8/2026"];
 const healthShortMonths = ["T3/2026", "T4/2026", "T5/2026", "T6/2026", "T7/2026", "T8/2026"];
@@ -264,6 +266,9 @@ function HealthLineGroup({
 }
 
 export function HealthDashboard() {
+  const { year, quarter } = getCurrentReportingPeriod();
+  const { indicators } = useIocReport("CTKTXH_QUY", `${year}${quarter}`);
+
   return (
     <section className="health-social-dashboard" aria-label="Nhóm y tế, an sinh xã hội">
       <div className="health-social-grid">
@@ -349,8 +354,8 @@ export function HealthDashboard() {
           <div className="health-card-title">Tỷ lệ bao phủ BHYT và tỷ lệ LLLĐ tham gia BHXH</div>
           <HealthPeriodSelect value={currentReportingPeriod.quarterLabel} />
           <div className="health-gauge-row">
-            <HealthGauge label="BAO PHỦ BHYT" />
-            <HealthGauge label="LLLĐ THAM GIA BHXH" />
+            <HealthGauge label="BAO PHỦ BHYT" value={pickIocNumber(indicators, "CTDB_XI_5_5_1", 70)} />
+            <HealthGauge label="LLLĐ THAM GIA BHXH" value={pickIocNumber(indicators, "CTDB_XI_5_5_2", 70)} />
           </div>
         </article>
 

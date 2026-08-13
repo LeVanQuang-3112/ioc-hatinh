@@ -1,14 +1,9 @@
 import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
-import { currentReportingPeriod } from "../../model/reportingPeriod";
-
-const adminLaborStaffBars = [
-  { label: "Tuyển mới", values: [25, 0, 0, 0] },
-  { label: "Nghỉ hưu", values: [0, 4, 0, 0] },
-  { label: "Thôi việc", values: [0, 0, 37, 0] },
-  { label: "Chuyển đi", values: [0, 0, 0, 3] },
-] as const;
+import { useIocReport } from "../../hooks/useIocReport";
+import { currentReportingPeriod, getCurrentReportingPeriod } from "../../model/reportingPeriod";
+import { pickIocNumber, pickIocValue } from "../../services/iocReportService";
 
 const adminProcedureBars = [
   { label: "Tỷ lệ hồ sơ giải quyết đúng hạn (98.5%)", value: 98.5, tone: "green" },
@@ -47,7 +42,7 @@ function AdminPeriodSelect({
   );
 }
 
-function AdminStaffChart() {
+function AdminStaffChart({ bars }: { bars: ReadonlyArray<{ label: string; values: readonly number[] }> }) {
   const option = useMemo<EChartsCoreOption>(() => ({
     color: ["#16b77d", "#4b8ee8", "#f4a53b", "#bfc8d5"],
     grid: { left: 48, right: 30, top: 24, bottom: 34 },
@@ -60,7 +55,7 @@ function AdminStaffChart() {
     },
     xAxis: {
       type: "category",
-      data: adminLaborStaffBars.map((item) => item.label),
+      data: bars.map((item) => item.label),
       axisLabel: { color: "rgba(245, 248, 252, 0.72)", fontSize: 12 },
       axisLine: { lineStyle: { color: "rgba(245, 248, 252, 0.42)" } },
       axisTick: { show: false },
@@ -80,9 +75,9 @@ function AdminStaffChart() {
       type: "bar",
       stack: "staff",
       barWidth: 24,
-      data: adminLaborStaffBars.map((item) => item.values[index]),
+      data: bars.map((item) => item.values[index]),
     })),
-  }), []);
+  }), [bars]);
 
   return <EChart className="admin-staff-chart" option={option} ariaLabel="Biến động nhân sự" />;
 }
@@ -111,7 +106,9 @@ function AdminProgressRow({
   );
 }
 
-function AdminLaborDonutChart() {
+function AdminLaborDonutChart({ introduced, returned }: { introduced: number; returned: number }) {
+  const total = introduced + returned;
+
   const option = useMemo<EChartsCoreOption>(() => ({
     color: ["#6ed698", "#ff817a"],
     tooltip: {
@@ -128,18 +125,18 @@ function AdminLaborDonutChart() {
         label: { show: false },
         labelLine: { show: false },
         data: [
-          { name: "Giới thiệu việc làm cho dự án, doanh nghiệp", value: 522 },
-          { name: "Trở về quê làm việc", value: 200 },
+          { name: "Giới thiệu việc làm cho dự án, doanh nghiệp", value: introduced },
+          { name: "Trở về quê làm việc", value: returned },
         ],
       },
     ],
-  }), []);
+  }), [introduced, returned]);
 
   return (
     <div className="admin-labor-donut">
       <EChart className="admin-labor-donut-chart" option={option} ariaLabel="Số lao động được giải quyết việc làm" />
       <div className="admin-labor-donut-center">
-        <strong>722</strong>
+        <strong>{total}</strong>
         <span>Lao động</span>
       </div>
     </div>
@@ -147,6 +144,39 @@ function AdminLaborDonutChart() {
 }
 
 export function InternalAdminLaborDashboard() {
+  const { year, quarter } = getCurrentReportingPeriod();
+  const { indicators } = useIocReport("CTKTXH_QUY", `${year}${quarter}`);
+
+  const staffExecuted = pickIocNumber(indicators, "CTDB_X_1_3", 2520);
+  const staffAssigned = pickIocNumber(indicators, "CTDB_X_1_2", 2450);
+  const staffPercent = staffAssigned > 0 ? ((staffExecuted / staffAssigned) * 100).toFixed(1) : "0.0";
+
+  const staffBars = [
+    { label: "Tuyển mới", values: [pickIocNumber(indicators, "CTDB_X_1_4", 25), 0, 0, 0] },
+    { label: "Nghỉ hưu", values: [0, pickIocNumber(indicators, "CTDB_X_1_5", 4), 0, 0] },
+    { label: "Thôi việc", values: [0, 0, pickIocNumber(indicators, "CTDB_X_1_6", 37), 0] },
+    { label: "Chuyển đi", values: [0, 0, 0, 3] },
+  ] as const;
+
+  const laborIntroduced = pickIocNumber(indicators, "CTDB_X_3_6_1", 522);
+  const laborReturned = pickIocNumber(indicators, "CTDB_X_3_6_2", 200);
+  const laborTotal = laborIntroduced + laborReturned;
+  const laborIntroducedPercent = laborTotal > 0 ? Math.round((laborIntroduced / laborTotal) * 100) : 0;
+  const laborReturnedPercent = laborTotal > 0 ? 100 - laborIntroducedPercent : 0;
+
+  const laborRows = adminLaborRows.map((row) => {
+    if (row.label === "Tỷ lệ lao động đã qua đào tạo") {
+      return { ...row, value: `${pickIocValue(indicators, "CTDB_X_3_1", "78.5")}%`, progress: pickIocNumber(indicators, "CTDB_X_3_1", row.progress) };
+    }
+    if (row.label === "Số phiên giao dịch việc làm tổ chức") {
+      return { ...row, value: `${pickIocValue(indicators, "CTDB_X_3_4", "24")} Phiên` };
+    }
+    if (row.label === "Số lượt lao động tư vấn, giới thiệu việc làm") {
+      return { ...row, value: `${pickIocValue(indicators, "CTDB_X_3_5", "1.420")} Lượt` };
+    }
+    return row;
+  });
+
   return (
     <section className="admin-labor-dashboard" aria-label="Nhóm nội vụ, cải cách hành chính, lao động">
       <div className="admin-labor-grid">
@@ -156,20 +186,20 @@ export function InternalAdminLaborDashboard() {
           <div className="admin-staff-value">
             <h3>Số biên chế hưởng lương NSNN</h3>
             <div>
-              <strong>2,700</strong>
+              <strong>{pickIocValue(indicators, "CTDB_X_1_1", "2.700")}</strong>
               <span>Biên chế</span>
             </div>
           </div>
           <div className="admin-quota">
             <h3>Tình hình thực hiện biên chế</h3>
-            <p><strong>2,520 / 2,450</strong><span>thực hiện/được giao</span></p>
+            <p><strong>{staffExecuted.toLocaleString("vi-VN")} / {staffAssigned.toLocaleString("vi-VN")}</strong><span>thực hiện/được giao</span></p>
             <i><b /></i>
-            <small>Đạt 97.2% chỉ tiêu biên chế giao</small>
+            <small>Đạt {staffPercent}% chỉ tiêu biên chế giao</small>
           </div>
           <div className="admin-chart-heading">
             <h3>Biến động nhân sự</h3>
           </div>
-          <AdminStaffChart />
+          <AdminStaffChart bars={staffBars} />
         </article>
 
         <article className="admin-panel admin-procedure-panel">
@@ -224,7 +254,7 @@ export function InternalAdminLaborDashboard() {
           <div className="admin-labor-content">
             <div className="admin-labor-training">
               <h3>Chất lượng Nguồn nhân lực & Đào tạo</h3>
-              {adminLaborRows.map((item) => (
+              {laborRows.map((item) => (
                 <AdminProgressRow
                   key={item.label}
                   label={item.label}
@@ -236,10 +266,10 @@ export function InternalAdminLaborDashboard() {
             </div>
             <div className="admin-labor-donut-panel">
               <h3>Số lao động được giải quyết việc làm</h3>
-              <AdminLaborDonutChart />
+              <AdminLaborDonutChart introduced={laborIntroduced} returned={laborReturned} />
               <div className="admin-labor-legend">
-                <span><i className="green" />Số lao động được giới thiệu việc làm cho các dự án, doanh nghiệp trên địa bàn tỉnh: 522 người (66%)</span>
-                <span><i className="red" />Lao động trở về quê làm việc: 200 người (34%)</span>
+                <span><i className="green" />Số lao động được giới thiệu việc làm cho các dự án, doanh nghiệp trên địa bàn tỉnh: {laborIntroduced} người ({laborIntroducedPercent}%)</span>
+                <span><i className="red" />Lao động trở về quê làm việc: {laborReturned} người ({laborReturnedPercent}%)</span>
               </div>
             </div>
           </div>

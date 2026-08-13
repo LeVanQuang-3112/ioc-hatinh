@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
-import { currentReportingPeriod } from "../../model/reportingPeriod";
+import { useIocReport } from "../../hooks/useIocReport";
+import { currentReportingPeriod, getCurrentReportingPeriod } from "../../model/reportingPeriod";
+import { pickIocValue } from "../../services/iocReportService";
 
 function TradeServicePeriodSelect({ value = currentReportingPeriod.quarterLabel }: { value?: string }) {
   return (
@@ -179,6 +181,9 @@ function TradeServiceTourismChart() {
 }
 
 export function TradeServiceDashboard() {
+  const { year, quarter } = getCurrentReportingPeriod();
+  const { indicators } = useIocReport("CTKTXH_QUY", `${year}${quarter}`);
+
   return (
     <section className="trade-service-dashboard" aria-label="Nhóm thương mại dịch vụ">
       <div className="trade-service-grid">
@@ -187,7 +192,7 @@ export function TradeServiceDashboard() {
           <TradeServiceMonthPeriodSelect />
           <div className="trade-service-total-body">
             <div className="trade-service-total-value">
-              <strong>234</strong>
+              <strong>{pickIocValue(indicators, "CTDB_V_1_1", "234")}</strong>
               <span>Triệu USD</span>
             </div>
             <p className="trade-service-trend"><i aria-hidden="true" /> <strong>12,6%</strong> so với cùng kỳ năm trước</p>

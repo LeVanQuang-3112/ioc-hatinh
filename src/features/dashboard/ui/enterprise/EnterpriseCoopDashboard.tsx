@@ -1,7 +1,9 @@
 import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
-import { currentReportingPeriod } from "../../model/reportingPeriod";
+import { useIocReport } from "../../hooks/useIocReport";
+import { currentReportingPeriod, getCurrentReportingPeriod } from "../../model/reportingPeriod";
+import { pickIocValue } from "../../services/iocReportService";
 
 function EnterprisePeriodSelect({ value = currentReportingPeriod.quarterLabel }: { value?: string }) {
   return (
@@ -121,6 +123,9 @@ function EnterpriseCoopChart() {
 }
 
 export function EnterpriseCoopDashboard() {
+  const { year, quarter } = getCurrentReportingPeriod();
+  const { indicators } = useIocReport("CTKTXH_QUY", `${year}${quarter}`);
+
   return (
     <section className="enterprise-dashboard" aria-label="Nhóm doanh nghiệp, hợp tác xã">
       <div className="enterprise-grid">
@@ -128,7 +133,7 @@ export function EnterpriseCoopDashboard() {
           <h3>Doanh nghiệp hoạt động trong nền kinh tế</h3>
           <EnterprisePeriodSelect />
           <div className="enterprise-total-value">
-            <strong>234</strong>
+            <strong>{pickIocValue(indicators, "CTDB_VI_1_1", "234")}</strong>
             <span>Doanh nghiệp</span>
           </div>
           <p className="enterprise-trend"><i aria-hidden="true" /> <strong>12,6%</strong> so với cùng kỳ năm trước</p>

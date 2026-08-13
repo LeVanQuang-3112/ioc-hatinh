@@ -2,7 +2,9 @@ import { useMemo } from "react";
 import type { EChartsCoreOption } from "echarts/core";
 import EChart from "@/shared/components/EChart";
 import { agricultureCharts, agriculturePeriods, type AgricultureChartConfig } from "../../model/dashboardContent";
-import { currentReportingPeriod } from "../../model/reportingPeriod";
+import { useIocReport } from "../../hooks/useIocReport";
+import { currentReportingPeriod, getCurrentReportingPeriod } from "../../model/reportingPeriod";
+import { pickIocNumber } from "../../services/iocReportService";
 
 function AgriculturePeriodSelect() {
   return (
@@ -75,7 +77,7 @@ function AgricultureBarChart({ chart }: { chart: AgricultureChartConfig }) {
   return <EChart className="agriculture-chart" option={option} ariaLabel={chart.title} />;
 }
 
-function ForestCoverageGauge() {
+function ForestCoverageGauge({ value }: { value: number }) {
   const option = useMemo<EChartsCoreOption>(() => ({
     series: [
       {
@@ -116,10 +118,10 @@ function ForestCoverageGauge() {
           fontSize: 34,
           fontWeight: 900,
         },
-        data: [{ value: 70 }],
+        data: [{ value }],
       },
     ],
-  }), []);
+  }), [value]);
 
   return (
     <div className="agriculture-gauge-wrap">
@@ -130,6 +132,9 @@ function ForestCoverageGauge() {
 }
 
 export function AgricultureDashboard() {
+  const { year, quarter } = getCurrentReportingPeriod();
+  const { indicators } = useIocReport("CTKTXH_QUY", `${year}${quarter}`);
+
   return (
     <section className="agriculture-dashboard" aria-label="Nhóm chỉ tiêu nông nghiệp">
       <div className="agriculture-grid">
@@ -145,7 +150,7 @@ export function AgricultureDashboard() {
         <article className="agriculture-panel agriculture-gauge-panel">
           <h3>Tỷ lệ che phủ rừng</h3>
           <AgriculturePeriodSelect />
-          <ForestCoverageGauge />
+          <ForestCoverageGauge value={pickIocNumber(indicators, "CTDB_IX_6", 70)} />
         </article>
 
         {agricultureCharts.slice(3).map((chart) => (

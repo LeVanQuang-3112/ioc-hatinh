@@ -10,4 +10,6 @@ export const dashboardQueryKeys = {
       filters.period,
       filters.unit,
     ] as const,
+  iocReport: (code: string, period: string) =>
+    [...dashboardQueryKeys.all, "ioc-report", code, period] as const,
 };
