@@ -457,8 +457,8 @@ function OverviewPlanningAssetsMetric() {
 }
 
 export function OverviewDashboard() {
-  const { year, quarter } = getCurrentReportingPeriod();
-  const { indicators } = useIocReport("CTKTXH_QUY", `${year}${quarter}`);
+  const { monthlyReportPeriod } = getCurrentReportingPeriod();
+  const { indicators } = useIocReport("CTKTXH_THANG", monthlyReportPeriod);
 
   const seafoodFarmed = pickIocNumber(indicators, "CTDB_IX_7_1", 35);
   const seafoodCaught = pickIocNumber(indicators, "CTDB_IX_7_2", 65);

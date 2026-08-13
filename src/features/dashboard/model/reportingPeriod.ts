@@ -10,6 +10,8 @@ export function getCurrentReportingPeriod(date = new Date()) {
     month,
     year,
     quarter,
+    /** YYYYMM, e.g. "202601" — the period format the IOC report API expects for monthly reports (CTKTXH_THANG). */
+    monthlyReportPeriod: `${year}${String(month).padStart(2, "0")}`,
     monthLabel: `Tháng ${month}/${year}`,
     monthValue: `month-${month}-${year}`,
     quarterLabel: `Quý ${quarterRoman}/${year}`,

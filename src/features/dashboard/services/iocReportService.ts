@@ -16,6 +16,9 @@ export type IocReportResponse = {
   };
 };
 
+/** The API's error shape uses `err_msg` instead of `error_message` on failure responses. */
+type IocReportErrorResponse = { err_code: string; err_msg?: string };
+
 const IOC_REPORT_URL = "https://report.vnsr.vn/IOC_WS/ws_recvMsgServlet";
 const IOC_ORG = import.meta.env.VITE_IOC_ORG ?? "000.00.00.H27";
 const IOC_ACCESS_TOKEN =
@@ -42,9 +45,9 @@ export async function fetchIocReport(
     throw new Error(`Yêu cầu báo cáo IOC thất bại (HTTP ${res.status})`);
   }
 
-  const json = (await res.json()) as IocReportResponse;
+  const json = (await res.json()) as IocReportResponse & IocReportErrorResponse;
   if (json.err_code !== "0") {
-    throw new Error(json.error_message || "Yêu cầu báo cáo IOC thất bại");
+    throw new Error(json.error_message || json.err_msg || "Yêu cầu báo cáo IOC thất bại");
   }
   return json;
 }
